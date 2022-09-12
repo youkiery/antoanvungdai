@@ -1,0 +1,368 @@
+/* Các tùy chỉnh CSS của giao diện nên để vào đây */
+  .panel-group {
+    background: white;
+    margin-top: 50px;
+    padding: 50px;
+    border-radius: 10px;
+  }
+
+  #alert-vhttp {
+    display: none;
+  }
+
+  body {
+    overflow: scroll;
+    height: 100%;
+  }
+
+  .pw-navbar {
+    background: lightgreen;
+    padding: 5px;
+  }
+
+  .pw-head-menu {
+    text-align: right;
+    line-height: 2em;
+  }
+
+  .pw-left-panel,
+  .pw-right-panel {
+    position: relative;
+    background: white;
+    height: 100vh;
+    -webkit-box-shadow: 0 2px 15px -4px rgb(0 0 0 / 15%);
+    -moz-box-shadow: 0 2px 15px -4px rgba(0, 0, 0, .15);
+    box-shadow: 0 2px 15px -4px rgb(0 0 0 / 15%);
+  }
+
+  .pw-left-panel {
+    float: left;
+    padding: 5px;
+    width: calc(100% - 360px);
+  }
+
+  .pw-right-panel {
+    float: right;
+    padding: 10px;
+    width: 350px;
+  }
+
+  .pw-footer-panel {
+    position: absolute;
+    left: 0px;
+    bottom: 60px;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .pw-subtext {
+    font-size: 0.8em;
+  }
+
+  .pw-bill {
+    border-bottom: 1px solid lightgray;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .pw-bill-header {
+    font-size: 1.4em;
+    font-weight: bold;
+    display: inline;
+    padding: 4px 20px;
+    background: lightgreen;
+    margin: 10px;
+  }
+
+  .pw-text-right {
+    text-align: right;
+  }
+
+  .pw-card,
+  .pw-discount-panel {
+    color: #000;
+    border-radius: 10px;
+    padding: 5px;
+    background: #fff;
+    line-height: 18px;
+    width: calc(100% - 20px);
+    display: inline-block;
+    position: relative;
+    box-shadow: 3px 3px 5px #d3d3d3;
+    border-color: #d3d3d3 gray gray #d3d3d3;
+    border-style: solid;
+    border-width: 1px;
+  }
+
+  .pw-card div {
+    line-height: 2em;
+  }
+
+  .pw-card.pw-item:hover {
+    background: #eee;
+  }  
+
+  .pw-suggest-group,
+  .pw-discount-group,
+  .pw-bill-tab {
+    position: relative;
+  }
+
+  .pw-bill-tab {
+    margin-bottom: 4px;
+  }
+
+  .pw-suggest-list {
+    position: absolute;
+    width: 100%;
+    background: #fff;
+    max-height: 400px;
+    overflow-y: scroll;
+    display: none;
+    z-index: 10;
+    top: 30px;
+  }
+
+  .pw-discount-panel {
+    position: absolute;
+    width: 300px;
+    display: none;
+    background: #fff;
+    z-index: 10;
+    top: -70px;
+    left: -300px;
+  }
+
+  .pw-suggest-image {
+    float: left;
+  }
+
+  .pw-suggest-image img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .pw-suggest-info {
+    float: right;
+    width: calc(100% - 74px);
+    height: 64px;
+  }
+
+  .suggest {
+    position: absolute;
+    width: 100%;
+    background: white;
+    z-index: 100;
+    border: 1px solid lightgray;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    max-height: 500px;
+    overflow-y: scroll;
+  }
+
+  .suggest-item {
+    height: 50px;
+    padding: 5px;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 5px;
+  }
+
+  .suggest-item-lg {
+    height: 74px !important;
+  }
+
+  .suggest-item:hover {
+    background: lightgreen;
+  }
+
+  #pw-error-panel {
+    z-index: 100;
+    width: 300px;
+    position: absolute;
+    bottom: 170px;
+    right: 20px;
+  }
+
+  #pw-dismiss {
+    width: 100%;
+    height: 100vh;
+    z-index: 5;
+    display: none;
+    position: fixed;
+  }
+
+  .pw-bill-close {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: white;
+    color: black;
+    width: 12px;
+    height: 12px;
+    border-radius: 10px;
+    font-size: 0.5em;
+    line-height: 12px;
+  }
+
+  .pw-side-bar {
+    background: white;
+    -webkit-box-shadow: 0 2px 15px -4px rgb(0 0 0 / 15%);
+    -moz-box-shadow: 0 2px 15px -4px rgba(0, 0, 0, .15);
+    box-shadow: 0 2px 15px -4px rgb(0 0 0 / 15%);
+  }
+
+  .pw-content {
+    margin: 10px 10px;
+    height: 100%;
+  }
+
+  .pw-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 10px 0px;
+  }
+
+  .pw-info-panel {
+    padding: 10px;
+    text-align: center;
+  }
+
+  .pw-avatar {
+    width: 50px;
+    height: 50px;
+    background: darkgreen;
+    margin: auto;
+  }
+
+  .pw-menu-group {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+  }
+
+  .pw-menu-header {
+    color: gray;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 10px;
+  }
+
+  .pw-menu-content {
+    padding-right: 20px;
+  }
+
+  .pw-menu-item {
+    display: block;
+    padding-left: 20px;
+    color: black;
+    margin: 5px 0px;
+  }
+
+  .pw-menu-item.active {
+    color: green;
+    font-weight: bold;
+    border-left: 5px solid green;
+    padding-left: 15px;
+  }
+
+  .pw-card-header {
+    float: right;
+    margin-bottom: 10px;
+  }
+
+  .pw-card-content {
+    clear: both;
+  }
+
+  .pw-image {
+    width: 128px;
+    height: 128px;
+    border-radius: 10px;
+  }
+
+  .pw-image-box {
+    float: left;
+    position: relative;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+  }
+
+  .pw-image-click {
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    font-size: 1.5em;
+    right: -5px;
+    top: -5px;
+  }
+
+  .pw-image-click:hover {
+    color: red;
+  }
+
+  .pw-image-panel {
+    margin-bottom: 5px;
+  }
+
+  .pw-none {
+    display: none !important;
+  }
+
+  .pw-alert {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    min-width: 200px;
+    display: none;
+    z-index: 10000;
+  }
+
+  .pw-thumb {
+    max-width: 64px;
+    max-height: 64px;
+  }
+
+  .pw-thumb-box {
+    height: 64px;
+    line-height: 64px;
+  }
+
+  .pw-suggest-image {
+    float: left;
+  }
+
+  .pw-suggest-image img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .pw-suggest-info {
+    float: right;
+    width: calc(100% - 74px);
+    height: 64px;
+  }
+
+  .suggest {
+    position: absolute;
+    width: 100%;
+    background: white;
+    z-index: 100;
+    border: 1px solid lightgray;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    max-height: 500px;
+    overflow-y: scroll;
+  }
+
+  .suggest-item-lg {
+    height: 74px;
+    margin-bottom: 5px;
+    padding: 5px;
+    border-bottom: 1px solid lightgray;
+  }
+
+  .ui-datepicker {
+    z-index: 10000 !important;
+  }
