@@ -33,6 +33,6 @@ var vhttp = {
   },
   notify: (text) => {
     if (!vhttp.init) vhttp.alert()
-    $('#alert-vhttp').text(text).fadeIn(500).delay(2000).fadeOut(500)
+    $('#alert-vhttp').text(text).show().delay(2000).fadeOut(500)
   }
 }

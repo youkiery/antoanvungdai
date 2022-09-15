@@ -13,6 +13,7 @@ $danhsachnhanvien = $db->all($sql);
 $sql = "select userid from pet_users_session where session = '$_SESSION[session]'";
 $session = $db->fetch($sql);
 
+$xtpl->assign('thoigian', date('d/m/Y H:i'));
 $xtpl->assign('idnhanvien', $session['userid']);
 $xtpl->assign('danhsachnhanvien', option($danhsachnhanvien, 'first_name', 'userid'));
 $xtpl->parse('main');

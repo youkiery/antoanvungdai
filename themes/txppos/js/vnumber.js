@@ -20,6 +20,8 @@ var vnumber = {
     })
   },
   clear: (number) => {
-    return Number(number.toString().replace(/\,/g, ''))
+    number = number.toString().replace(/[^0-9.]/g, '')
+    if (!number) number = 0
+    return Number(number)
   }
 }

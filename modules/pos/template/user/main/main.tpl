@@ -22,6 +22,37 @@
     display: block;
   }
 
+  .pw-input-group {
+    position: relative;
+    height: 55px;
+    padding: 2px;
+  }
+
+  .pw-input-group.col-xs-8 {
+    width: calc(33% - 4px);
+    margin: 2px;
+  }
+
+  .pw-input-header {
+    background: lightgreen;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+  }
+
+  .pw-input-header:hover {
+    cursor: pointer;
+  }
+
+  .pw-input-content {
+    position: absolute;
+    top: 25px;
+  }
+
   @media print {
     #printable {
       display: block;
@@ -71,60 +102,6 @@
   </div>
 </div>
 
-<div class="modal fade" id="modal-thanh-toan" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Thu tiền khách trả </h4>
-      </div>
-      <div class="modal-body">
-        <div class="row form-group">
-          <div class="col-xs-12">
-            Số tiền
-          </div>
-          <div class="col-xs-12">
-            <input autocomplete="off" type="text" class="form-control pw-text-right" id="thanh-toan-tien">
-          </div>
-        </div>
-
-        <div class="row form-group">
-          <div class="col-xs-8">
-            <button class="btn btn-block btn-default btn-block">
-              Tiền mặt
-            </button>
-          </div>
-          <div class="col-xs-8">
-            <button class="btn btn-default btn-block">
-              Điểm
-            </button>
-          </div>
-          <div class="col-xs-8">
-            <button class="btn btn-default btn-block">
-              Chuyển khoản
-            </button>
-          </div>
-        </div>
-
-        <div class="row form-group">
-          <div class="col-xs-12"> Khách cần trả </div>
-          <div class="col-xs-12" id="thanh-toan-can-tra"> </div>
-        </div>
-
-        <div class="row form-group">
-          <div class="col-xs-12"> Khách thanh toán </div>
-          <div class="col-xs-12" id="thanh-toan-khach"> </div>
-        </div>
-
-        <div class="row form-group">
-          <div class="col-xs-12"> Tiền thừa </div>
-          <div class="col-xs-12" id="thanh-toan-tien-thua"> </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div id="pw-dismiss" onclick="antoanbo()"></div>
 <div id="pw-error-panel"> </div>
 <div id="printable"></div>
@@ -158,7 +135,7 @@
         </div>
         <div class="col-xs-2"> </div>
         <div class="col-xs-8 pw-subtext">
-          07/06/2022 16:52
+          {thoigian}
         </div>
       </div>
       <div class="input-group form-group">
@@ -192,12 +169,12 @@
         <div class="col-xs-12 pw-text-right">
           <div class="form-group input-group">
             <input autocomplete="off" class="form-control pw-text-right" id="suagiamgiaphantram" value="0"
-            onkeyup="suagiamgiahoadon()">
+              onkeyup="suagiamgiahoadon()">
             <div class="input-group-addon"> % </div>
           </div>
           <div class="form-group input-group">
             <input autocomplete="off" class="form-control pw-text-right" id="suagiamgiatien" value="0"
-            onkeyup="suagiamgiahoadon()">
+              onkeyup="suagiamgiahoadon()">
             <div class="input-group-addon"> VND </div>
           </div>
         </div>
@@ -210,20 +187,31 @@
 
       <div class="row form-group">
         <div class="col-xs-24"> Khách thanh toán </div>
-        <div class="col-xs-8">
-          <input type="text" class="form-control" placeholder="Tiền mặt">
+        <div class="col-xs-8 pw-input-group">
+          <div class="pw-input-header" onclick="chonthanhtoan(0)"> Tiền mặt </div>
+          <input type="text" class="pw-input-content form-control" id="thanhtoantien" placeholder="Tiền mặt"
+            onkeyup="suathanhtoan(0)">
         </div>
-        <div class="col-xs-8">
-          <input type="text" class="form-control" placeholder="Chuyển khoản">
+        <div class="col-xs-8 pw-input-group">
+          <div class="pw-input-header" onclick="chonthanhtoan(1)"> Chuyển khoản </div>
+          <input type="text" class="pw-input-content form-control" id="thanhtoanchuyenkhoan" placeholder="Chuyển khoản"
+            onkeyup="suathanhtoan(1)">
         </div>
-        <div class="col-xs-8">
-          <input type="text" class="form-control" placeholder="Điểm">
+        <div class="col-xs-8 pw-input-group">
+          <div class="pw-input-header" onclick="chonthanhtoan(2)">Điểm</div>
+          <input type="text" class="pw-input-content form-control" id="thanhtoandiem" placeholder="Điểm"
+            onkeyup="suathanhtoan(2)">
         </div>
       </div>
 
-      <div class="row form-group">
+      <div class="row form-group" id="blocktienthua" style="display: none;">
         <div class="col-xs-12"> Tiền thừa </div>
         <div class="col-xs-12 pw-text-right" id="tienthua"> 0 </div>
+      </div>
+
+      <div class="row form-group" id="blocktienno" style="display: none;">
+        <div class="col-xs-12"> ra nợ cho khách </div>
+        <div class="col-xs-12 pw-text-right" id="tienno"> 0 </div>
       </div>
 
       <div class="form-group">
@@ -248,16 +236,7 @@
     hanghoa: [],
     khachhang: [],
     idnhanvien: '{idnhanvien}',
-    giamgia: {
-      'tien': {
-        'tien': 'btn-info',
-        'phantram': 'btn-default'
-      },
-      'phantram': {
-        'tien': 'btn-default',
-        'phantram': 'btn-info'
-      }
-    }
+    thanhtoan: ['thanhtoantien', 'thanhtoanchuyenkhoan', 'thanhtoandiem']
   }
   $(document).ready(() => {
     // gợi ý tìm hàng hóa
@@ -318,7 +297,13 @@
 
   function thanhtoan() {
     // nếu hóa đơn hiện tại không có hàng hóa, thông báo
+    // nếu hóa đơn không có sđt mà nợ thì báo
+    var thanhtoan = global.hoadon[global.chonhoadon].thanhtoan
+    var tongthanhtoan = thanhtoan[0] + thanhtoan[1] + thanhtoan[2]
+    var thanhtien = global.hoadon[global.chonhoadon].thanhtien
+    var khachhang = global.hoadon[global.chonhoadon].khachhang.id
     if (!global.hoadon[global.chonhoadon].hanghoa.length) return vhttp.notify('Chọn hàng hóa trước khi thanh toán')
+    else if (khachhang == 0 && (thanhtien > tongthanhtoan)) return vhttp.notify('Chưa chọn khách hàng nên không thể ra nợ')
     else {
       vhttp.post('/pos/api/', {
         action: 'thanhtoan',
@@ -339,9 +324,57 @@
 
   }
 
-  function suathanhtoan() {
-    // kiểm tra thanh toán hoa đơn có loại nào hơn 0 hay không
-    // nếu có chỉ 1, thay đổi
+  function chonthanhtoan(loai) {
+    // kiểm tra nếu 
+    if (loai == 2) return 0
+    global.hoadon[global.chonhoadon].thanhtoan[0] = 0
+    global.hoadon[global.chonhoadon].thanhtoan[1] = 0
+    global.hoadon[global.chonhoadon].thanhtoan[2] = 0
+    global.hoadon[global.chonhoadon].thanhtoan[loai] = global.hoadon[global.chonhoadon].thanhtien
+    $('#thanhtoantien').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[0]))
+    $('#thanhtoanchuyenkhoan').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[1]))
+    $('#thanhtoandiem').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[2]))
+
+    // kiểm tra thanh toán > tiền hang không thì báo trả tiền thừa, ra nợ
+    $('#blocktienthua').hide()
+    $('#blocktienno').hide()
+  }
+
+  function suathanhtoan(loai) {
+    var thanhtoan = vnumber.clear($('#' + global.thanhtoan[loai]).val())
+    if (loai == 2 && thanhtoan > 0) thanhtoan = 0
+    if (thanhtoan < 0) thanhtoan = 0
+    global.hoadon[global.chonhoadon].thanhtoan[loai] = thanhtoan
+    global.hoadon[global.chonhoadon].suathanhtoan = 0
+    $('#' + global.thanhtoan[loai]).val(vnumber.format(thanhtoan))
+
+    // ck + điểm không được > thành tiền
+
+    var tienmat = global.hoadon[global.chonhoadon].thanhtoan[0]
+    var chuyenkhoan = global.hoadon[global.chonhoadon].thanhtoan[1]
+    var diem = global.hoadon[global.chonhoadon].thanhtoan[2]
+    var thanhtien = global.hoadon[global.chonhoadon].thanhtien
+
+    if (thanhtien < diem + chuyenkhoan) {
+      chuyenkhoan = thanhtien - diem
+      global.hoadon[global.chonhoadon].thanhtoan[1] = chuyenkhoan
+      $('#thanhtoanchuyenkhoan').val(vnumber.format(chuyenkhoan))
+    }
+
+    var thanhtoan = tienmat + chuyenkhoan + diem
+
+    // kiểm tra thanh toán > tiền hang không thì báo trả tiền thừa, ra nợ
+    $('#blocktienthua').hide()
+    $('#blocktienno').hide()
+    if (thanhtoan == thanhtien) { }
+    else if (thanhtoan > thanhtien) {
+      $('#tienthua').text(vnumber.format(thanhtoan - thanhtien))
+      $('#blocktienthua').show()
+    }
+    else {
+      $('#tienno').text(vnumber.format(thanhtien - thanhtoan))
+      $('#blocktienno').show()
+    }
   }
 
   function thaydoinguoiban() {
@@ -360,12 +393,15 @@
   function tailaikhach() {
     var khachhang = global.hoadon[global.chonhoadon].khachhang
     if (khachhang.dienthoai.length) {
+      $('#thanhtoandiem').prop('disabled', false)
       $('#tim-khach').val(khachhang.ten + ' (' + khachhang.dienthoai + ')')
       $('#tim-khach').prop('readonly', true)
       $('#them-khach').hide()
       $('#xoa-khach').show()
     }
     else {
+      global.hoadon[global.chonhoadon].thanhtoan[2] = 0
+      $('#thanhtoandiem').prop('disabled', true)
       $('#tim-khach').val('')
       $('#tim-khach').prop('readonly', false)
       $('#them-khach').show()
@@ -427,14 +463,6 @@
     tailaikhach()
   }
 
-  function chonthanhtoan() {
-    $('#thanh-toan-tien').val(0)
-    $('#thanh-toan-can-tra').text()
-    $('#thanh-toan-khach').text()
-    $('#thanh-toan-tien-thua').text()
-    $('#modal-thanh-toan').modal('show')
-  }
-
   function themhoadon() {
     global.hoadon.push({
       nguoiban: global.idnhanvien,
@@ -445,6 +473,7 @@
       giamgiaphantram: 0,
       ghichu: '',
       thanhtoan: [0, 0, 0],
+      suathanhtoan: 1,
       khachhang: { id: 0, ma: '', ten: '', dienthoai: '' },
       hanghoa: []
     })
@@ -533,18 +562,36 @@
     var hoadon = global.hoadon[global.chonhoadon].hanghoa
     var soluong = 0
     var tongtien = 0
+    tailaikhach()
+    $('#thanhtoantien').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[0]))
+    $('#thanhtoanchuyenkhoan').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[1]))
+    $('#thanhtoandiem').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[2]))
+
+    var thanhtoan = global.hoadon[global.chonhoadon].thanhtoan[0] + global.hoadon[global.chonhoadon].thanhtoan[1] + global.hoadon[global.chonhoadon].thanhtoan[2]
+    var thanhtien = global.hoadon[global.chonhoadon].thanhtien
+
+    $('#blocktienthua').hide()
+    $('#blocktienno').hide()
+    if (thanhtoan == thanhtien) { }
+    else if (thanhtoan > thanhtien) {
+      $('#tienthua').text(vnumber.format(thanhtoan - thanhtien))
+      $('#blocktienthua').show()
+    }
+    else {
+      $('#tienno').text(vnumber.format(thanhtien - thanhtoan))
+      $('#blocktienno').show()
+    }
+
     $('#nguoiban option[value=' + global.hoadon[global.chonhoadon].nguoiban + ']').prop('selected', true)
     $('#ghichu').val(global.hoadon[global.chonhoadon].ghichu)
     hoadon.forEach((hd, vitrichay) => {
-      soluong += hd.soluong
-      tongtien += hd.soluong * hd.giaban
       html += `
       <div class="pw-card pw-item">
         <div class="row pw-col">
           <div class="col-xs-1" id="#xoa-`+ vitrichay + `" onclick="xoahang(` + vitrichay + `)"> <span class="fa fa-remove"> </span> </div>
           <div class="col-xs-4" id="#ma-`+ vitrichay + `">` + hd.ma + `</div>
           <div class="col-xs-8" id="#tem-`+ vitrichay + `">` + hd.ten + `</div>
-          <div class="col-xs-4"> 
+          <div class="col-xs-5"> 
             <div class="input-group">
               <div class="input-group-btn">
                 <button class="btn btn-info" onclick="bangsuagia(`+ vitrichay + `)">
@@ -590,16 +637,13 @@
               </div>
             </div>
           </div>
-          <div class="col-xs-3"> 
+          <div class="col-xs-2"> 
             <input autocomplete="off" class="form-control pw-text-right" id="soluong-`+ vitrichay + `" value="` + vnumber.format(hd.soluong) + `" onkeyup="tailaigia(` + vitrichay + `)" onchange="tailaigia(` + vitrichay + `)">  
           </div>
           <div class="col-xs-4 pw-text-right" id="thanhtien-`+ vitrichay + `"> ` + vnumber.format(hd.soluong * hd.giaban) + ` </div>
         </div>
       </div>`
     })
-    global.hoadon[global.chonhoadon].soluong = soluong
-    global.hoadon[global.chonhoadon].tongtien = tongtien
-    global.hoadon[global.chonhoadon].thanhtien = tongtien - global.hoadon[global.chonhoadon].giamgia
     $(function () {
       $('[data-toggle="popover"]').popover()
     })
@@ -620,13 +664,12 @@
     // kiểm tra giảm giá khác 0 thì cập nhật giảm giá
     // cập nhật giá bán
     var dongia = vnumber.clear($('#suadongia-' + vitri).val())
-    var giamgia = vnumber.clear($('#suagiamgia-' + vitri).val())
-    if (global.hoadon[global.chonhoadon].hanghoa[vitri].loaigiamgia == 'tien') {
-      var giaban = dongia - giamgia
-    }
-    else {
-      var giaban = Math.floor(dongia * (100 - giamgia) / 100)
-    }
+    var giamgiatien = vnumber.clear($('#suagiamgiatien-' + vitri).val())
+    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-' + vitri).val())
+
+    var giaban = dongia * (100 - giamgiaphantram) / 100
+    giaban -= giamgiatien
+
     global.hoadon[global.chonhoadon].hanghoa[vitri].dongia = dongia
     global.hoadon[global.chonhoadon].hanghoa[vitri].giaban = giaban
     $('#suagiaban-' + vitri).val(vnumber.format(giaban))
@@ -642,12 +685,22 @@
     var giamgiatien = vnumber.clear($('#suagiamgiatien-' + vitri).val())
     var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-' + vitri).val())
 
-    
+    if (giamgiaphantram < 0) giamgiaphantram = 0
+    else if (giamgiaphantram > 100) giamgiaphantram = 100
+
+    var giaban = (dongia * (100 - giamgiaphantram) / 100).toFixed()
+
+    if (giamgiatien < 0) giamgiatien = 0
+    else if (giamgiatien > giaban) giamgiatien = giaban
+
+    giaban -= giamgiatien
 
     global.hoadon[global.chonhoadon].hanghoa[vitri].giaban = giaban
-    global.hoadon[global.chonhoadon].hanghoa[vitri].giamgia = giamgia
+    global.hoadon[global.chonhoadon].hanghoa[vitri].giamgiatien = giamgiatien
+    global.hoadon[global.chonhoadon].hanghoa[vitri].giamgiaphantram = giamgiaphantram
     $('#suagiaban-' + vitri).val(vnumber.format(giaban))
-    $('#suagiamgia-' + vitri).val(vnumber.format(giamgia))
+    $('#suagiamgiatien-' + vitri).val(vnumber.format(giamgiatien))
+    $('#suagiamgiaphantram-' + vitri).val(vnumber.format(giamgiaphantram))
     $('#giaban-' + vitri).val(vnumber.format(giaban))
     tailaigia(vitri)
   }
@@ -658,25 +711,24 @@
     // cập nhật đơn giá, giảm giá
     var giaban = vnumber.clear($('#suagiaban-' + vitri).val())
     var dongia = vnumber.clear($('#suadongia-' + vitri).val())
+    var giamgiatien = vnumber.clear($('#suagiamgiatien-' + vitri).val())
+    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-' + vitri).val())
+
     if (giaban > dongia) dongia = giaban
 
-    if (global.hoadon[global.chonhoadon].hanghoa[vitri].loaigiamgia == 'tien') {
-      var giamgia = dongia - giaban
-    } else {
-      var giamgia = Math.floor((dongia - giaban) * 100 / dongia)
-    }
+    dongia += giamgiatien
+    dongia = (giaban * 100 / (100 - giamgiaphantram)).toFixed()
+
     global.hoadon[global.chonhoadon].hanghoa[vitri].giaban = giaban
-    global.hoadon[global.chonhoadon].hanghoa[vitri].giamgia = giamgia
     $('#suadongia-' + vitri).val(vnumber.format(dongia))
     $('#suagiaban-' + vitri).val(vnumber.format(giaban))
-    $('#suagiamgia-' + vitri).val(vnumber.format(giamgia))
     $('#giaban-' + vitri).val(vnumber.format(giaban))
     tailaigia(vitri)
   }
 
   function tailaigia(vitri = -1) {
     if (vitri >= 0) {
-      var soluong = vnumber.clear($('#soluong-' + vitri).val())
+     var soluong = vnumber.clear($('#soluong-' + vitri).val())
       var giaban = vnumber.clear($('#giaban-' + vitri).val())
       var thanhtien = soluong * giaban
       global.hoadon[global.chonhoadon].hanghoa[vitri].soluong = soluong
@@ -687,7 +739,6 @@
     }
     var tongtien = 0
     var thanhtoan = 0
-    var tienthua = 0
     var giamgiatien = global.hoadon[global.chonhoadon].giamgiatien
     var giamgiaphantram = global.hoadon[global.chonhoadon].giamgiaphantram
 
@@ -699,72 +750,43 @@
     thanhtien -= giamgiatien
 
     thanhtoan = tongtien
-    tienthua = tienthua
     global.hoadon[global.chonhoadon].tongtien = tongtien
     global.hoadon[global.chonhoadon].thanhtien = thanhtien
     // nếu thanh toán nhiều hơn 1 loại thì khóa input thanh toán
     var loaithanhtoan = global.hoadon[global.chonhoadon].thanhtoan
 
+    if (global.hoadon[global.chonhoadon].suathanhtoan) {
+      // chưa sửa thanh toán
+      // mặc định thanh toán bằng tiền mặt
+      global.hoadon[global.chonhoadon].thanhtoan[0] = thanhtien
+      global.hoadon[global.chonhoadon].thanhtoan[1] = 0
+      global.hoadon[global.chonhoadon].thanhtoan[2] = 0
+      $('#thanhtoantien').val(vnumber.format(thanhtien))
+      $('#thanhtoanchuyenkhoan').val(0)
+      $('#thanhtoandiem').val(0)
+
+      $('#blocktienthua').hide()
+      $('#blocktienno').hide()
+    }
+    else {
+      // đã sửa thanh toán
+      // tính lại tiền thừa
+      var tongthanhtoan = loaithanhtoan[0] + loaithanhtoan[1] + loaithanhtoan[2]
+      $('#blocktienthua').hide()
+      $('#blocktienno').hide()
+      if (tongthanhtoan == thanhtien) { }
+      else if (tongthanhtoan > thanhtien) {
+        $('#tienthua').text(vnumber.format(tongthanhtoan - thanhtien))
+        $('#blocktienthua').show()
+      }
+      else {
+        $('#tienno').text(vnumber.format(thanhtien - tongthanhtoan))
+        $('#blocktienno').show()
+      }
+    }
+
     $('#tongtien').text(vnumber.format(tongtien))
     $('#cantra').text(vnumber.format(thanhtien))
-    $('#tienthua').text(vnumber.format(tienthua))
-  }
-
-  function chonloaigiam(vitri, giamgiamoi) {
-    var giamgiacu = global.hoadon[global.chonhoadon].hanghoa[vitri].loaigiamgia
-    if (giamgiacu !== giamgiamoi) {
-      var dongia = vnumber.clear($('#suadongia-' + vitri).val())
-      var giamgia = vnumber.clear($('#suagiamgia-' + vitri).val())
-      if (dongia == 0) {
-        giamgia = 0
-        giaban = 0
-      }
-      else if (giamgiacu == 'tien') {
-        var giamgia = Math.floor(giamgia * 100 / dongia)
-        var giaban = dongia * (100 - giamgia) / 100
-      }
-      else {
-        var giamgia = Math.floor(giamgia * dongia / 100)
-        var giaban = dongia - giamgia
-      }
-
-      global.hoadon[global.chonhoadon].hanghoa[vitri].loaigiamgia = giamgiamoi
-      global.hoadon[global.chonhoadon].hanghoa[vitri].giamgia = giamgia
-      global.hoadon[global.chonhoadon].hanghoa[vitri].giaban = giaban
-      var giam = global.giamgia[global.hoadon[global.chonhoadon].hanghoa[vitri].loaigiamgia]
-      $('#suagiamgia-' + vitri).val(vnumber.format(giamgia))
-      $('#suagiaban-' + vitri).val(vnumber.format(giaban))
-      $('#giaban-' + vitri).val(vnumber.format(giaban))
-      $('#giamtien-' + vitri).attr('class', 'btn ' + giam.tien)
-      $('#giamphantram-' + vitri).attr('class', 'btn ' + giam.phantram)
-    }
-  }
-
-  function chonloaigiamhoadon(giamgiamoi) {
-    var giamgiacu = global.hoadon[global.chonhoadon].loaigiamgia
-    var giamgia = global.hoadon[global.chonhoadon].giamgia
-    if (giamgiacu !== giamgiamoi) {
-      var tongtien = vnumber.clear($('#tongtien').text())
-      if (tongtien == 0) {
-        giamgia = 0
-        giaban = 0
-      }
-      else if (giamgiacu == 'tien') {
-        var giamgia = Math.floor(giamgia * 100 / tongtien)
-        var giaban = tongtien * (100 - giamgia) / 100
-      }
-      else {
-        var giamgia = Math.floor(giamgia * tongtien / 100)
-        var giaban = tongtien - giamgia
-      }
-
-      global.hoadon[global.chonhoadon].loaigiamgia = giamgiamoi
-      global.hoadon[global.chonhoadon].giamgia = giamgia
-      $('#cantra').text(vnumber.format(giaban))
-      $('#suagiamgia').val(vnumber.format(giamgia))
-      $('#giamtien').attr('class', 'btn ' + global.giamgia[global.hoadon[global.chonhoadon].loaigiamgia].tien)
-      $('#giamphantram').attr('class', 'btn ' + global.giamgia[global.hoadon[global.chonhoadon].loaigiamgia].phantram)
-    }
   }
 
   function suagiamgiahoadon(type) {
@@ -775,7 +797,7 @@
     if (giamgiaphantram < 0) giamgiaphantram = 0
     else if (giamgiaphantram > 100) giamgiaphantram = 100
 
-    if (giamgiaphantram) tongtien = tongtien * (100 - giamgiaphantram) / 100
+    if (giamgiaphantram) tongtien = (tongtien * (100 - giamgiaphantram) / 100).toFixed()
 
     if (giamgiatien < 0) giamgiatien = 0
     else if (giamgiatien > tongtien) giamgiatien = tongtien
@@ -784,8 +806,8 @@
 
     global.hoadon[global.chonhoadon].giamgiatien = giamgiatien
     global.hoadon[global.chonhoadon].giamgiaphantram = giamgiaphantram
-    $('#suagiamgia').val(vnumber.format(giamgiatien))
-    $('#suagiamgia').val(vnumber.format(giamgiaphantram))
+    $('#suagiamgiatien').val(vnumber.format(giamgiatien))
+    $('#suagiamgiaphantram').val(vnumber.format(giamgiaphantram))
     $('#cantra').text(vnumber.format(tongtien))
   }
 

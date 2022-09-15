@@ -31,11 +31,45 @@ function thanhtoan() {
   $session = $db->fetch($sql);
 
   $idkhach = $data['khachhang']['id'];
-  $sql = "insert into pos_hoadon (mahoadon, idnguoiban, idnguoiratoa, idkhach, thoigian, soluong, tongtien, giamgia, thanhtien, thanhtoan, ghichu) values('$mahoadon', $data[nguoiban], $session[userid], $idkhach, $thoigian, $data[soluong], $data[tongtien], $data[giamgia], $data[thanhtien], $data[thanhtien], '$data[ghichu]')";
+  // thu ưu tiên chuyển khoản và điểm, phần còn lại là tiền mặt
+  $tienmat = $data['thanhtoan'][0];
+  $chuyenkhoan = $data['thanhtoan'][1];
+  $diem = $data['thanhtoan'][2];
+  $thukhach = $tienmat + $chuyenkhoan + $diem;
+  $no = 0
+
+  $thanhtoantrutien = $data['thanhtien'] - $chuyenkhoan - $diem;
+  if ($tienmat > $thanhtoantrutien) {
+    $tienmat = $thanhtoantrutien;
+    $data['thanhtoan'][0] = $tienmat;
+    $thukhach = $tienmat + $chuyenkhoan + $diem;
+  }
+  else {
+    // nợ tiền
+    $no = $data['thanhtien'] - $tienmat - $chuyenkhoan - $diem;
+    $sql = "update pos_khachhang set tienno = tienno + $no where id = $idkhach";
+    $db->query($sql);
+  }
+
+  $sql = "select id from pos_thuchi order by id desc limit 1";
+  $thuchi = $db->fetch($sql);
+  if (empty($thuchi)) $thuchi = ['id' => 0];
+  $idthuchi = $thuchi['id'];
+
+  $thoigian = time();
+  foreach ($data['thanhtoan'] as $loai => $sotien) {
+    if ($sotien) {
+      $mathuchi = "TC" . fill_zero(++ $idthuchi);
+      $sql = "insert into pos_thuchi (mathuchi, loaithuchi, loaitien, sotien, thoigian) values('$mathuchi', 0, $loai, $sotien, $thoigian)";
+      $db->query($sql);
+    }
+  }
+ 
+  $sql = "insert into pos_hoadon (mahoadon, idnguoiban, idnguoiratoa, idkhach, thoigian, soluong, tongtien, giamgiatien, giamgiaphantram, thanhtien, thanhtoan, ghichu) values('$mahoadon', $data[nguoiban], $session[userid], $idkhach, $thoigian, $data[soluong], $data[tongtien], $data[giamgiatien], $data[giamgiaphantram], $data[thanhtien], $thukhach, '$data[ghichu]')";
   $id = $db->insertid($sql);
 
   foreach ($data['hanghoa'] as $hanghoa) {
-    $sql = "insert into pos_chitiethoadon (idhoadon, idhang, dongia, giamgia, giaban, soluong, thanhtien, soluongthuc) values($id, $hanghoa[id], $hanghoa[dongia], $hanghoa[giamgia], $hanghoa[giaban], $hanghoa[soluong], ". ($hanghoa['giaban'] * $hanghoa['soluong']) .", $hanghoa[soluong])";
+    $sql = "insert into pos_chitiethoadon (idhoadon, idhang, dongia, giamgiatien, giamgiaphantram, giaban, soluong, thanhtien, soluongthuc) values($id, $hanghoa[id], $hanghoa[dongia], $hanghoa[giamgiatien], $hanghoa[giamgiaphantram], $hanghoa[giaban], $hanghoa[soluong], ". ($hanghoa['giaban'] * $hanghoa['soluong']) .", $hanghoa[soluong])";
     $db->query($sql);
 
     $sql = "update pos_hanghoa set soluong = soluong - $hanghoa[soluong] where id = $hanghoa[id]";
