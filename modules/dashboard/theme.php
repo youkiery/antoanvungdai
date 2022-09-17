@@ -191,8 +191,16 @@ function danhsachhoadon() {
     $xtpl->assign('mahoadon', $row['mahoadon']);
     $xtpl->assign('thoigian', date('d/m/Y H:i', $row['thoigian']));
     $xtpl->assign('khachhang', $khachhang['ten']);
+    $xtpl->assign('tongtien', number_format($row['tongtien']));
     $xtpl->assign('thanhtien', number_format($row['thanhtien']));
-    $xtpl->assign('giamgia', number_format($row['giamgia']));
+    $xtpl->assign('giamgiatien', number_format($row['giamgiatien']));
+    if (!empty($row['giamgiaphantram'])) $xtpl->assign('giamgiaphantram', "+ $row[giamgiaphantram]%");
+    else $xtpl->assign('giamgiaphantram', '');
+
+    if ($row['giamgiaphantram'] > 0 || $row['giamgiatien'] > 0) $xtpl->assign('cogiamgia', 'pw-giamgia');
+    else $xtpl->assign('cogiamgia', '');
+    // $giamgia = $row['tongtien'] - $row['thanhtien'];
+    // $xtpl->assign('giamgia', $giamgia);
     $xtpl->assign('datra', number_format($row['thanhtoan']));
     $xtpl->parse('main.row');
   }

@@ -10,7 +10,7 @@
   <div class="col-xs-12">
     Số hàng: {sohang} <br>
     Tổng tiền: {tongtien} <br>
-    Giảm giá: {giamgia} <br>
+    Giảm giá: {giamgiatien} {giamgiaphantram} {giamgiatienphantram} <br>
     Thành tiền: {thanhtien} <br>
     Đã trả: {datra} <br>
   </div>
@@ -35,7 +35,7 @@
     <td> {tenhang} </td>
     <td> {soluong} </td>
     <td> {dongia} </td>
-    <td> {giamgia} </td>
+    <td> {giamgiatien} {giamgiaphantram} {giamgiatienphantram} </td>
     <td> {giaban} </td>
     <td> {thanhtien} </td>
   </tr>

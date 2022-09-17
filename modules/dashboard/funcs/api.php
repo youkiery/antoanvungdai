@@ -68,6 +68,8 @@ function inhoadon() {
   $xtpl->assign('dienthoai', $khachhang['dienthoai']);
   $xtpl->assign('thoigian', date('d/m/Y H:i:s'));
 
+  if ($row['idkhach']) $xtpl->parse('main.khachhang');
+
   $sql = "select * from pos_chitiethoadon where idhoadon = $id";
   $danhsachchitiet = $db->all($sql);
 
@@ -83,12 +85,12 @@ function inhoadon() {
     $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
   }
 
-  if ($hoadon['giamgia']) {
-    $xtpl->assign('tongtien', number_format($chitiet['soluong']));
-    $xtpl->assign('giamgia', number_format($chitiet['giamgia']));
+  if ($hoadon['giamgiatien'] > 0 || $hoadon['giamgiaphantram'] > 0) {
+    $xtpl->assign('tongtien', number_format($hoadon['tongtien']));
+    $xtpl->assign('giamgiatienphantram', number_format($hoadon['giamgiaphantram'] * $hoadon['tongtien'] / 100 + $chitiet['giamgiatien']));
     $xtpl->parse('main.giamgia');
   }
-  $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
+  $xtpl->assign('thanhtien', number_format($hoadon['thanhtien']));
   $xtpl->parse('main.row');
   $xtpl->parse('main');
 
@@ -130,7 +132,11 @@ function chitiethoadon() {
     $xtpl->assign('tenhang', $hanghoa['tenhang']);
     $xtpl->assign('soluong', number_format($chitiet['soluong']));
     $xtpl->assign('dongia', number_format($chitiet['dongia']));
-    $xtpl->assign('giamgia', number_format($chitiet['giamgia']));
+    $xtpl->assign('giamgiatien', number_format($chitiet['giamgiatien']));
+    if (!empty($chitiet['giamgiaphantram'])) {
+      $xtpl->assign('giamgiaphantram', "+ $chitiet[giamgiaphantram]%");
+      $xtpl->assign('giamgiatienphantram', "(". (number_format($chitiet['giamgiaphantram'] * $chitiet['dongia'] / 100)) .")");
+    } 
     $xtpl->assign('giaban', number_format($chitiet['giaban']));
     $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
 
@@ -151,7 +157,15 @@ function chitiethoadon() {
   $xtpl->assign('banhang', $banhang['first_name']);
   $xtpl->assign('sohang', number_format($soluong));
   $xtpl->assign('tongtien', number_format($hoadon['tongtien']));
-  $xtpl->assign('giamgia', number_format($hoadon['giamgia']));
+  $xtpl->assign('giamgiatien', number_format($hoadon['giamgiatien']));
+  if (!empty($hoadon['giamgiaphantram'])) {
+    $xtpl->assign('giamgiaphantram', "+ $hoadon[giamgiaphantram]%");
+    $xtpl->assign('giamgiatienphantram', "(". (number_format($hoadon['giamgiaphantram'] * $hoadon['tongtien'] / 100)) .")");
+  } 
+  else {
+    $xtpl->assign('giamgiaphantram', '');
+    $xtpl->assign('giamgiatienphantram', '');
+  }
   $xtpl->assign('thanhtien', number_format($hoadon['thanhtien']));
   $xtpl->assign('datra', number_format($hoadon['thanhtoan']));
   $xtpl->assign('ghichu', '');

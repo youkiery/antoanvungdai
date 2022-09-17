@@ -18,6 +18,7 @@ function inhoadon($id) {
   global $db, $resp;
 
   $xtpl = new XTemplate('inhoadon.tpl', UPATH);
+
   $sql = "select * from pos_hoadon where id = $id";
   $hoadon = $db->fetch($sql);
 
@@ -37,6 +38,8 @@ function inhoadon($id) {
   $xtpl->assign('dienthoai', $khachhang['dienthoai']);
   $xtpl->assign('thoigian', date('d/m/Y H:i:s'));
 
+  if ($row['idkhach']) $xtpl->parse('main.khachhang');
+
   $sql = "select * from pos_chitiethoadon where idhoadon = $id";
   $danhsachchitiet = $db->all($sql);
 
@@ -52,15 +55,14 @@ function inhoadon($id) {
     $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
   }
 
-  if ($hoadon['giamgia']) {
-    $xtpl->assign('tongtien', number_format($chitiet['soluong']));
-    $xtpl->assign('giamgia', number_format($chitiet['giamgia']));
+  if ($hoadon['giamgiatien'] > 0 || $hoadon['giamgiaphantram'] > 0) {
+    $xtpl->assign('tongtien', number_format($hoadon['tongtien']));
+    $xtpl->assign('giamgiatienphantram', number_format($hoadon['giamgiaphantram'] * $hoadon['tongtien'] / 100 + $chitiet['giamgiatien']));
     $xtpl->parse('main.giamgia');
   }
-  $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
+  $xtpl->assign('thanhtien', number_format($hoadon['thanhtien']));
   $xtpl->parse('main.row');
   $xtpl->parse('main');
-
-  $resp['status'] = 1;
+  
   return $xtpl->text();
 }

@@ -25,10 +25,10 @@ function signin() {
 
   $sql = "select * from pet_users where username = '$username'";
   if (empty($user = $db->fetch($sql))) {
-    $resp['msg'] = 'Tài khoản không tồn tại';
+    $resp['messenger'] = 'Tài khoản không tồn tại';
   }
   else if (!$crypt->validate_password($password, $user['password'])) {
-    $resp['msg'] = 'Sai mật khẩu';
+    $resp['messenger'] = 'Sai mật khẩu';
   }
   else {
     if (login_userid($user['userid'])) $resp['status'] = 1;

@@ -24,7 +24,7 @@ function thanhtoan() {
 
   $sql = "select id from pos_hoadon order by id desc limit 1";
   $hang = $db->fetch($sql);
-  $mahoadon = "HP" . fillzero(($hang['id'] ? $hang['id'] : 0) + 1);
+  $mahoadon = "HD" . fillzero(($hang['id'] ? $hang['id'] : 0) + 1);
   $thoigian = time();
   
   $sql = "select userid from pet_users_session where session = '$_SESSION[session]'";
@@ -36,7 +36,7 @@ function thanhtoan() {
   $chuyenkhoan = $data['thanhtoan'][1];
   $diem = $data['thanhtoan'][2];
   $thukhach = $tienmat + $chuyenkhoan + $diem;
-  $no = 0
+  $no = 0;
 
   $thanhtoantrutien = $data['thanhtien'] - $chuyenkhoan - $diem;
   if ($tienmat > $thanhtoantrutien) {
@@ -59,7 +59,7 @@ function thanhtoan() {
   $thoigian = time();
   foreach ($data['thanhtoan'] as $loai => $sotien) {
     if ($sotien) {
-      $mathuchi = "TC" . fill_zero(++ $idthuchi);
+      $mathuchi = "TC" . fillzero(++ $idthuchi);
       $sql = "insert into pos_thuchi (mathuchi, loaithuchi, loaitien, sotien, thoigian) values('$mathuchi', 0, $loai, $sotien, $thoigian)";
       $db->query($sql);
     }

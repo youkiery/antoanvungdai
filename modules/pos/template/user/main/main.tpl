@@ -14,14 +14,6 @@
     width: 100%;
   }
 
-  #printable {
-    display: none;
-  }
-
-  #nonprintable {
-    display: block;
-  }
-
   .pw-input-group {
     position: relative;
     height: 55px;
@@ -53,12 +45,16 @@
     top: 25px;
   }
 
+  #printable {
+    display: none;
+  }
+
   @media print {
     #printable {
       display: block;
     }
 
-    #nonprintable {
+    .nonprintable {
       display: none;
     }
   }
@@ -105,7 +101,7 @@
 <div id="pw-dismiss" onclick="antoanbo()"></div>
 <div id="pw-error-panel"> </div>
 <div id="printable"></div>
-<div id="nonprintable">
+<div class="nonprintable">
   <div class="pw-navbar">
     <div class="row">
       <div class="col-xs-8">
@@ -327,6 +323,7 @@
   function chonthanhtoan(loai) {
     // kiểm tra nếu 
     if (loai == 2) return 0
+    global.hoadon[global.chonhoadon].suathanhtoan = 0
     global.hoadon[global.chonhoadon].thanhtoan[0] = 0
     global.hoadon[global.chonhoadon].thanhtoan[1] = 0
     global.hoadon[global.chonhoadon].thanhtoan[2] = 0
@@ -334,10 +331,7 @@
     $('#thanhtoantien').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[0]))
     $('#thanhtoanchuyenkhoan').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[1]))
     $('#thanhtoandiem').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[2]))
-
-    // kiểm tra thanh toán > tiền hang không thì báo trả tiền thừa, ra nợ
-    $('#blocktienthua').hide()
-    $('#blocktienno').hide()
+    tailaitienthua()
   }
 
   function suathanhtoan(loai) {
@@ -349,32 +343,17 @@
     $('#' + global.thanhtoan[loai]).val(vnumber.format(thanhtoan))
 
     // ck + điểm không được > thành tiền
-
-    var tienmat = global.hoadon[global.chonhoadon].thanhtoan[0]
     var chuyenkhoan = global.hoadon[global.chonhoadon].thanhtoan[1]
     var diem = global.hoadon[global.chonhoadon].thanhtoan[2]
     var thanhtien = global.hoadon[global.chonhoadon].thanhtien
-
+    
     if (thanhtien < diem + chuyenkhoan) {
       chuyenkhoan = thanhtien - diem
       global.hoadon[global.chonhoadon].thanhtoan[1] = chuyenkhoan
       $('#thanhtoanchuyenkhoan').val(vnumber.format(chuyenkhoan))
     }
 
-    var thanhtoan = tienmat + chuyenkhoan + diem
-
-    // kiểm tra thanh toán > tiền hang không thì báo trả tiền thừa, ra nợ
-    $('#blocktienthua').hide()
-    $('#blocktienno').hide()
-    if (thanhtoan == thanhtien) { }
-    else if (thanhtoan > thanhtien) {
-      $('#tienthua').text(vnumber.format(thanhtoan - thanhtien))
-      $('#blocktienthua').show()
-    }
-    else {
-      $('#tienno').text(vnumber.format(thanhtien - thanhtoan))
-      $('#blocktienno').show()
-    }
+    tailaitienthua()
   }
 
   function thaydoinguoiban() {
@@ -566,21 +545,7 @@
     $('#thanhtoantien').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[0]))
     $('#thanhtoanchuyenkhoan').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[1]))
     $('#thanhtoandiem').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[2]))
-
-    var thanhtoan = global.hoadon[global.chonhoadon].thanhtoan[0] + global.hoadon[global.chonhoadon].thanhtoan[1] + global.hoadon[global.chonhoadon].thanhtoan[2]
-    var thanhtien = global.hoadon[global.chonhoadon].thanhtien
-
-    $('#blocktienthua').hide()
-    $('#blocktienno').hide()
-    if (thanhtoan == thanhtien) { }
-    else if (thanhtoan > thanhtien) {
-      $('#tienthua').text(vnumber.format(thanhtoan - thanhtien))
-      $('#blocktienthua').show()
-    }
-    else {
-      $('#tienno').text(vnumber.format(thanhtien - thanhtoan))
-      $('#blocktienno').show()
-    }
+    tailaitienthua()
 
     $('#nguoiban option[value=' + global.hoadon[global.chonhoadon].nguoiban + ']').prop('selected', true)
     $('#ghichu').val(global.hoadon[global.chonhoadon].ghichu)
@@ -755,36 +720,7 @@
     // nếu thanh toán nhiều hơn 1 loại thì khóa input thanh toán
     var loaithanhtoan = global.hoadon[global.chonhoadon].thanhtoan
 
-    if (global.hoadon[global.chonhoadon].suathanhtoan) {
-      // chưa sửa thanh toán
-      // mặc định thanh toán bằng tiền mặt
-      global.hoadon[global.chonhoadon].thanhtoan[0] = thanhtien
-      global.hoadon[global.chonhoadon].thanhtoan[1] = 0
-      global.hoadon[global.chonhoadon].thanhtoan[2] = 0
-      $('#thanhtoantien').val(vnumber.format(thanhtien))
-      $('#thanhtoanchuyenkhoan').val(0)
-      $('#thanhtoandiem').val(0)
-
-      $('#blocktienthua').hide()
-      $('#blocktienno').hide()
-    }
-    else {
-      // đã sửa thanh toán
-      // tính lại tiền thừa
-      var tongthanhtoan = loaithanhtoan[0] + loaithanhtoan[1] + loaithanhtoan[2]
-      $('#blocktienthua').hide()
-      $('#blocktienno').hide()
-      if (tongthanhtoan == thanhtien) { }
-      else if (tongthanhtoan > thanhtien) {
-        $('#tienthua').text(vnumber.format(tongthanhtoan - thanhtien))
-        $('#blocktienthua').show()
-      }
-      else {
-        $('#tienno').text(vnumber.format(thanhtien - tongthanhtoan))
-        $('#blocktienno').show()
-      }
-    }
-
+    tailaitienthua()
     $('#tongtien').text(vnumber.format(tongtien))
     $('#cantra').text(vnumber.format(thanhtien))
   }
@@ -806,9 +742,44 @@
 
     global.hoadon[global.chonhoadon].giamgiatien = giamgiatien
     global.hoadon[global.chonhoadon].giamgiaphantram = giamgiaphantram
+    global.hoadon[global.chonhoadon].thanhtien = tongtien
     $('#suagiamgiatien').val(vnumber.format(giamgiatien))
     $('#suagiamgiaphantram').val(vnumber.format(giamgiaphantram))
     $('#cantra').text(vnumber.format(tongtien))
+
+    // sửa tiền ra nợ hay
+    tailaitienthua()
+  }
+
+  function tailaitienthua() {
+    $('#blocktienthua').hide()
+    $('#blocktienno').hide()
+    var thanhtien = global.hoadon[global.chonhoadon].thanhtien
+    if (global.hoadon[global.chonhoadon].suathanhtoan) {
+      // chưa sửa thanh toán
+      // mặc định thanh toán bằng tiền mặt
+      global.hoadon[global.chonhoadon].thanhtoan[0] = global.hoadon[global.chonhoadon].thanhtien
+      global.hoadon[global.chonhoadon].thanhtoan[1] = 0
+      global.hoadon[global.chonhoadon].thanhtoan[2] = 0
+      $('#thanhtoantien').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtien))
+      $('#thanhtoanchuyenkhoan').val(0)
+      $('#thanhtoandiem').val(0)
+    }
+    else {
+      // đã sửa thanh toán
+      // tính lại tiền thừa
+      var loaithanhtoan = global.hoadon[global.chonhoadon].thanhtoan
+      var tongthanhtoan = loaithanhtoan[0] + loaithanhtoan[1] + loaithanhtoan[2]
+      if (tongthanhtoan == thanhtien) { }
+      else if (tongthanhtoan > thanhtien) {
+        $('#tienthua').text(vnumber.format(tongthanhtoan - thanhtien))
+        $('#blocktienthua').show()
+      }
+      else {
+        $('#tienno').text(vnumber.format(thanhtien - tongthanhtoan))
+        $('#blocktienno').show()
+      }
+    }
   }
 
   function bangsuagia(vitri) {

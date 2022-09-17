@@ -1,4 +1,20 @@
 <!-- BEGIN: main -->
+<style>
+  #printable {
+    display: none;
+  }
+
+  @media print {
+    #printable {
+      display: block;
+    }
+
+    .nonprintable {
+      display: none;
+    }
+  }
+</style>
+
 <div class="modal fade" id="modal-xoahoadon" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -96,7 +112,8 @@
   </div>
 </div>
 
-<div class="pw-content">
+<div id="printable"></div>
+<div class="pw-content nonprintable">
   <form>
     <div class="input-group">
       <input type="text" class="form-control" placeholder="Tìm Kiếm" name="keyword" value="">
@@ -185,19 +202,16 @@
   }
 
   function inhoadon(id) {
+
     vhttp.post('/dashboard/api/', {
       action: 'inhoadon',
       id: id
     }).then((resp) => {
-      var winPrint = window.open('', '_blank', '');
-      winPrint.focus()
-      winPrint.document.write(resp.html);
+      // thanh toán xong xóa hóa đơn hiện tại
       setTimeout(() => {
-        winPrint.print()
-        setTimeout(() => {
-          winPrint.close()
-        }, 300)
-      }, 300)
+        $('#printable').html(resp.html)
+        window.print()
+      }, 500);
     }, (e) => { })
   }
 

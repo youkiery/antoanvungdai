@@ -78,6 +78,11 @@
     text-align: right;
   }
 
+  pw-giamgia {
+    color: red;
+    font-weight: bold;
+  }
+
   .pw-card,
   .pw-discount-panel {
     color: #000;

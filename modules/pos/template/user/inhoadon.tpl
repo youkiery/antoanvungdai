@@ -2,12 +2,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> Mẫu in </title>
   <style>
-    * {
+    #printer * {
       font-size: 12pt;
       font-family: "Tahoma", sans-serif;
     }
@@ -20,7 +17,7 @@
 
   </style>
 </head>
-<body>
+<body id="printer">
   <div>BỆNH VIỆN THÚ CƯNG THANH XUÂN</div>
   <div>Chi nhánh: Đăk Lăk</div>
   <div>Điện thoại: 02626 290 609</div>
@@ -28,7 +25,10 @@
   <div style="text-align: center;"> <b> {mahoadon} </b> </div>
   <div> Nhân viên: {nguoiban} </div>
   <div> Khách hàng: {khachhang} </div>
+  <!-- BEGIN: khachhang -->
   <div> Điện thoại: {dienthoai} </div>
+  <div> Địa chỉ: {diachi} </div>
+  <!-- END: khachhang -->
   <div> Thời gian: {thoigian} </div>
   <div style="border-bottom: 1px dashed gray; padding-bottom: 2px;"></div>
   <!-- BEGIN: row -->
@@ -56,13 +56,13 @@
       Giảm hóa đơn
     </div>
     <div style="text-align: right; float: right; width: 30%;">
-      {giamgia}
+      {giamgiatienphantram}
     </div>
   </div>
   <!-- END: giamgia -->
   <div style="clear: both;">
     <div style="text-align: right; float: left; width: 70%;">
-      Tổng tiền hàng
+      Thành tiền
     </div>
     <div style="text-align: right; float: right; width: 30%;">
       <b>{thanhtien}</b>

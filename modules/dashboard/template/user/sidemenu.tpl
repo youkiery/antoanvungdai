@@ -1,5 +1,5 @@
 <!-- BEGIN: main -->
-<div class="pw-side-bar">
+<div class="pw-side-bar nonprintable">
   <div class="pw-info-panel">
     <div class="pw-avatar"> </div>
     Dương Duy Khánh <br>

@@ -5,8 +5,9 @@
       <th> Mã hóa đơn </th>
       <th> Thời gian </th>
       <th> Khách hàng </th>
-      <th> Thành tiền </th>
+      <th> Tổng tiền </th>
       <th> Giảm giá </th>
+      <th> Thành tiền </th>
       <th> Đã trả </th>
     </tr>
   </thead>
@@ -16,12 +17,13 @@
       <td> {mahoadon} </td>
       <td> {thoigian} </td>
       <td> {khachhang} </td>
+      <td> {tongtien} </td>
+      <td> <span class="{cogiamgia}"> {giamgiatien} {giamgiaphantram} </span> </td>
       <td> {thanhtien} </td>
-      <td> {giamgia} </td>
       <td> {datra} </td>
     </tr>
     <tr class="chitiet" id="tr-{id}" style="display: none;" load="0">
-      <td colspan="6" id="td-{id}"></td>
+      <td colspan="7" id="td-{id}"></td>
     </tr>
   </tbody>
   <!-- END: row -->
