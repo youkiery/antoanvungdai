@@ -479,9 +479,21 @@ function themkhach() {
   $id = $nv_Request->get_string('id', 'post');
 
   if (empty($id)) {
-    $sql = "insert into pos_khachhang (ten, dienthoai, diachi) values('$data[ten]', '$data[dienthoai]', '$data[diachi]')";
-    $id = $db->insert_id($sql);
-    $resp['messenger'] = 'Đã thêm khách hàng';
+    $sql = "select * from pos_khachhang where dienthoai = '$data[dienthoai]'";
+    if (!empty($db->fetch($sql))) {
+      $resp['status'] = 1;
+      $resp['messenger'] = 'Khách hàng đã tồn tại';
+      return '';
+    }
+    else {
+      $sql = "select id from pos_khachhang order by id desc limit 1";
+      $hang = $db->fetch($sql);
+      $ma = "KH" . fillzero(($hang['id'] ? $hang['id'] : 0) + 1);
+    
+      $sql = "insert into pos_khachhang (ma, ten, dienthoai, diachi) values('$ma', '$data[ten]', '$data[dienthoai]', '$data[diachi]')";
+      $id = $db->insert_id($sql);
+      $resp['messenger'] = 'Đã thêm khách hàng';
+    }
   }
   else {
     $sql = "update pos_khachhang set ten = '$data[ten]', dienthoai = '$data[dienthoai]', diachi = '$data[diachi]' where id = $id";

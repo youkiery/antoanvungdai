@@ -34,9 +34,16 @@ function thanhtoan() {
   // thu ưu tiên chuyển khoản và điểm, phần còn lại là tiền mặt
   $tienmat = $data['thanhtoan'][0];
   $chuyenkhoan = $data['thanhtoan'][1];
-  $diem = $data['thanhtoan'][2];
+  $doidiem = $data['thanhtoan'][2];
   $thukhach = $tienmat + $chuyenkhoan + $diem;
   $no = 0;
+
+  // tính tích điểm
+  // cứ 10k/điểm
+  // công thức: điểm = (tổng tiền - giảm giá * 10) / 10000
+  $diem = intval(($data['tonghang'] - ($data['tonghang'] - $data['thanhtien'] + $doidiem) * 100) / 10000);
+  if ($diem < 0) $diem = 0;
+  $doidiem = $doidiem / 100;
 
   $thanhtoantrutien = $data['thanhtien'] - $chuyenkhoan - $diem;
   if ($tienmat > $thanhtoantrutien) {
@@ -47,7 +54,10 @@ function thanhtoan() {
   else {
     // nợ tiền
     $no = $data['thanhtien'] - $tienmat - $chuyenkhoan - $diem;
-    $sql = "update pos_khachhang set tienno = tienno + $no where id = $idkhach";
+  }
+
+  if ($idkhach) {
+    $sql = "update pos_khachhang set tienno = tienno + $no, diem = diem + $diem - $doidiem where id = $idkhach";
     $db->query($sql);
   }
 

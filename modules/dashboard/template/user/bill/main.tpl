@@ -114,17 +114,6 @@
 
 <div id="printable"></div>
 <div class="pw-content nonprintable">
-  <form>
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="Tìm Kiếm" name="keyword" value="">
-      <div class="input-group-btn">
-        <button class="btn btn-default" type="submit">
-          <span class="fa fa-search"></span>
-        </button>
-      </div>
-    </div>
-  </form>
-
   <div class="pw-header">
     Hóa đơn
   </div>
