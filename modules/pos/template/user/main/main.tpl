@@ -106,21 +106,23 @@
         <h4 class="modal-title"> Thu nợ khách </h4>
       </div>
       <div class="modal-body">
-        <div class="form-group row">
-          <div class="col-xs-8"> Điện thoại </div>
-          <div class="col-xs-16">
-            <input autocomplete="off" type="text" class="form-control" id="thuno-dienthoai">
+        <div class="form-group">
+          <div class="pw-suggest-group">
+            <input autocomplete="off" type="text" class="form-control" id="thuno-timkhach"
+              placeholder="Tìm kiếm khách hàng">
+            <div class="pw-suggest-list" id="thuno-goiytimkhach"> </div>
           </div>
         </div>
 
-        <div class="row" id="thuno-khachhang">
+        <div class="row" id="thuno-thongtinkhachhang">
+          <div class="col-xs-24"> Khách hàng <span id="thuno-khachhang"></span> </div>
           <div class="col-xs-12"> Nợ: <span id="thuno-tienno"></span> </div>
           <div class="col-xs-12"> Điểm: <span id="thuno-diem"></span> </div>
         </div>
 
         <div id="thuno-noidung"> </div>
 
-        <!-- <div class="row form-group">
+        <div class="row form-group" id="thuno-thanhtoan">
           <div class="col-xs-24"> Khách thanh toán </div>
           <div class="col-xs-8 pw-input-group">
             <div class="pw-input-header" onclick="chonthanhtoanthuno(0)"> Tiền mặt </div>
@@ -129,19 +131,20 @@
           </div>
           <div class="col-xs-8 pw-input-group">
             <div class="pw-input-header" onclick="chonthanhtoanthuno(1)"> Chuyển khoản </div>
-            <input type="text" class="pw-input-content form-control" id="thuno-thanhtoanchuyenkhoan" placeholder="Chuyển khoản"
-              onkeyup="suathanhtoanthuno(1)">
+            <input type="text" class="pw-input-content form-control" id="thuno-thanhtoanchuyenkhoan"
+              placeholder="Chuyển khoản" onkeyup="suathanhtoanthuno(1)">
           </div>
           <div class="col-xs-8 pw-input-group">
             <div class="pw-input-header" onclick="chonthanhtoanthuno(2)">Điểm</div>
             <input type="text" class="pw-input-content form-control" id="thuno-thanhtoandiem" placeholder="Điểm"
               onkeyup="suathanhtoanthuno(2)">
           </div>
-        </div> -->
-  
-        <div class="row form-group" id="blocktienthua" style="display: none;">
-          <div class="col-xs-12"> Tiền thừa </div>
-          <div class="col-xs-12 pw-text-right" id="thuno-tienthua"> 0 </div>
+        </div>
+
+        <div class="row form-group" id="thuno-blocktienthua">
+          <div class="col-xs-12">  </div>
+          <div class="col-xs-6"> Còn nợ </div>
+          <div class="col-xs-6 pw-text-right" id="thuno-tienthua"> 0 </div>
         </div>
 
         <button class="insert btn btn-success btn-block" onclick="xacnhanthuno()">
@@ -293,8 +296,13 @@
     hoadon: [],
     hanghoa: [],
     khachhang: [],
+    khachhangthuno: [],
+    idkhachhangthuno: 0,
+    thuno: {},
     idnhanvien: '{idnhanvien}',
-    thanhtoan: ['thanhtoantien', 'thanhtoanchuyenkhoan', 'thanhtoandiem']
+    thanhtoan: ['thanhtoantien', 'thanhtoanchuyenkhoan', 'thanhtoandiem'],
+    thanhtoanthuno: ['thuno-thanhtoantien', 'thuno-thanhtoanchuyenkhoan', 'thuno-thanhtoandiem'],
+    thututhanhtoan: [[1, 2], [0, 2], [0, 1]]
   }
   $(document).ready(() => {
     // gợi ý tìm hàng hóa
@@ -303,9 +311,9 @@
         vhttp.post('/pos/api/', {
           action: 'timhang',
           tukhoa: key
-        }).then((phanhoi) => {
+        }).then((resp) => {
           html = ``
-          global.hanghoa = phanhoi.danhsach
+          global.hanghoa = resp.danhsach
           global.hanghoa.forEach((hanghoa, i) => {
             html += `
             <div class="suggest-item suggest-item-lg" onclick="themhanghoa(`+ i + `)">
@@ -332,14 +340,37 @@
         vhttp.post('/pos/api/', {
           action: 'timkhach',
           tukhoa: key
-        }).then((phanhoi) => {
+        }).then((resp) => {
           html = ``
-          global.khachhang = phanhoi.danhsach
+          global.khachhang = resp.danhsach
           global.khachhang.forEach((khachhang, i) => {
             html += `
               <div class="suggest-item" onclick="chonkhachhang(`+ i + `)">
                 `+ khachhang.ten + ` <span style="float: right;"> ` + khachhang.dienthoai + ` </span> <br>
                 `+ khachhang.ma + `
+              </div>`
+          })
+          if (!html.length) html = `Không có kết quả`
+          resolve(html)
+        }, () => {
+          resolve('Không có kết quả')
+        })
+      })
+    }, 300, 300)
+
+    vremind.install('#thuno-timkhach', '#thuno-goiytimkhach', (key) => {
+      return new Promise(resolve => {
+        vhttp.post('/pos/api/', {
+          action: 'timkhachthuno',
+          tukhoa: key
+        }).then((resp) => {
+          html = ``
+          global.khachhangthuno = resp.danhsach
+          global.khachhangthuno.forEach((khachhang, i) => {
+            html += `
+              <div class="suggest-item" onclick="chonkhachhangthuno(`+ i + `)">
+                `+ khachhang.ten + ` <span style="float: right;"> ` + khachhang.dienthoai + ` </span> <br>
+                `+ khachhang.ma + `<span style="float: right; color: red; font-weight: bold;"> ` + vnumber.format(khachhang.tienno) + ` </span> 
               </div>`
           })
           if (!html.length) html = `Không có kết quả`
@@ -421,7 +452,7 @@
     var chuyenkhoan = global.hoadon[global.chonhoadon].thanhtoan[1]
     var diem = global.hoadon[global.chonhoadon].thanhtoan[2]
     var thanhtien = global.hoadon[global.chonhoadon].thanhtien
-    
+
     if (thanhtien < diem + chuyenkhoan) {
       chuyenkhoan = thanhtien - diem
       global.hoadon[global.chonhoadon].thanhtoan[1] = chuyenkhoan
@@ -432,57 +463,171 @@
   }
 
   function thuno() {
+    $('#thuno-noidung').hide()
+    $('#thuno-thongtinkhachhang').hide()
+    $('#thuno-tienthua').text(0)
+    $('#thuno-blocktienthua').hide()
+    $('#thuno-thanhtoantien').val(0)
+    $('#thuno-thanhtoanchuyenkhoan').val(0)
+    $('#thuno-thanhtoandiem').val(0)
+    $('#thuno-thanhtoan').hide()
+    $('#thuno-khachhang').text('')
+    $('#thuno-tienno').text('')
+    $('#thuno-diem').text('')
     $('#modal-thuno').modal('show')
   }
 
-  // function chonthanhtoanthuno(loai) {
-  //   // kiểm tra nếu 
-  //   global.hoadon[global.chonhoadon].thanhtoan[0] = 0
-  //   global.hoadon[global.chonhoadon].thanhtoan[1] = 0
-  //   global.hoadon[global.chonhoadon].thanhtoan[2] = 0
+  function chonkhachhangthuno(i) {
+    var khachhang = global.khachhangthuno[i]
+    vhttp.post('/pos/api/', {
+      action: 'thongtinthuno',
+      id: khachhang.id
+    }).then((resp) => {
+      // load thông tin điểm, nợ
+      // load thông tin hóa đơn nợ
+      $('#thuno-noidung').show()
+      global.thuno = resp.dulieu
+      $('#thuno-noidung').html(resp.noidung)
+      $('#thuno-khachhang').text(khachhang.ten + ' ('+ khachhang.dienthoai +')')
+      $('#thuno-tienno').text(vnumber.format(khachhang.tienno))
+      $('#thuno-diem').text(vnumber.format(khachhang.diem))
+      $('#thuno-thongtinkhachhang').show()
+      $('#thuno-thanhtoan').show()
+      $('#thuno-diem').text(vnumber.format(khachhang.diem))
+      $('#thuno-tienthua').text(vnumber.format(khachhang.tienno))
+      $('#thuno-blocktienthua').show()
+    }, () => { })
+  }
 
-  //   if (loai == 2) {
-  //     if (!global.hoadon[global.chonhoadon].khachhang.id) return 0
-  //     var diem = global.hoadon[global.chonhoadon].khachhang.diem * 100
-  //     global.hoadon[global.chonhoadon].thanhtoan[0] = global.hoadon[global.chonhoadon].thanhtien - diem
-  //     global.hoadon[global.chonhoadon].thanhtoan[2] = diem
-  //   }
-  //   else {
-  //     global.hoadon[global.chonhoadon].thanhtoan[loai] = global.hoadon[global.chonhoadon].thanhtien
-  //   }
-  //   global.hoadon[global.chonhoadon].suathanhtoan = 0
-  //   $('#thanhtoantien').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[0]))
-  //   $('#thanhtoanchuyenkhoan').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[1]))
-  //   $('#thanhtoandiem').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[2]))
-  //   tailaitienthua()
-  // }
-
-  // function suathanhtoanthuno(loai) {
-  //   var thanhtoan = vnumber.clear($('#' + global.thanhtoan[loai]).val())
-  //   if (loai == 2) {
-  //     var khachhang = global.hoadon[global.chonhoadon].khachhang
-  //     var diem = khachhang.diem * 100
-  //     if (!khachhang.id) thanhtoan = 0
-  //     if (thanhtoan > diem) thanhtoan = diem
-  //   }
-  //   if (thanhtoan < 0) thanhtoan = 0
-  //   global.hoadon[global.chonhoadon].thanhtoan[loai] = thanhtoan
-  //   global.hoadon[global.chonhoadon].suathanhtoan = 0
-  //   $('#' + global.thanhtoan[loai]).val(vnumber.format(thanhtoan))
-
-  //   // ck + điểm không được > thành tiền
-  //   var chuyenkhoan = global.hoadon[global.chonhoadon].thanhtoan[1]
-  //   var diem = global.hoadon[global.chonhoadon].thanhtoan[2]
-  //   var thanhtien = global.hoadon[global.chonhoadon].thanhtien
+  function suatoathanhtoanthuno(i) {
+    var tien = vnumber.clear($('#thuno-tien'+ i).val())
+    var tongthanhtoan = 0
+    if (tien < 0) tien = 0
+    else if (tien > global.thuno.hoadon[i].conno) tien = global.thuno.hoadon[i].conno
+    $('#thuno-tien'+ i).val(vnumber.format(tien))
     
-  //   if (thanhtien < diem + chuyenkhoan) {
-  //     chuyenkhoan = thanhtien - diem
-  //     global.hoadon[global.chonhoadon].thanhtoan[1] = chuyenkhoan
-  //     $('#thanhtoanchuyenkhoan').val(vnumber.format(chuyenkhoan))
-  //   }
+    global.thuno.hoadon[i].thuthem = tien
+    global.thuno.hoadon.forEach(thuno => {
+      tongthanhtoan += thuno.thuthem
+    });
+    global.thuno.thanhtoan[0] = tongthanhtoan
+    global.thuno.thanhtoan[1] = 0
+    global.thuno.thanhtoan[2] = 0
+    $('#thuno-thanhtoantien').val(vnumber.format(global.thuno.thanhtoan[0]))
+    $('#thuno-thanhtoanchuyenkhoan').val(global.thuno.thanhtoan[1])
+    $('#thuno-thanhtoandiem').val(global.thuno.thanhtoan[2])
+    tinhtienconno()
+  }
 
-  //   tailaitienthua()
-  // }
+  function chonthanhtoanthuno(loai) {
+    global.thuno.thanhtoan[0] = 0
+    global.thuno.thanhtoan[1] = 0
+    global.thuno.thanhtoan[2] = 0
+
+    if (loai == 2) {
+      var diem = global.thuno.khachhang.diem * 100
+      console.log(diem);
+      global.thuno.thanhtoan[0] = global.thuno.khachhang.tienno - diem
+      global.thuno.thanhtoan[2] = diem
+    }
+    else {
+      global.thuno.thanhtoan[loai] = global.thuno.khachhang.tienno
+    }
+    global.thuno.suathanhtoan = 1
+
+    global.thuno.hoadon.forEach((hoadon, i) => {
+      $('#thuno-tien'+i).val(vnumber.format(hoadon.conno))
+      global.thuno.hoadon[i].thuthem = hoadon.conno
+    });
+
+    $('#thuno-thanhtoantien').val(vnumber.format(global.thuno.thanhtoan[0]))
+    $('#thuno-thanhtoanchuyenkhoan').val(vnumber.format(global.thuno.thanhtoan[1]))
+    $('#thuno-thanhtoandiem').val(vnumber.format(global.thuno.thanhtoan[2]))
+    tinhtienconno()
+  }
+
+  function suathanhtoanthuno(loai) {
+    var thanhtoan = vnumber.clear($('#' + global.thanhtoanthuno[loai]).val())
+    if (loai == 2) {
+      var diem = global.thuno.khachhang.diem * 100
+      if (thanhtoan > diem) thanhtoan = diem
+    }
+    if (thanhtoan < 0) thanhtoan = 0
+    global.thuno.thanhtoan[loai] = thanhtoan
+    global.thuno.suathanhtoan = 0
+
+    // kiểm tra loại thanh toán nhập vào 
+    var tienmat = global.thuno.thanhtoan[0]
+    var chuyenkhoan = global.thuno.thanhtoan[1]
+    var diem = global.thuno.thanhtoan[2]
+    var tongthanhtoan = tienmat + chuyenkhoan + diem
+    var tienno = global.thuno.khachhang.tienno
+
+    if (tongthanhtoan > tienno) {
+      // tổng thanh toán lớn hơn số nợ, giữ nguyên thanh toán, giảm 2 cái còn lại
+      var sodu = tongthanhtoan - tienno
+      var thututhanhtoan = global.thututhanhtoan[loai]
+      var loai1 = thututhanhtoan[0]
+      var loai2 = thututhanhtoan[1]
+      if (sodu < global.thuno.thanhtoan[loai1]) {
+        global.thuno.thanhtoan[loai1] -= sodu
+      }
+      else {
+        global.thuno.thanhtoan[loai1] = 0
+        sodu -= global.thuno.thanhtoan[loai1]
+        if (sodu < global.thuno.thanhtoan[loai1] + global.thuno.thanhtoan[loai2]) {
+          global.thuno.thanhtoan[loai2] -= sodu
+        }
+        else {
+          global.thuno.thanhtoan[loai2] = 0
+          sodu -= global.thuno.thanhtoan[loai1]
+          if (sodu < global.thuno.thanhtoan[loai]) {
+            global.thuno.thanhtoan[loai] = tienno
+          }
+        }
+      }
+    }
+    $('#thuno-thanhtoantien').val(vnumber.format(global.thuno.thanhtoan[0]))
+    $('#thuno-thanhtoanchuyenkhoan').val(vnumber.format(global.thuno.thanhtoan[1]))
+    $('#thuno-thanhtoandiem').val(vnumber.format(global.thuno.thanhtoan[2]))
+    // tính lượng thanh toán
+
+    var tienmat = global.thuno.thanhtoan[0]
+    var chuyenkhoan = global.thuno.thanhtoan[1]
+    var diem = global.thuno.thanhtoan[2]
+    var tongthanhtoan = tienmat + chuyenkhoan + diem
+
+    global.thuno.hoadon.forEach((hoadon, i) => {
+      if (tongthanhtoan > hoadon.conno) {
+        global.thuno.hoadon[i].thuthem = hoadon.conno
+        tongthanhtoan -= hoadon.conno
+      }
+      else if (tongthanhtoan > 0) {
+        global.thuno.hoadon[i].thuthem = tongthanhtoan
+        tongthanhtoan = 0
+      }
+      else {
+        global.thuno.hoadon[i].thuthem = 0
+      }
+      $('#thuno-tien'+ i).val(vnumber.format(global.thuno.hoadon[i].thuthem))
+    })
+    tinhtienconno()
+  }
+
+  function tinhtienconno() {
+    var tongthanhtoan = global.thuno.thanhtoan[0] + global.thuno.thanhtoan[1] + global.thuno.thanhtoan[2]
+    $('#thuno-tienthua').text(vnumber.format(global.thuno.khachhang.tienno - tongthanhtoan))
+  }
+
+  function xacnhanthuno() {
+    vhttp.post('/pos/api/', {
+      action: 'thuno',
+      data: global.thuno
+    }).then((resp) => {
+      $('#modal-thuno').modal('hide')
+    }, (e) => {
+    })
+  }
 
   function thaydoinguoiban() {
     global.hoadon[global.chonhoadon].nguoiban = $('#nguoiban option:selected')[0].value
@@ -503,7 +648,7 @@
       $('#thanhtoandiem').prop('disabled', false)
       $('#tim-khach').val(khachhang.ten + ' (' + khachhang.dienthoai + ')')
       $('#tim-khach').prop('readonly', true)
-      $('#khach-no').text(khachhang.tienno)
+      $('#khach-no').text(vnumber.format(khachhang.tienno))
       $('#khach-diem').text(khachhang.diem)
       $('#them-khach').hide()
       $('#xoa-khach').show()
@@ -833,7 +978,7 @@
 
   function tailaigia(vitri = -1) {
     if (vitri >= 0) {
-     var soluong = vnumber.clear($('#soluong-' + vitri).val())
+      var soluong = vnumber.clear($('#soluong-' + vitri).val())
       var giaban = vnumber.clear($('#giaban-' + vitri).val())
       var thanhtien = soluong * giaban
       global.hoadon[global.chonhoadon].hanghoa[vitri].soluong = soluong

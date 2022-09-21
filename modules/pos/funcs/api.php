@@ -35,7 +35,7 @@ function thanhtoan() {
   $tienmat = $data['thanhtoan'][0];
   $chuyenkhoan = $data['thanhtoan'][1];
   $doidiem = $data['thanhtoan'][2];
-  $thukhach = $tienmat + $chuyenkhoan + $diem;
+  $thukhach = $tienmat + $chuyenkhoan + $doidiem;
   $no = 0;
 
   // tính tích điểm
@@ -61,22 +61,33 @@ function thanhtoan() {
     $db->query($sql);
   }
 
+  $thoigian = time();
+  $tongtien = 0;
+
+  foreach ($data['thanhtoan'] as $loai => $sotien) {
+    if ($sotien) $tongtien += $sotien;
+  }
+
   $sql = "select id from pos_thuchi order by id desc limit 1";
   $thuchi = $db->fetch($sql);
   if (empty($thuchi)) $thuchi = ['id' => 0];
   $idthuchi = $thuchi['id'];
+  $mathuchi = "TC" . fillzero(++ $idthuchi);
+  $sql = "insert into pos_thuchi (mathuchi, sotien, thoigian) values('$mathuchi', $tongtien, $thoigian)";
+  $idthuchi = $db->insertid($sql);
 
-  $thoigian = time();
   foreach ($data['thanhtoan'] as $loai => $sotien) {
     if ($sotien) {
-      $mathuchi = "TC" . fillzero(++ $idthuchi);
-      $sql = "insert into pos_thuchi (mathuchi, loaithuchi, loaitien, sotien, thoigian) values('$mathuchi', 0, $loai, $sotien, $thoigian)";
+      $sql = "insert into pos_chitietthuchi(idthuchi, loai, sotien) values($idthuchi, $loai, $sotien)";
       $db->query($sql);
     }
   }
  
   $sql = "insert into pos_hoadon (mahoadon, idnguoiban, idnguoiratoa, idkhach, thoigian, soluong, tongtien, giamgiatien, giamgiaphantram, thanhtien, thanhtoan, ghichu) values('$mahoadon', $data[nguoiban], $session[userid], $idkhach, $thoigian, $data[soluong], $data[tongtien], $data[giamgiatien], $data[giamgiaphantram], $data[thanhtien], $thukhach, '$data[ghichu]')";
   $id = $db->insertid($sql);
+
+  $sql = "insert into pos_machitietthuchi (idthuchi, loai, ma) values($idthuchi, 1, '$mahoadon')";
+  $db->query($sql);
 
   foreach ($data['hanghoa'] as $hanghoa) {
     $sql = "insert into pos_chitiethoadon (idhoadon, idhang, dongia, giamgiatien, giamgiaphantram, giaban, soluong, thanhtien, soluongthuc) values($id, $hanghoa[id], $hanghoa[dongia], $hanghoa[giamgiatien], $hanghoa[giamgiaphantram], $hanghoa[giaban], $hanghoa[soluong], ". ($hanghoa['giaban'] * $hanghoa['soluong']) .", $hanghoa[soluong])";
@@ -89,6 +100,46 @@ function thanhtoan() {
   $resp['status'] = 1;
   $resp['html'] = inhoadon($id);
   $resp['messenger'] = "Đã thanh toán";
+}
+
+function thuno() {
+  global $db, $resp, $nv_Request, $crypt;
+
+  $data = $nv_Request->get_array('data', 'post');
+  $tongtien = 0;
+  $thoigian = time();
+  foreach ($data['thanhtoan'] as $loai => $sotien) {
+    if ($sotien) $tongtien += $sotien;
+  }
+
+  $sql = "select id from pos_thuchi order by id desc limit 1";
+  $thuchi = $db->fetch($sql);
+  if (empty($thuchi)) $thuchi = ['id' => 0];
+  $idthuchi = $thuchi['id'];
+  $mathuchi = "TC" . fillzero(++ $idthuchi);
+  $sql = "insert into pos_thuchi (mathuchi, sotien, thoigian) values('$mathuchi', $tongtien, $thoigian)";
+  $idthuchi = $db->insertid($sql);
+
+  $khachhang = $data['khachhang'];
+  foreach ($data['hoadon'] as $hoadon) {
+    $sql = "insert into pos_machitietthuchi (idthuchi, loai, ma) values($idthuchi, 1, '$hoadon[mahoadon]')";
+    $db->query($sql);
+
+    $sql = "update pos_hoadon set thanhtoan = thanhtoan + $hoadon[thuthem] where id = $hoadon[id]";
+    $db->query($sql);
+    $sql = "update pos_khachhang set tienno = tienno + $tongtien where id = $khachhang[id]";
+    $db->query($sql);
+  }
+
+  foreach ($data['thanhtoan'] as $loai => $sotien) {
+    if ($sotien) {
+      $sql = "insert into pos_chitietthuchi(idthuchi, loai, sotien) values($idthuchi, $loai, $sotien)";
+      $db->query($sql);
+    }
+  }
+
+  $resp['messenger'] = 'Đã thu toa nợ';
+  $resp['status'] = 1;
 }
 
 function timhang() {
@@ -114,6 +165,58 @@ function timkhach() {
   $danhsach = $db->all($sql);
 
   $resp['danhsach'] = $danhsach;
+  $resp['status'] = 1;
+}
+
+function timkhachthuno() {
+  global $db, $resp, $nv_Request, $crypt;
+
+  $tukhoa = $nv_Request->get_string('tukhoa', 'post');
+  $sql = "select * from pos_khachhang where ten like '%$tukhoa%' or ma like '%$tukhoa%' and tienno > 0 order by id desc limit 20";
+  $danhsach = $db->all($sql);
+
+  $resp['danhsach'] = $danhsach;
+  $resp['status'] = 1;
+}
+
+function thongtinthuno() {
+  global $db, $resp, $nv_Request;
+
+  $id = $nv_Request->get_string('id', 'post');
+  $xtpl = new XTemplate('chitiet.tpl', UPATH . '/main');
+
+  $sql = "select * from pos_hoadon where thanhtoan < thanhtien and idkhach = $id";
+  $danhsachhoadon = $db->all($sql);
+
+  $sql = "select * from pos_khachhang where id = $id";
+  $khachhang = $db->fetch($sql);
+
+  $dulieu = ['khachhang' => [
+    'id' => $id,
+    'diem' => $khachhang['diem'],
+    'tienno' => $khachhang['tienno']
+  ], 'hoadon' => [], 'suathanhtoan' => 0, 'thanhtoan' => [[], [], []]];
+
+
+  foreach ($danhsachhoadon as $i => $hoadon) {
+    $dulieutam = [
+      'id' => $hoadon['id'],
+      'mahoadon' => $hoadon['mahoadon'],
+      'conno' => $hoadon['thanhtien'] - $hoadon['thanhtoan'],
+      'thuthem' => 0
+    ];
+    $dulieu['hoadon'][$i] = $dulieutam;
+    $xtpl->assign('i', $i);
+    $xtpl->assign('thoigian', date('d/m/Y', $hoadon['thoigian']));
+    $xtpl->assign('mahoadon', $hoadon['mahoadon']);
+    $xtpl->assign('dathu', number_format($hoadon['thanhtoan']));
+    $xtpl->assign('conno', number_format($hoadon['thanhtien'] - $hoadon['thanhtoan']));
+    $xtpl->parse('main.row');
+  }
+  
+  $xtpl->parse('main');
+  $resp['dulieu'] = $dulieu;
+  $resp['noidung'] = $xtpl->text();
   $resp['status'] = 1;
 }
 
