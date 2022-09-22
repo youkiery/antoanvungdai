@@ -98,6 +98,13 @@ function inhoadon() {
   $resp['html'] = $xtpl->text();
 }
 
+function taisoquy() {
+  global $db, $resp, $nv_Request;
+
+  $resp['status'] = 1;
+  $resp['danhsach'] = danhsachthuchi();
+}
+
 function taihoadon() {
   global $db, $resp, $nv_Request;
 
@@ -511,8 +518,8 @@ function themkhach() {
 
 function xoakhach() {
   global $db, $resp, $nv_Request;
+  
   $id = $nv_Request->get_string('id', 'post');
-
   $sql = "update pos_khachhang set kichhoat = 0 where id = $id";
   $db->query($sql);
   $resp['status'] = 1;
@@ -527,3 +534,62 @@ function taikhach() {
   $resp['danhsach'] = danhsachkhach();
 }
 
+function themloaithuchi() {
+  global $db, $resp, $nv_Request;
+
+  $ten = $nv_Request->get_string('ten', 'post');
+  $loai = $nv_Request->get_string('loai', 'post');
+  $sql = "insert into pos_loaithuchi (loai, ten) values($loai, '$ten')";
+  $id = $db->insertid($sql);
+
+  $sql = "select * from pos_loaithuchi where loai = $loai order by id";
+  $danhsachloaithuchi = $db->all($sql);
+
+  $resp['status'] = 1;
+  $resp['id'] = $id;
+  $resp['html'] = option($danhsachloaithuchi, 'ten', 'id');
+}
+
+function themphieuthu() {
+  global $db, $resp, $nv_Request;
+
+  $data = $nv_Request->get_array('data', 'post');
+  $data['sotien'] = str_replace(',', '', $data['sotien']);
+  $thoigian = time();
+  $sql = "select id from pos_thuchi order by id desc limit 1";
+  $thuchi = $db->fetch($sql);
+  if (empty($thuchi)) $thuchi = ['id' => 0];
+  $idthuchi = $thuchi['id'];
+  $mathuchi = "TC" . fillzero(++ $idthuchi);
+  $sql = "insert into pos_thuchi (mathuchi, idloaithuchi, idkhachhang, sotien, thoigian, ghichu) values('$mathuchi', $data[loai], 0, $data[sotien], $thoigian, '$data[ghichu]')";
+  $idthuchi = $db->insertid($sql);
+
+  $sql = "insert into pos_chitietthuchi (idthuchi, loai, sotien) values('$idthuchi', 0, $data[sotien])";
+  $idthuchi = $db->insertid($sql);
+  
+  $resp['status'] = 1;
+  $resp['messenger'] = 'Đã thêm phiếu thu';
+  $resp['html'] = danhsachthuchi();
+}
+
+function themphieuchi() {
+  global $db, $resp, $nv_Request;
+
+  $data = $nv_Request->get_array('data', 'post');
+  $data['sotien'] = str_replace(',', '', $data['sotien']);
+  $thoigian = time();
+  $sql = "select id from pos_thuchi order by id desc limit 1";
+  $thuchi = $db->fetch($sql);
+  if (empty($thuchi)) $thuchi = ['id' => 0];
+  $idthuchi = $thuchi['id'];
+  $mathuchi = "TC" . fillzero(++ $idthuchi);
+  $sql = "insert into pos_thuchi (mathuchi, idloaithuchi, idkhachhang, sotien, thoigian, ghichu) values('$mathuchi', $data[loai], 0, -$data[sotien], $thoigian, '$data[ghichu]')";
+  $idthuchi = $db->insertid($sql);
+
+  $sql = "insert into pos_chitietthuchi (idthuchi, loai, sotien) values('$idthuchi', 0, -$data[sotien])";
+  $idthuchi = $db->insertid($sql);
+  
+  $resp['status'] = 1;
+  $resp['messenger'] = 'Đã thêm phiếu thu';
+  $resp['html'] = danhsachthuchi();
+}

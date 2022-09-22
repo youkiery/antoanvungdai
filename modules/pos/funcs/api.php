@@ -45,8 +45,8 @@ function thanhtoan() {
   if ($diem < 0) $diem = 0;
   $doidiem = $doidiem / 100;
 
-  $thanhtoantrutien = $data['thanhtien'] - $chuyenkhoan - $diem;
-  if ($tienmat > $thanhtoantrutien) {
+  $thanhtoantrutien = $data['thanhtien'] - $chuyenkhoan - $doidiem;
+  if ($tienmat >= $thanhtoantrutien) {
     $tienmat = $thanhtoantrutien;
     $data['thanhtoan'][0] = $tienmat;
     $thukhach = $tienmat + $chuyenkhoan + $diem;
@@ -68,12 +68,19 @@ function thanhtoan() {
     if ($sotien) $tongtien += $sotien;
   }
 
+  $sql = "select * from pos_loaithuchi where id = 0";
+  if (empty($loaithuchi = $db->fetch($sql))) {
+    $sql = "insert into pos_loaithuchi (id, loai, ten) values(0, 0, 'Thu tiền khách trả')";
+    $db->query($sql);
+    $loaithuchi = ['id' => 0];
+  }
+
   $sql = "select id from pos_thuchi order by id desc limit 1";
   $thuchi = $db->fetch($sql);
   if (empty($thuchi)) $thuchi = ['id' => 0];
   $idthuchi = $thuchi['id'];
   $mathuchi = "TC" . fillzero(++ $idthuchi);
-  $sql = "insert into pos_thuchi (mathuchi, sotien, thoigian) values('$mathuchi', $tongtien, $thoigian)";
+  $sql = "insert into pos_thuchi (mathuchi, idloaithuchi, idkhachhang, sotien, thoigian, ghichu) values('$mathuchi', $loaithuchi[id], $idkhach, $tongtien, $thoigian, '')";
   $idthuchi = $db->insertid($sql);
 
   foreach ($data['thanhtoan'] as $loai => $sotien) {
@@ -112,15 +119,22 @@ function thuno() {
     if ($sotien) $tongtien += $sotien;
   }
 
+  $sql = "select * from pos_loaithuchi where id = 0";
+  if (empty($loaithuchi = $db->fetch($sql))) {
+    $sql = "insert into pos_loaithuchi (id, loai, ten) values(0, 0, 'Thu nợ khách trả')";
+    $db->query($sql);
+    $loaithuchi = ['id' => 0];
+  }
+
+  $khachhang = $data['khachhang'];
   $sql = "select id from pos_thuchi order by id desc limit 1";
   $thuchi = $db->fetch($sql);
   if (empty($thuchi)) $thuchi = ['id' => 0];
   $idthuchi = $thuchi['id'];
   $mathuchi = "TC" . fillzero(++ $idthuchi);
-  $sql = "insert into pos_thuchi (mathuchi, sotien, thoigian) values('$mathuchi', $tongtien, $thoigian)";
+  $sql = "insert into pos_thuchi (mathuchi, idloaithuchi, idkhachhang, sotien, thoigian, ghichu) values('$mathuchi', $loaithuchi[id], $khachhang[id], $tongtien, $thoigian, '')";
   $idthuchi = $db->insertid($sql);
 
-  $khachhang = $data['khachhang'];
   foreach ($data['hoadon'] as $hoadon) {
     $sql = "insert into pos_machitietthuchi (idthuchi, loai, ma) values($idthuchi, 1, '$hoadon[mahoadon]')";
     $db->query($sql);

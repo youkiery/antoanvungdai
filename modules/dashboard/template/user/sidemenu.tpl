@@ -31,6 +31,9 @@
       <a href="/dashboard/bill" class="pw-menu-item {bill}">
         Hóa đơn
       </a>
+      <a href="/dashboard/cash" class="pw-menu-item {cash}">
+        Sổ quỹ
+      </a>
     </div>
   </div>
 </div>

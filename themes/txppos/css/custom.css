@@ -1,4 +1,18 @@
 /* Các tùy chỉnh CSS của giao diện nên để vào đây */
+  #printable {
+    display: none;
+  }
+
+  @media print {
+    #printable {
+      display: block;
+    }
+
+    .nonprintable {
+      display: none;
+    }
+  }
+
   .panel-group {
     background: white;
     margin-top: 50px;
