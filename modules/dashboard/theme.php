@@ -260,6 +260,47 @@ function danhsachhoadon() {
   return $xtpl->text();
 }
 
+function thongke() {
+  global $db;
+  $xtpl = new XTemplate('tongquan.tpl', PATH);
+
+  $batdau = strtotime(date('Y/m/d'));
+  $ketthuc = $batdau + 60 * 60 * 24 - 1;
+  $sql = "select b.* from pos_thuchi a inner join pos_chitietthuchi b on a.id = b.idthuchi where (a.thoigian between $batdau and $ketthuc)";
+  $danhsach = $db->all($sql);
+  $dulieu = [
+    'tongthu' => 0,
+    'tongchi' => 0,
+    'doanhthu' => 0,
+    'loinhuan' => 0,
+    'tienmat' => 0,
+    'tienmat2' => 0,
+    'chuyenkhoan' => 0,
+    'diem' => 0,
+  ];
+  $arr = [0 => 'tienmat', 'chuyenkhoan', 'diem'];
+
+  // tính theo hóa đơn thay vì 
+
+  foreach ($danhsach as $thuchi) {
+    if ($thuchi['sotien'] > 0) {
+      $dulieu['tongthu'] += $thuchi['sotien'];
+      $dulieu[$arr[$thuchi['loai']]] += $thuchi['sotien'];
+    }
+    else $dulieu['tongchi'] += $thuchi['sotien'];
+  }
+  $dulieu['tongchi'] = $dulieu['tongchi'] * -1;
+  $dulieu['doanhthu'] = $dulieu['tongthu'] - $dulieu['tongchi'];
+  $dulieu['tienmat2'] = $dulieu['tienmat'] - $dulieu['diem'] - $dulieu['chuyenkhoan'];
+
+  foreach ($dulieu as $ten => $giatri) {
+    $xtpl->assign($ten, number_format($giatri));
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function tuychonnhanvien() {
   global $db, $nv_Request;
 

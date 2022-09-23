@@ -17,6 +17,7 @@ if (!nv_function_exists('sidemenu')) {
       'customer' => 'customer',
       'bill' => 'bill',
       'cash' => 'cash',
+      'statistic' => 'statistic',
     );
     $xtpl = new XTemplate('sidemenu.tpl', UPATH);
     if (!empty($menu[$op])) $m = $menu[$op];

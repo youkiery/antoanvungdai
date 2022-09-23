@@ -34,6 +34,9 @@
       <a href="/dashboard/cash" class="pw-menu-item {cash}">
         Sổ quỹ
       </a>
+      <a href="/dashboard/statistic" class="pw-menu-item {statistic}">
+        Thống kê
+      </a>
     </div>
   </div>
 </div>
