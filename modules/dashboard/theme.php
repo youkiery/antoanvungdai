@@ -261,10 +261,14 @@ function danhsachhoadon() {
 }
 
 function thongke() {
-  global $db;
-  $xtpl = new XTemplate('tongquan.tpl', PATH);
+  global $db, $nv_Request;
+  $xtpl = new XTemplate('tongquan.tpl', UPATH . '/statistic/');
 
-  $batdau = strtotime(date('Y/m/d'));
+  $thoigian = $nv_Request->get_string('thoigian', 'post');
+  if (empty($thoigian)) $thoigian = date('d/m/Y');
+  $thoigian = explode('/', $thoigian);
+  $batdau = strtotime("$thoigian[2]/$thoigian[1]/$thoigian[0]");
+  // $batdau = strtotime(date('Y/m/d'));
   $ketthuc = $batdau + 60 * 60 * 24 - 1;
   $sql = "select b.* from pos_thuchi a inner join pos_chitietthuchi b on a.id = b.idthuchi where (a.thoigian between $batdau and $ketthuc)";
   $danhsach = $db->all($sql);
@@ -280,8 +284,6 @@ function thongke() {
   ];
   $arr = [0 => 'tienmat', 'chuyenkhoan', 'diem'];
 
-  // tính theo hóa đơn thay vì 
-
   foreach ($danhsach as $thuchi) {
     if ($thuchi['sotien'] > 0) {
       $dulieu['tongthu'] += $thuchi['sotien'];
@@ -292,6 +294,14 @@ function thongke() {
   $dulieu['tongchi'] = $dulieu['tongchi'] * -1;
   $dulieu['doanhthu'] = $dulieu['tongthu'] - $dulieu['tongchi'];
   $dulieu['tienmat2'] = $dulieu['tienmat'] - $dulieu['diem'] - $dulieu['chuyenkhoan'];
+
+  // tính theo hóa đơn thay vì 
+  $sql = "select b.* from pos_hoadon a inner join pos_chitiethoadon b on a.id = b.idhoadon where a.thoigian between $batdau and $ketthuc";
+  $danhsach = $db->all($sql);
+
+  foreach ($danhsach as $hoadon) {
+    $dulieu['loinhuan'] += ($hoadon['giaban'] - $hoadon['gianhap']) * $hoadon['soluongthuc'];
+  }
 
   foreach ($dulieu as $ten => $giatri) {
     $xtpl->assign($ten, number_format($giatri));

@@ -593,3 +593,10 @@ function themphieuchi() {
   $resp['messenger'] = 'Đã thêm phiếu thu';
   $resp['html'] = danhsachthuchi();
 }
+
+function xemthongke() {
+  global $db, $resp, $nv_Request;
+
+  $resp['status'] = 1;
+  $resp['html'] = thongke();
+}

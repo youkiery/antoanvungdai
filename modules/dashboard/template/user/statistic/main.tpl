@@ -30,6 +30,12 @@
     <div class="pw-card-header">
       <!-- <button class="btn btn-success" onclick="themkhach()"> <span class="fa fa-plus"></span> </button> -->
     </div>
+    <div class="input-group">
+      <input type="text" class="date form-control" id="date" value="{homnay}">
+      <div class="input-group-btn">
+        <button class="btn btn-success" onclick="thongke()"> <span class="fa fa-line-chart"></span> </button>
+      </div>
+    </div>
     <div class="pw-card-content" id="content">
       {danhsach}
     </div>
@@ -37,92 +43,18 @@
 </div>
 
 <script>
-  var global = {
-    filter: {
-      page: 1,
-      hoadon: '',
-      hanghoa: '',
-      khachhang: '',
-      thoigiandau: '',
-      thoigiancuoi: '',
-      nguoiban: '',
-      nguoiratoa: '',
-      ghichu: '',
-    }
-  }
-
   $(document).ready(() => {
     $('.date').datepicker({
       dateFormat: 'dd/mm/yy'
     })
   })
 
-  function lochoadon() {
-    $('#modal-timhoadon').modal('show')
-  }
-
-  function timkiem(page) {
-    global.filter = {
-      page: page,
-      hoadon: $('#tim-hoadon').val(),
-      hanghoa: $('#tim-hanghoa').val(),
-      khachhang: $('#tim-khachhang').val(),
-      thoigiandau: $('#tim-thoigiandau').val(),
-      thoigiancuoi: $('#tim-thoigiancuoi').val(),
-      nguoiban: $('#tim-nguoiban').val(),
-      nguoiratoa: $('#tim-nguoiratoa').val(),
-      ghichu: $('#tim-ghichu').val(),
-    }
-
+  function thongke() {
     vhttp.post('/dashboard/api/', {
-      action: 'taihoadon',
-      filter: global.filter
+      action: 'xemthongke',
+      thoigian: $('#date').val()
     }).then((resp) => {
-      $('#content').html(resp.danhsach)
-      $('#modal-timhoadon').modal('hide')
-    }, (e) => { })
-  }
-
-  function chitiet(id) {
-    if ($('#tr-' + id).attr('load') == '0') {
-      vhttp.post('/dashboard/api/', {
-        action: 'chitiethoadon',
-        id: id
-      }).then((resp) => {
-        $('#tr-' + id).attr('load', '1')
-        $('#td-' + id).html(resp.html)
-      }, (e) => { })
-    }
-    $('.chitiet').hide()
-    $('#tr-' + id).show()
-  }
-
-  function inhoadon(id) {
-
-    vhttp.post('/dashboard/api/', {
-      action: 'inhoadon',
-      id: id
-    }).then((resp) => {
-      // thanh toán xong xóa hóa đơn hiện tại
-      setTimeout(() => {
-        $('#printable').html(resp.html)
-        window.print()
-      }, 500);
-    }, (e) => { })
-  }
-
-  function xoahoadon(id) {
-    global.id = id
-    $('#modal-xoahoadon').modal('show')
-  }
-
-  function xacnhanxoahoadon(id) {
-    vhttp.post('/dashboard/api/', {
-      action: 'xoahoadon',
-      id: global.id
-    }).then((resp) => {
-      $('#content').html(resp.danhsach)
-      $('#modal-xoahoadon').modal('hide')
+      $('#content').html(resp.html)
     }, (e) => { })
   }
 </script>

@@ -6,6 +6,7 @@ if (!defined('NV_IS_MOD_NEWS')) {
 $page_title = $lang_module['title'];
 
 $xtpl = new XTemplate('main.tpl', PATH);
+$xtpl->assign('homnay', date('d/m/Y'));
 $xtpl->assign('danhsach', thongke());
 $xtpl->parse('main');
 $contents = $xtpl->text();
