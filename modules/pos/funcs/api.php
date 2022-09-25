@@ -97,7 +97,7 @@ function thanhtoan() {
   $db->query($sql);
 
   foreach ($data['hanghoa'] as $hanghoa) {
-    $sql = "insert into pos_chitiethoadon (idhoadon, idhang, dongia, giamgiatien, giamgiaphantram, giaban, soluong, thanhtien, soluongthuc) values($id, $hanghoa[id], $hanghoa[dongia], $hanghoa[giamgiatien], $hanghoa[giamgiaphantram], $hanghoa[giaban], $hanghoa[soluong], ". ($hanghoa['giaban'] * $hanghoa['soluong']) .", $hanghoa[soluong])";
+    $sql = "insert into pos_chitiethoadon (idhoadon, idhang, tenhang, gianhap, dongia, giamgiatien, giamgiaphantram, giaban, soluong, thanhtien, soluongthuc) values($id, $hanghoa[id], '$hanghoa[ten]', $hanghoa[gianhap], $hanghoa[dongia], $hanghoa[giamgiatien], $hanghoa[giamgiaphantram], $hanghoa[giaban], $hanghoa[soluong], ". ($hanghoa['giaban'] * $hanghoa['soluong']) .", $hanghoa[soluong])";
     $db->query($sql);
 
     $sql = "update pos_hanghoa set soluong = soluong - $hanghoa[soluong] where id = $hanghoa[id]";
@@ -160,7 +160,7 @@ function timhang() {
   global $db, $resp, $nv_Request, $crypt;
 
   $tukhoa = $nv_Request->get_string('tukhoa', 'post');
-  $sql = "select id, mahang as ma, tenhang as ten, giaban, soluong, hinhanh, donvi from pos_hanghoa where tenhang like '%$tukhoa%' or mahang like '%$tukhoa%' order by id desc limit 20";
+  $sql = "select id, mahang as ma, tenhang as ten, giaban, gianhap, soluong, hinhanh, donvi from pos_hanghoa where tenhang like '%$tukhoa%' or mahang like '%$tukhoa%' order by id desc limit 20";
   $danhsach = $db->all($sql);
 
   foreach ($danhsach as $thutu => $hang) {

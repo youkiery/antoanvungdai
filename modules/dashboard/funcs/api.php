@@ -136,7 +136,7 @@ function chitiethoadon() {
     $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
     $hanghoa = $db->fetch($sql);
     $xtpl->assign('mahang', $hanghoa['mahang']);
-    $xtpl->assign('tenhang', $hanghoa['tenhang']);
+    $xtpl->assign('tenhang', $chitiet['tenhang']);
     $xtpl->assign('soluong', number_format($chitiet['soluong']));
     $xtpl->assign('dongia', number_format($chitiet['dongia']));
     $xtpl->assign('giamgiatien', number_format($chitiet['giamgiatien']));

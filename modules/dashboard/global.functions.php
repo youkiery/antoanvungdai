@@ -4,9 +4,9 @@ if (!defined('NV_MAINFILE')) {
   exit('Stop!!!');
 }
 
-function datetotime($date) {
-  $datetimes = explode('/', $date);
-  return strtotime("$datetimes[2]/$datetimes[1]/$datetimes[0]");
+function datetotime($thoigian) {
+  $thoigian = explode('/', $thoigian);
+  return strtotime("$thoigian[2]/$thoigian[1]/$thoigian[0]");
 }
 
 function parseimage($image) {

@@ -30,10 +30,17 @@
     <div class="pw-card-header">
       <!-- <button class="btn btn-success" onclick="themkhach()"> <span class="fa fa-plus"></span> </button> -->
     </div>
-    <div class="input-group">
-      <input type="text" class="date form-control" id="date" value="{homnay}">
-      <div class="input-group-btn">
-        <button class="btn btn-success" onclick="thongke()"> <span class="fa fa-line-chart"></span> </button>
+    <div class="row">
+      <div class="col-xs-12">
+        <input type="text" class="date form-control" id="batdau" value="{homnay}">
+      </div>
+      <div class="col-xs-12">
+        <div class="input-group">
+          <input type="text" class="date form-control" id="ketthuc" value="{homnay}">
+          <div class="input-group-btn">
+            <button class="btn btn-success" onclick="thongke()"> <span class="fa fa-line-chart"></span> </button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="pw-card-content" id="content">
@@ -52,7 +59,8 @@
   function thongke() {
     vhttp.post('/dashboard/api/', {
       action: 'xemthongke',
-      thoigian: $('#date').val()
+      batdau: $('#batdau').val(),
+      ketthuc: $('#ketthuc').val()
     }).then((resp) => {
       $('#content').html(resp.html)
     }, (e) => { })
