@@ -23,7 +23,7 @@ if (!empty($action) && function_exists($action)) {
 echo json_encode($resp);
 die();
 
-function importitem() {
+function importhanghoa() {
   global $db, $nv_Request, $resp, $_FILES, $x, $xr;
 
   $raw = $_FILES['file']['tmp_name'];
@@ -99,11 +99,80 @@ function importitem() {
   $resp['messenger'] = 'Đã import file, tải lại trang để xem kết quả';
 }
 
+function importkhach() {
+  global $db, $nv_Request, $resp, $_FILES, $x, $xr;
+
+  $raw = $_FILES['file']['tmp_name'];
+  include(NV_ROOTDIR .'/includes/plugin/PHPExcel/IOFactory.php');
+  $inputFileType = PHPExcel_IOFactory::identify($raw);
+  $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+  $objReader->setReadDataOnly(true);
+  $objPHPExcel = $objReader->load($raw);
+  
+  $sheet = $objPHPExcel->getSheet(0); 
+  $highestRow = $sheet->getHighestRow(); 
+  $highestColumn = $sheet->getHighestColumn();
+
+  $array = [
+    'Mã khách' => -1, 'Tên khách' => -1, 'Điện thoại' => -1, 'Địa chỉ' => -1
+  ];
+  $rev = [
+    'Mã khách' => 'makhach', 'Tên khách' => 'tenkhach', 'Điện thoại' => 'dienthoai', 'Địa chỉ' => 'diachi'
+  ];
+  $arr = [];
+  for ($j = 0; $j <= $x[$highestColumn]; $j ++) {
+    $arr [$j]= $sheet->getCell($xr[$j] . '1')->getValue();
+  }
+
+  foreach ($arr as $key => $val) {
+    if (isset($array[$val])) {
+      $array[$val] = $key;
+    }
+  }
+
+  $check = false;
+  foreach ($array as $val) {
+    if ($val < 0) $check = true;
+  }
+  if ($check) {
+    $resp['messenger'] = "File thiếu cột dữ liệu";
+    return 0;
+  }
+
+  for ($i = 0; $i <= $x[$highestRow]; $i ++) {
+    $dulieu = [];
+    foreach ($array as $key => $value) {
+      $val = $sheet->getCell($xr[$value] . ($i + 2))->getValue();
+      if ($val !== 0 && empty($val)) $val = '';
+      $dulieu[$rev[$key]] = trim($val);
+    }
+    // kiếm tra mã hàng, nếu có cập nhật, nếu không thì thêm
+    $sql = "select id from pos_khachhang where makhach = '$dulieu[makhach]' and kichhoat = 1";
+    if (empty($khachhang = $db->fetch($sql))) {
+      if (empty($dulieu['makhach'])) {
+        $sql = "select id from pos_khachhang order by id desc limit 1";
+        $khach = $db->fetch($sql);
+        $makhach = fillzero(($khach['id'] ? $khach['id'] : 0) + 1);
+        $dulieu['makhach'] = "SP$makhach";
+      }
+      $sql = "insert into pos_khachhang (makhach, tenkhach, diachi, dienthoai, diem, tienno, kichhoat) values('$dulieu[makhach]', '$dulieu[tenkhach]', '$dulieu[diachi]', '$dulieu[dienthoai]', 0, 0, 1)";
+    }
+    else {
+      $sql = "update pos_khachhang set tenkhach = '$dulieu[tenkhach]', diachi = '$dulieu[diachi]', dienthoai = '$dulieu[dienthoai]' where id = $khachhang[id]";
+    }
+    $db->query($sql);
+  }
+  $resp['status'] = 1;
+  $resp['messenger'] = 'Đã import file, tải lại trang để xem kết quả';
+}
+
 // tải file
 function download() {
   global $db, $nv_Request, $resp;
   $filemau = [
-    'item' => 'FileMauImportHangHoa.xlsx'
+    'item' => 'FileMauImportHangHoa.xlsx',
+    'customer' => 'FileMauImportKhachHang.xlsx',
+    'purchase' => 'FileMauImportNhapHang.xlsx'
   ];
 
   $filename = $nv_Request->get_string('filename', 'post');
@@ -593,13 +662,13 @@ function themkhach() {
       $hang = $db->fetch($sql);
       $ma = "KH" . fillzero(($hang['id'] ? $hang['id'] : 0) + 1);
     
-      $sql = "insert into pos_khachhang (ma, ten, dienthoai, diachi) values('$ma', '$data[ten]', '$data[dienthoai]', '$data[diachi]')";
+      $sql = "insert into pos_khachhang (makhach, tenkhach, dienthoai, diachi) values('$ma', '$data[ten]', '$data[dienthoai]', '$data[diachi]')";
       $id = $db->insert_id($sql);
       $resp['messenger'] = 'Đã thêm khách hàng';
     }
   }
   else {
-    $sql = "update pos_khachhang set ten = '$data[ten]', dienthoai = '$data[dienthoai]', diachi = '$data[diachi]' where id = $id";
+    $sql = "update pos_khachhang set makhach = '$data[ma]', tenkhach = '$data[ten]', dienthoai = '$data[dienthoai]', diachi = '$data[diachi]' where id = $id";
     $db->query($sql);
     $resp['messenger'] = 'Đã cập nhật khách hàng';
   }

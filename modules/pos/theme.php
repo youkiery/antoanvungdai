@@ -33,7 +33,7 @@ function inhoadon($id) {
 
   $xtpl->assign('mahoadon', $hoadon['mahoadon']);
   $xtpl->assign('nguoiban', $nguoiban['first_name']);
-  $xtpl->assign('khachhang', $khachhang['ten']);
+  $xtpl->assign('khachhang', $khachhang['tenkhach']);
   $xtpl->assign('diachi', $khachhang['diachi']);
   $xtpl->assign('dienthoai', $khachhang['dienthoai']);
   $xtpl->assign('thoigian', date('d/m/Y H:i:s'));

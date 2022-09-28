@@ -175,7 +175,7 @@ function timkhach() {
   global $db, $resp, $nv_Request, $crypt;
 
   $tukhoa = $nv_Request->get_string('tukhoa', 'post');
-  $sql = "select * from pos_khachhang where ten like '%$tukhoa%' or ma like '%$tukhoa%' order by id desc limit 20";
+  $sql = "select * from pos_khachhang where tenkhach like '%$tukhoa%' or makhach like '%$tukhoa%' order by id desc limit 20";
   $danhsach = $db->all($sql);
 
   $resp['danhsach'] = $danhsach;
@@ -186,7 +186,7 @@ function timkhachthuno() {
   global $db, $resp, $nv_Request, $crypt;
 
   $tukhoa = $nv_Request->get_string('tukhoa', 'post');
-  $sql = "select * from pos_khachhang where ten like '%$tukhoa%' or ma like '%$tukhoa%' and tienno > 0 order by id desc limit 20";
+  $sql = "select * from pos_khachhang where tenkhach like '%$tukhoa%' or makhach like '%$tukhoa%' and tienno > 0 order by id desc limit 20";
   $danhsach = $db->all($sql);
 
   $resp['danhsach'] = $danhsach;

@@ -179,16 +179,17 @@ function danhsachkhach() {
   if (empty($filter['page'])) $filter['page'] = 1;
   if (empty($filter['tukhoa'])) $filter['tukhoa'] = '';
 
-  $sql = "select count(id) as count from pos_khachhang where kichhoat = 1 and (ten like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%')";
+  $sql = "select count(id) as count from pos_khachhang where kichhoat = 1 and (tenkhach like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%' or makhach like '%$filter[tukhoa]%')";
   $count = $db->fetch($sql)['count']; 
 
-  $sql = "select * from pos_khachhang where  kichhoat = 1 and (ten like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%') order by id desc limit $limit offset ". ($filter['page'] - 1) * $limit;
+  $sql = "select * from pos_khachhang where  kichhoat = 1 and (tenkhach like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%' or makhach like '%$filter[tukhoa]%') order by id desc limit $limit offset ". ($filter['page'] - 1) * $limit;
   $danhsach = $db->all($sql);
 
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/customer/');
   foreach ($danhsach as $i => $row) {
     $xtpl->assign('id', $row['id']);
-    $xtpl->assign('ten', $row['ten']);
+    $xtpl->assign('makhach', $row['makhach']);
+    $xtpl->assign('ten', $row['tenkhach']);
     $xtpl->assign('dienthoai', $row['dienthoai']);
     $xtpl->assign('diachi', $row['diachi']);
     $xtpl->parse('main.row');

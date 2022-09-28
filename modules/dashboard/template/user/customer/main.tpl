@@ -1,4 +1,23 @@
 <!-- BEGIN: main -->
+<div class="modal fade" id="modal-import" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <div class="text-center">
+          Tệp mẫu <button class="btn btn-info" onclick="download('customer')"> <span class="fa fa-download"></span>
+          </button>
+          <input type="file" id="import-file" onchange="chonfile()"
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+          <button class="btn btn-info btn-block" id="import-btn" onclick="xacnhanimport()">
+            Thực hiện
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="modal-xoa-khach" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -47,6 +66,12 @@
       </div>
       <div class="modal-body">
         <div class="form-group row">
+          <div class="col-xs-8"> Mã khách </div>
+          <div class="col-xs-16">
+            <input type="text" class="form-control" id="khach-ma">
+          </div>
+        </div>
+        <div class="form-group row">
           <div class="col-xs-8"> Khách hàng </div>
           <div class="col-xs-16">
             <input type="text" class="form-control" id="khach-ten">
@@ -83,6 +108,7 @@
 
   <div class="pw-card">
     <div class="pw-card-header">
+      <button class="btn btn-info" onclick="importkhach()"> <span class="fa fa-file"></span> </button>
       <button class="btn btn-info" onclick="timkhach()"> <span class="fa fa-search"></span> </button>
       <button class="btn btn-success" onclick="themkhach()"> <span class="fa fa-plus"></span> </button>
     </div>
@@ -130,8 +156,9 @@
     $('#modal-them-khach').modal('show')
   }
 
-  function suakhach(id, ten, diachi, dienthoai) {
+  function suakhach(id, ma, ten, diachi, dienthoai) {
     global.id = id
+    $('#khach-ma').val(ma)
     $('#khach-ten').val(ten)
     $('#khach-dien-thoai').val(dienthoai)
     $('#khach-dia-chi').val(diachi)
@@ -142,6 +169,7 @@
 
   async function xacnhanthemkhach() {
     data = {
+      ma: $('#khach-ma').val(),
       ten: $('#khach-ten').val(),
       dienthoai: $('#khach-dien-thoai').val(),
       diachi: $('#khach-dia-chi').val(),
@@ -182,6 +210,54 @@
       $('#content').html(resp.danhsach)
       $('#modal-tim-khach').modal('hide')
     }, (e) => { })
+  }
+
+  function chonfile() {
+    var file = $('#import-file').val()
+    if (file) $('#import-btn').show()
+    else $('#import-btn').hide()
+  }
+
+  function importkhach() {
+    $('#import-btn').hide()
+    $('#import-file').val('')
+    $('#modal-import').modal('show')
+  }
+
+  function download(filename) {
+    vhttp.post('/dashboard/api/', {
+      action: 'download',
+      filename: filename
+    }).then((resp) => {
+      // nếu trả về link thì download
+      window.location = resp.link;
+    }, (e) => { })
+  }
+
+  function xacnhanimport() {
+    var form = new FormData()
+    form.append('action', 'importkhach');
+    form.append('file', $('#import-file')[0].files[0]); 
+    $.ajax({
+      url: '/dashboard/api/',
+      type: 'post',
+      data: form,
+      processData: false,
+      contentType: false
+    }).done((x) => {
+      try {
+        var json = JSON.parse(x)
+        if (json.messenger.length) vhttp.notify(json.messenger)
+        if (json.status) {
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000);
+        }
+      }
+      catch (error) {
+
+      }
+    }).fail(() => { });
   }
 </script>
 <!-- END: main -->

@@ -202,7 +202,7 @@
 
   function xacnhanimport() {
     var form = new FormData()
-    form.append('action', 'importitem');
+    form.append('action', 'importhang');
     form.append('file', $('#import-file')[0].files[0]); 
     $.ajax({
       url: '/dashboard/api/',
@@ -213,8 +213,8 @@
     }).done((x) => {
       try {
         var json = JSON.parse(x)
+        if (json.messenger.length) vhttp.notify(json.messenger)
         if (json.status) {
-          if (json.messenger.length) vhttp.notify(json.messenger)
           setTimeout(() => {
             window.location.reload()
           }, 1000);
