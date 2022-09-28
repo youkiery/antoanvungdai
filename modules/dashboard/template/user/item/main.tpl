@@ -1,4 +1,23 @@
 <!-- BEGIN: main -->
+<div class="modal fade" id="modal-import" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <div class="text-center">
+          Tệp mẫu <button class="btn btn-info" onclick="download('item')"> <span class="fa fa-download"></span>
+          </button>
+          <input type="file" id="import-file" onchange="chonfile()"
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+          <button class="btn btn-info btn-block" id="import-btn" onclick="xacnhanimport()">
+            Thực hiện
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="modal-xoa-hang" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -6,7 +25,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
         <div class="text-center">
           Xác nhận xóa hàng hóa
-        <button class="btn btn-danger btn-block" onclick="xacnhanxoa()"> Xóa </button>
+          <button class="btn btn-danger btn-block" onclick="xacnhanxoa()"> Xóa </button>
         </div>
       </div>
     </div>
@@ -120,6 +139,7 @@
 
   <div class="pw-card">
     <div class="pw-card-header">
+      <button class="btn btn-info" onclick="importhang()"> <span class="fa fa-file"></span> </button>
       <button class="btn btn-info" onclick="timhang()"> <span class="fa fa-search"></span> </button>
       <button class="btn btn-success" onclick="themhang()"> <span class="fa fa-plus"></span> </button>
     </div>
@@ -157,6 +177,54 @@
     vimage.path = '/pw/images'
     vimage.install('them-hinh')
   })
+
+  function chonfile() {
+    var file = $('#import-file').val()
+    if (file) $('#import-btn').show()
+    else $('#import-btn').hide()
+  }
+
+  function importhang() {
+    $('#import-btn').hide()
+    $('#import-file').val('')
+    $('#modal-import').modal('show')
+  }
+
+  function download(filename) {
+    vhttp.post('/dashboard/api/', {
+      action: 'download',
+      filename: filename
+    }).then((resp) => {
+      // nếu trả về link thì download
+      window.location = resp.link;
+    }, (e) => { })
+  }
+
+  function xacnhanimport() {
+    var form = new FormData()
+    form.append('action', 'importitem');
+    form.append('file', $('#import-file')[0].files[0]); 
+    $.ajax({
+      url: '/dashboard/api/',
+      type: 'post',
+      data: form,
+      processData: false,
+      contentType: false
+    }).done((x) => {
+      try {
+        var json = JSON.parse(x)
+        if (json.status) {
+          if (json.messenger.length) vhttp.notify(json.messenger)
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000);
+        }
+      }
+      catch (error) {
+
+      }
+    }).fail(() => { });
+  }
 
   function themhang() {
     $('#them-ma-hang').val('')
@@ -207,17 +275,17 @@
     }).then((resp) => {
       data = resp.data
       $('#them-ma-hang').val(data.mahang),
-      $('#them-ten-hang').val(data.tenhang),
-      $('#them-loai-hang').val(data.loaihang),
-      $('#them-gia-nhap').val(data.gianhap),
-      $('#them-gia-ban').val(data.giaban),
-      $('#them-don-vi').val(data.donvi),
-      $('#them-gioi-thieu').val(data.gioithieu),
-      vimage.data['them-hinh'] = data.hinhanh
+        $('#them-ten-hang').val(data.tenhang),
+        $('#them-loai-hang').val(data.loaihang),
+        $('#them-gia-nhap').val(data.gianhap),
+        $('#them-gia-ban').val(data.giaban),
+        $('#them-don-vi').val(data.donvi),
+        $('#them-gioi-thieu').val(data.gioithieu),
+        vimage.data['them-hinh'] = data.hinhanh
       vimage.reload('them-hinh')
       $('.modal-them').prop('disabled', false)
       $('#modal-them-hang').modal('show')
-    }, (e) => {})
+    }, (e) => { })
   }
 
   async function xacnhansua() {
@@ -241,7 +309,7 @@
     }).then((resp) => {
       $('#content').html(resp.danhsach)
       $('#modal-them-hang').modal('hide')
-    }, (e) => {})
+    }, (e) => { })
   }
 
   async function kiemtrahang() {
@@ -268,7 +336,7 @@
     }).then((resp) => {
       $('#content').html(resp.danhsach)
       $('#modal-xoa-hang').modal('hide')
-    }, (e) => {})
+    }, (e) => { })
   }
 
   function timhang() {
@@ -286,7 +354,7 @@
     }).then((resp) => {
       $('#content').html(resp.danhsach)
       $('#modal-tim-hang').modal('hide')
-    }, (e) => {})
+    }, (e) => { })
   }
 
   // async function xacnhanthem() {

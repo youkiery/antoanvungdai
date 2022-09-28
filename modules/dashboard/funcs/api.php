@@ -10,6 +10,11 @@ $action = $nv_Request->get_string('action', 'post');
 $resp = array(
   'status' => 0
 );
+$x = array();
+$xr = array(0 => 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', 'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'HI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO');
+foreach ($xr as $key => $value) {
+  $x[$value] = $key;
+}
 
 if (!empty($action) && function_exists($action)) {
   $action();
@@ -17,6 +22,97 @@ if (!empty($action) && function_exists($action)) {
 
 echo json_encode($resp);
 die();
+
+function importitem() {
+  global $db, $nv_Request, $resp, $_FILES, $x, $xr;
+
+  $raw = $_FILES['file']['tmp_name'];
+  include(NV_ROOTDIR .'/includes/plugin/PHPExcel/IOFactory.php');
+  $inputFileType = PHPExcel_IOFactory::identify($raw);
+  $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+  $objReader->setReadDataOnly(true);
+  $objPHPExcel = $objReader->load($raw);
+  
+  $sheet = $objPHPExcel->getSheet(0); 
+  $highestRow = $sheet->getHighestRow(); 
+  $highestColumn = $sheet->getHighestColumn();
+
+  $array = [
+    'Mã Hàng' => -1, 'Tên Hàng' => -1, 'Đơn vị' => -1, 'Loại hàng' => -1, 'Giá nhập' => -1, 'Giá bán' => -1, 'Số lượng' => -1, 'Hình ảnh' => -1, 'Giới thiệu' => -1, 'Hoạt động' => -1,
+  ];
+  $rev = [
+    'Mã Hàng' => 'mahang', 'Tên Hàng' => 'tenhang', 'Đơn vị' => 'donvi', 'Loại hàng' => 'loaihang', 'Giá nhập' => 'gianhap', 'Giá bán' => 'giaban', 'Số lượng' => 'soluong', 'Hình ảnh' => 'hinhanh', 'Giới thiệu' => 'gioithieu', 'Hoạt động' => 'hoatdong',
+  ];
+  $arr = [];
+  for ($j = 0; $j <= $x[$highestColumn]; $j ++) {
+    $arr [$j]= $sheet->getCell($xr[$j] . '1')->getValue();
+  }
+
+  foreach ($arr as $key => $val) {
+    if (isset($array[$val])) {
+      $array[$val] = $key;
+    }
+  }
+
+  $check = false;
+  foreach ($array as $val) {
+    if ($val < 0) $check = true;
+  }
+  if ($check) {
+    $resp['messenger'] = "File thiếu cột dữ liệu";
+    return 0;
+  }
+
+  for ($i = 0; $i <= $x[$highestRow]; $i ++) {
+    $dulieu = [];
+    foreach ($array as $key => $value) {
+      $val = $sheet->getCell($xr[$value] . ($i + 2))->getValue();
+      if ($val !== 0 && empty($val)) $val = '';
+      $dulieu[$rev[$key]] = trim($val);
+    }
+    // kiếm tra loại hàng, nếu có thì thôi, nếu không thì cập nhật, nếu để trống thì cho vô mặc định
+    $dulieu['gianhap'] = preg_replace('/\D/', '', $dulieu['gianhap']);
+    $dulieu['giaban'] = preg_replace('/\D/', '', $dulieu['giaban']);
+    $loaihang = mb_strtolower($dulieu['loaihang']);
+    $sql = "select * from pos_phanloai where module = 'hanghoa' and kichhoat = 1 and LOWER(ten) = '$loaihang'";
+    if (empty($phanloai = $db->fetch($sql))) {
+      $sql = "insert into pos_phanloai (ten, module, kichhoat, thutu) values('$dulieu[loaihang]', 'hanghoa', 1, 0)";
+      $phanloai = ['id' => $db->insertid($sql)];
+    }
+    // kiếm tra mã hàng, nếu có cập nhật, nếu không thì thêm
+    $sql = "select id from pos_hanghoa where mahang = '$dulieu[mahang]'";
+    if (empty($hanghoa = $db->fetch($sql))) {
+      if (empty($dulieu['mahang'])) {
+        $sql = "select id from pos_hanghoa order by id desc limit 1";
+        $hang = $db->fetch($sql);
+        $mahang = fillzero(($hang['id'] ? $hang['id'] : 0) + 1);
+        $dulieu['mahang'] = "SP$mahang";
+      }
+      $sql = "insert into pos_hanghoa (mahang, tenhang, loaihang, giaban, gianhap, soluong, hinhanh, gioithieu, donvi) values('$dulieu[mahang]', '$dulieu[tenhang]', $phanloai[id], $dulieu[giaban], $dulieu[gianhap], $dulieu[soluong], '$dulieu[hinhanh]', '$dulieu[gioithieu]', '$dulieu[donvi]')";
+    }
+    else {
+      $sql = "update pos_hanghoa set tenhang = '$dulieu[tenhang]', loaihang = $phanloai[id], giaban = $dulieu[giaban], gianhap = $dulieu[gianhap], soluong = $dulieu[soluong], hinhanh = '$dulieu[hinhanh]', gioithieu = '$dulieu[gioithieu]', donvi = '$dulieu[donvi]' where id = $hanghoa[id]";
+    }
+    $db->query($sql);
+  }
+  $resp['status'] = 1;
+  $resp['messenger'] = 'Đã import file, tải lại trang để xem kết quả';
+}
+
+// tải file
+function download() {
+  global $db, $nv_Request, $resp;
+  $filemau = [
+    'item' => 'FileMauImportHangHoa.xlsx'
+  ];
+
+  $filename = $nv_Request->get_string('filename', 'post');
+  if (isset($filemau[$filename]) && file_exists(UPATH . $filemau[$filename])) {
+    $resp['status'] = 1;
+    $resp['link'] = URPATH . $filemau[$filename];
+  }
+  else $resp['messenger'] = 'Lỗi file';
+}
 
 // item, hanghoa
 function xoahoadon() {
