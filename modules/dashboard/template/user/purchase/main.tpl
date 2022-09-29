@@ -371,15 +371,34 @@
   }
 
   function themhanghoa(thutu) {
-    global.danhsach.push({
-      id: global.hanghoa[thutu].id,
-      mahang: global.hanghoa[thutu].mahang,
-      tenhang: global.hanghoa[thutu].tenhang,
-      hinhanh: global.hanghoa[thutu].hinhanh,
-      dongia: global.hanghoa[thutu].dongia,
-      soluong: 1,
-      thanhtien: global.hanghoa[thutu].dongia,
-    })
+    var vitri = -1
+    var hanghoa = global.hanghoa[thutu]
+    global.danhsach.forEach((hang, vitrichay) => {
+      if (hang.mahang == hanghoa.mahang) {
+        vitri = vitrichay
+      }
+    });
+    // neu chua, them vao
+    if (vitri < 0) {
+      global.danhsach.push({
+        id: global.hanghoa[thutu].id,
+        mahang: global.hanghoa[thutu].mahang,
+        tenhang: global.hanghoa[thutu].tenhang,
+        hinhanh: global.hanghoa[thutu].hinhanh,
+        dongia: global.hanghoa[thutu].dongia,
+        soluong: 0,
+        thanhtien: global.hanghoa[thutu].dongia,
+      })
+      vitri = global.danhsach.length - 1
+    }
+    // so luong + 1, day len dau danh sach
+    global.danhsach[vitri].soluong++
+    for (let i = vitri; i > 0; i--) {
+      // hoa doi vi tri voi phan tu phia truoc
+      bientam = global.danhsach[i]
+      global.danhsach[i] = global.danhsach[i - 1]
+      global.danhsach[i - 1] = bientam
+    }
     tailaidanhsach()
   }
 
