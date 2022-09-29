@@ -166,6 +166,77 @@ function importkhach() {
   $resp['messenger'] = 'Đã import file, tải lại trang để xem kết quả';
 }
 
+function importnhaphang() {
+  global $db, $nv_Request, $resp, $_FILES, $x, $xr;
+
+  $raw = $_FILES['file']['tmp_name'];
+  include(NV_ROOTDIR .'/includes/plugin/PHPExcel/IOFactory.php');
+  $inputFileType = PHPExcel_IOFactory::identify($raw);
+  $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+  $objReader->setReadDataOnly(true);
+  $objPHPExcel = $objReader->load($raw);
+  
+  $sheet = $objPHPExcel->getSheet(0); 
+  $highestRow = $sheet->getHighestRow(); 
+  $highestColumn = $sheet->getHighestColumn();
+
+  $array = [ 'Mã Hàng' => -1, 'Tên Hàng' => -1, 'Đơn vị' => -1, 'Đơn giá' => -1, 'Giá bán' => -1, 'Số lượng' => -1];
+  $rev = [ 'Mã Hàng' => 'mahang', 'Tên Hàng' => 'tenhang', 'Đơn vị' => 'donvi', 'Đơn giá' => 'dongia', 'Giá bán' => 'giaban', 'Số lượng' => 'soluong'];
+  $arr = [];
+  for ($j = 0; $j <= $x[$highestColumn]; $j ++) {
+    $arr [$j]= $sheet->getCell($xr[$j] . '1')->getValue();
+  }
+
+  foreach ($arr as $key => $val) {
+    if (isset($array[$val])) {
+      $array[$val] = $key;
+    }
+  }
+
+  $check = false;
+  foreach ($array as $val) {
+    if ($val < 0) $check = true;
+  }
+  if ($check) {
+    $resp['messenger'] = "File thiếu cột dữ liệu";
+    return 0;
+  }
+
+  $danhsach = [];
+  $loi = [];
+  for ($i = 0; $i <= $x[$highestRow]; $i ++) {
+    $dulieu = [];
+    foreach ($array as $key => $value) {
+      $val = $sheet->getCell($xr[$value] . ($i + 2))->getValue();
+      if ($val !== 0 && empty($val)) $val = '';
+      $dulieu[$rev[$key]] = trim($val);
+    }
+    $sql = "select * from pos_hanghoa where mahang = '$dulieu[mahang]' and kichhoat = 1";
+    if (empty($hanghoa = $db->fetch($sql))) {
+      // kiểm tra mã hàng, nếu không có, trả lỗi
+      $loi []= 'Hàng hóa '. ($i + 1) .' không tồn tại';
+    }
+    else {
+      // nếu có, thêm vào danh sách
+      $danhsach []= [
+        'id' => $hanghoa['id'],
+        'mahang' => $hanghoa['mahang'],
+        'tenhang' => $hanghoa['tenhang'],
+        'hinhanh' => $hanghoa['hinhanh'],
+        'dongia' => $dulieu['dongia'],
+        'soluong' => $dulieu['soluong'],
+        'thanhtien' => $dulieu['soluong'] * $hanghoa['gianhap'],
+      ];
+    }
+  }
+  $resp['status'] = 1;
+  if (count($loi)) {
+    $resp['loi'] = implode('<br>', $loi);
+    return 0;
+  }
+  $resp['danhsach'] = $danhsach;
+}
+
 // tải file
 function download() {
   global $db, $nv_Request, $resp;

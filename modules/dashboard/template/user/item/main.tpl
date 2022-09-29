@@ -201,9 +201,14 @@
   }
 
   function xacnhanimport() {
+    var file = $('#import-file')[0].files[0]
+    if (!file) {
+      vhttp.notify('Chọn file import trước khi thực hiện')
+      return 0
+    }
     var form = new FormData()
+    form.append('file', file); 
     form.append('action', 'importhang');
-    form.append('file', $('#import-file')[0].files[0]); 
     $.ajax({
       url: '/dashboard/api/',
       type: 'post',

@@ -183,15 +183,33 @@
         </div>
 
         <div id="danh-sach-nhap"></div>
+
+        <div id="loi-import" style="color: red; font-weight: bold">
+
+        </div>
+        <div class="text-center" id="mau-import">
+          Tệp mẫu <button class="btn btn-info" onclick="download('customer')"> <span class="fa fa-download"></span>
+          </button>
+          <input type="file" id="import-file" onchange="chonfile()"
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+          <button class="btn btn-info btn-block" id="import-btn" onclick="xacnhanimport()">
+            Thực hiện
+          </button>
+        </div>
+
         <div> <b> Thành tiền: </b> <span id="thanh-tien"></span> </div>
 
-        <div class="modal-body">
-          <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(1)">
-            Xác nhận
-          </button>
-          <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(0)">
-            Lưu tạm
-          </button>
+        <div class="row">
+          <div class="col-xs-12">
+            <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(1)">
+              Xác nhận
+            </button>
+          </div>
+          <div class="col-xs-12">
+            <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(0)">
+              Lưu tạm
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -282,7 +300,9 @@
     global.danhsach = []
     global.thanhtien = 0
     global.id = 0
-    $('#them-nguon-cung').val('0')
+    $('#loi-import').hide()
+    $('#import-file').val(null)
+    $('#them-nguon-cung option:first-child').prop('selected', true)
     $('#thanh-tien').text('0')
     tailaidanhsach()
     $('#modal-them-nhap').modal('show')
@@ -296,6 +316,8 @@
       global.id = id
       global.danhsach = resp.danhsach
       tailaidanhsach()
+      $('#loi-import').hide()
+      $('#import-file').val(null)
       $('#them-nguon-cung').val(resp.nguoncung)
       $('#modal-them-nhap').modal('show')
     }, (e) => { })
@@ -316,7 +338,8 @@
     }, (e) => { })
   }
 
-  function tailaidanhsach() {
+  function tailaidanhsach(submit = false) {
+    let thanhtien = 0
     let html = `
     <table class="table table-bordered">
       <tr> 
@@ -337,13 +360,12 @@
         <td id="thanhtien-`+ thutu + `"> ` + vnumber.format(hanghoa.thanhtien) + ` </td>
         <td> <button class="btn btn-danger btn-xs" onclick="xoahanghoa(`+ thutu + `)">xóa</button> </td>
       </tr>`
+      thanhtien += Number(vnumber.clear(hanghoa.thanhtien))
     })
     $('#danh-sach-nhap').html(html + `</table>`)
 
-    let thanhtien = 0
-    global.danhsach.forEach(hanghoa => {
-      thanhtien += Number(vnumber.clear(hanghoa.thanhtien))
-    });
+    if (global.danhsach.length) $('#mau-import').hide()
+    else $('#mau-import').show()
     global.thanhtien = thanhtien
     $('#thanh-tien').text(vnumber.format(thanhtien))
   }
@@ -514,6 +536,69 @@
       $('#content').html(resp.danhsach)
       $('#modal-tim-nhap').modal('hide')
     }, (e) => { })
+  }
+  
+  function chonfile() {
+    var file = $('#import-file').val()
+    $('#loi-import').hide()
+    if (file) $('#import-btn').show()
+    else $('#import-btn').hide()
+  }
+
+  function download(filename) {
+    vhttp.post('/dashboard/api/', {
+      action: 'download',
+      filename: filename
+    }).then((resp) => {
+      // nếu trả về link thì download
+      window.location = resp.link;
+    }, (e) => { })
+  }
+
+  function xacnhanimport() {
+    var file = $('#import-file')[0].files[0]
+    if (!file) {
+      vhttp.notify('Chọn file import trước khi thực hiện')
+      return 0
+    }
+    var form = new FormData()
+    form.append('file', file); 
+    form.append('action', 'importnhaphang');
+    $.ajax({
+      url: '/dashboard/api/',
+      type: 'post',
+      data: form,
+      processData: false,
+      contentType: false
+    }).done((x) => {
+      try {
+        var json = JSON.parse(x)
+        if (json.messenger && json.messenger.length) vhttp.notify(json.messenger)
+        if (json.status) {
+          $('#import-file').val(null)
+          if (json.loi && json.loi.length) {
+            $('#loi-import').text(json.loi)
+            $('#loi-import').show()
+            return 0
+          }
+          json.danhsach.forEach(hanghoa => {
+            global.danhsach.push({
+              id: hanghoa.id,
+              mahang: hanghoa.mahang,
+              tenhang: hanghoa.tenhang,
+              hinhanh: hanghoa.hinhanh,
+              dongia: hanghoa.dongia,
+              soluong: hanghoa.soluong,
+              thanhtien: hanghoa.thanhtien,
+            })
+          });
+          tailaidanhsach()
+        }
+      }
+      catch (error) {
+
+      }
+    }).fail(() => { });
   }
 </script>
 <!-- END: main -->
