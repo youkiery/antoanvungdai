@@ -23,6 +23,60 @@ if (!empty($action) && function_exists($action)) {
 echo json_encode($resp);
 die();
 
+function xuatfilenhaphang() {
+  global $db, $nv_Request, $resp, $xr;
+
+  include(NV_ROOTDIR .'/includes/plugin/PHPExcel/IOFactory.php');
+  $fileType = 'Excel2007'; 
+  $objPHPExcel = PHPExcel_IOFactory::load(UPATH . 'MauXuatFileNhapHang.xlsx');
+  $objPHPExcel->setActiveSheetIndex(0);
+
+  $filter = $nv_Request->get_array('filter', 'post');
+  if (empty($filter['page'])) $filter['page'] = 1;
+  if (empty($filter['batdau'])) $filter['batdau'] = strtotime(date('Y/m/1'));
+  else $filter['batdau'] = datetotime($filter['batdau']);
+  if (empty($filter['ketthuc'])) $filter['ketthuc'] = strtotime(date('Y') .'/'. (date('m') + 1) . '/1') - 1;
+  else $filter['ketthuc'] = datetotime($filter['ketthuc']);
+
+  $sql = "select * from pos_nhaphang where thoigian between $filter[batdau] and $filter[ketthuc] order by thoigian desc";
+  $danhsach = $db->all($sql);
+  $i = 2;
+  $thutu = 1;
+  $trangthai = [0 => 'Phiếu tạm', 'Đã hoàn thành'];
+  
+  foreach ($danhsach as $nhaphang) {
+    $j = 0;
+    $sql = "select * from pos_nguoncung where id = $nhaphang[idnguoncung]";
+    $nguoncung = $db->fetch($sql);
+
+    $sql = "select count(*) as number from pos_chitietnhaphang where idnhaphang = $nhaphang[id]";
+    $somathang = $db->fetch($sql);
+
+    $sql = "select sum(soluong) as number from pos_chitietnhaphang where idnhaphang = $nhaphang[id]";
+    $sohang = $db->fetch($sql);
+
+    $objPHPExcel
+      ->setActiveSheetIndex(0)
+      ->setCellValue($xr[$j ++] . $i, $thutu++)
+      ->setCellValue($xr[$j ++] . $i, $nhaphang['manhap'])
+      ->setCellValue($xr[$j ++] . $i, date('d/m/Y H:i:s', $nhaphang['thoigian']))
+      ->setCellValue($xr[$j ++] . $i, $nguoncung['ten'])
+      ->setCellValue($xr[$j ++] . $i, number_format($somathang['number']))
+      ->setCellValue($xr[$j ++] . $i, number_format($sohang['number']))
+      ->setCellValue($xr[$j ++] . $i, number_format($nhaphang['tongtien']))
+      ->setCellValue($xr[$j ++] . $i, $trangthai[$nhaphang['trangthai']]);
+    $i ++;
+  }
+
+  $outFile = '/uploads/excel/MauXuatFileNhapHang-'. time() .'.xlsx';
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $objWriter->save(NV_ROOTDIR . $outFile);
+  $objPHPExcel->disconnectWorksheets();
+  unset($objWriter, $objPHPExcel);
+  $resp['status'] = 1;
+  $resp['link'] = $outFile;
+}
+
 function importhanghoa() {
   global $db, $nv_Request, $resp, $_FILES, $x, $xr;
 

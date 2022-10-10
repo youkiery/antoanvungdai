@@ -346,8 +346,8 @@
           global.khachhang.forEach((khachhang, i) => {
             html += `
               <div class="suggest-item" onclick="chonkhachhang(`+ i + `)">
-                `+ khachhang.ten + ` <span style="float: right;"> ` + khachhang.dienthoai + ` </span> <br>
-                `+ khachhang.ma + `
+                `+ khachhang.tenkhach + ` <span style="float: right;"> ` + khachhang.dienthoai + ` </span> <br>
+                `+ khachhang.makhach + `
               </div>`
           })
           if (!html.length) html = `Không có kết quả`
@@ -369,8 +369,8 @@
           global.khachhangthuno.forEach((khachhang, i) => {
             html += `
               <div class="suggest-item" onclick="chonkhachhangthuno(`+ i + `)">
-                `+ khachhang.ten + ` <span style="float: right;"> ` + khachhang.dienthoai + ` </span> <br>
-                `+ khachhang.ma + `<span style="float: right; color: red; font-weight: bold;"> ` + vnumber.format(khachhang.tienno) + ` </span> 
+                `+ khachhang.tenkhach + ` <span style="float: right;"> ` + khachhang.dienthoai + ` </span> <br>
+                `+ khachhang.makhach + `<span style="float: right; color: red; font-weight: bold;"> ` + vnumber.format(khachhang.tienno) + ` </span> 
               </div>`
           })
           if (!html.length) html = `Không có kết quả`
@@ -488,7 +488,7 @@
       $('#thuno-noidung').show()
       global.thuno = resp.dulieu
       $('#thuno-noidung').html(resp.noidung)
-      $('#thuno-khachhang').text(khachhang.ten + ' ('+ khachhang.dienthoai +')')
+      $('#thuno-khachhang').text(khachhang.tenkhach + ' ('+ khachhang.dienthoai +')')
       $('#thuno-tienno').text(vnumber.format(khachhang.tienno))
       $('#thuno-diem').text(vnumber.format(khachhang.diem))
       $('#thuno-thongtinkhachhang').show()
@@ -646,7 +646,7 @@
     var khachhang = global.hoadon[global.chonhoadon].khachhang
     if (khachhang.dienthoai.length) {
       $('#thanhtoandiem').prop('disabled', false)
-      $('#tim-khach').val(khachhang.ten + ' (' + khachhang.dienthoai + ')')
+      $('#tim-khach').val(khachhang.tenkhach + ' (' + khachhang.dienthoai + ')')
       $('#tim-khach').prop('readonly', true)
       $('#khach-no').text(vnumber.format(khachhang.tienno))
       $('#khach-diem').text(khachhang.diem)
@@ -679,7 +679,7 @@
     khachhang = global.hoadon[global.chonhoadon].khachhang
     if (khachhang.id) {
       global.id = khachhang.id
-      $('#khach-ten').val(khachhang.ten)
+      $('#khach-ten').val(khachhang.tenkhach)
       $('#khach-dien-thoai').val(khachhang.dienthoai)
       $('#khach-dia-chi').val(khachhang.diachi)
       $('.insert').hide()
@@ -716,7 +716,7 @@
   }
 
   function xoakhach() {
-    global.hoadon[global.chonhoadon].khachhang = { id: 0, ma: '', ten: '', dienthoai: '' }
+    global.hoadon[global.chonhoadon].khachhang = { id: 0, makhach: '', tenkhach: '', dienthoai: '' }
     tailaikhach()
   }
 

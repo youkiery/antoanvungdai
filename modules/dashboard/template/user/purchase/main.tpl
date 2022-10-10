@@ -223,6 +223,7 @@
 
   <div class="pw-card">
     <div class="pw-card-header">
+      <button class="btn btn-info" onclick="xuatfile()"> <span class="fa fa-download"></span> </button>
       <button class="btn btn-info" onclick="timnhap()"> <span class="fa fa-search"></span> </button>
       <button class="btn btn-success" onclick="themnhap()"> <span class="fa fa-plus"></span> </button>
     </div>
@@ -564,10 +565,10 @@
     else $('#import-btn').hide()
   }
 
-  function download(filename) {
+  function xuatfile() {
     vhttp.post('/dashboard/api/', {
-      action: 'download',
-      filename: filename
+      action: 'xuatfilenhaphang',
+      filter: global.filter
     }).then((resp) => {
       // nếu trả về link thì download
       window.location = resp.link;
