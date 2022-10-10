@@ -48,31 +48,31 @@
         <div class="form-group row">
           <div class="col-xs-8"> Mã hóa đơn </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="tim-hoadon">
+            <input autocomplete="off" type="text" class="form-control" id="tim-hoadon">
           </div>
         </div>
 
         <div class="form-group row">
           <div class="col-xs-8"> Mã hàng, tên hàng </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="tim-hanghoa">
+            <input autocomplete="off" type="text" class="form-control" id="tim-hanghoa">
           </div>
         </div>
 
         <div class="form-group row">
           <div class="col-xs-8"> Khách hàng </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="tim-khachhang">
+            <input autocomplete="off" type="text" class="form-control" id="tim-khachhang">
           </div>
         </div>
 
         <div class="form-group row">
           <div class="col-xs-8"> Thời gian </div>
           <div class="col-xs-8">
-            <input type="text" class="date form-control" id="tim-thoigiandau" value="{dauthang}">
+            <input autocomplete="off" type="text" class="date form-control" id="tim-thoigiandau" value="{dauthang}">
           </div>
           <div class="col-xs-8">
-            <input type="text" class="date form-control" id="tim-thoigiancuoi" value="{cuoithang}">
+            <input autocomplete="off" type="text" class="date form-control" id="tim-thoigiancuoi" value="{cuoithang}">
           </div>
         </div>
 
@@ -99,7 +99,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Ghi chú </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="tim-ghichu">
+            <input autocomplete="off" type="text" class="form-control" id="tim-ghichu">
           </div>
         </div>
 

@@ -25,7 +25,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Từ khóa tìm kiếm </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="tim-tu-khoa">
+            <input autocomplete="off" type="text" class="form-control" id="tim-tu-khoa">
           </div>
         </div>
 
@@ -33,13 +33,13 @@
           <div class="col-xs-8"> Lọc theo thời gian </div>
           <div class="col-xs-8">
             <div class="input-group">
-              <input type="text" class="form-control date" id="tim-bat-dau" value="{batdau}">
+              <input autocomplete="off" type="text" class="form-control date" id="tim-bat-dau" value="{batdau}">
               <div class="input-group-addon"> <span class="fa fa-calendar"></span> </div>
             </div>
           </div>
           <div class="col-xs-8">
             <div class="input-group">
-              <input type="text" class="form-control date" id="tim-ket-thuc" value="{ketthuc}">
+              <input autocomplete="off" type="text" class="form-control date" id="tim-ket-thuc" value="{ketthuc}">
               <div class="input-group-addon"> <span class="fa fa-calendar"></span> </div>
             </div>
           </div>
@@ -66,13 +66,13 @@
         <div class="form-group row">
           <div class="col-xs-8"> Mã Hàng </div>
           <div class="col-xs-16">
-            <input type="text" class="modal-them form-control" id="them-ma-hang" placeholder="Mã hàng tự động">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-ma-hang" placeholder="Mã hàng tự động">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-xs-8"> Tên Hàng </div>
           <div class="col-xs-16">
-            <input type="text" class="modal-them form-control" id="them-ten-hang">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-ten-hang">
           </div>
         </div>
         <div class="form-group row">
@@ -86,19 +86,19 @@
         <div class="form-group row">
           <div class="col-xs-8"> Giá nhập </div>
           <div class="col-xs-16">
-            <input type="text" class="modal-them form-control" id="them-gia-nhap">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-gia-nhap">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-xs-8"> Giá bán </div>
           <div class="col-xs-16">
-            <input type="text" class="modal-them form-control" id="them-gia-ban">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-gia-ban">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-xs-8"> Đơn vị </div>
           <div class="col-xs-16">
-            <input type="text" class="modal-them form-control" id="them-don-vi">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-don-vi">
           </div>
         </div>
         <div class="form-group row">
@@ -128,13 +128,13 @@
         <div class="form-group row">
           <div class="col-xs-8"> Nhà cung cấp </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="nguon-ten">
+            <input autocomplete="off" type="text" class="form-control" id="nguon-ten">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-xs-8"> Điện thoại </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="nguon-dien-thoai">
+            <input autocomplete="off" type="text" class="form-control" id="nguon-dien-thoai">
           </div>
         </div>
         <div class="form-group row">
@@ -163,7 +163,7 @@
       <div class="modal-body">
         <div class="form-group relative">
           <div class="input-group">
-            <input type="text" class="form-control" id="them-nhap-hang" placeholder="Tìm kiếm hàng hóa">
+            <input autocomplete="off" type="text" class="form-control" id="them-nhap-hang" placeholder="Tìm kiếm hàng hóa">
             <div class="input-group-btn">
               <button class="btn btn-success" onclick="themhang()"> <span class="fa fa-plus"></span> </button>
             </div>
@@ -356,8 +356,8 @@
       <tr id="hanghoa-`+ thutu + `" thutu="` + thutu + `">
         <td> `+ hanghoa.mahang + ` </td>
         <td> `+ hanghoa.tenhang + ` </td>
-        <td> <input class="form-control" id="dongia-`+ thutu + `" onkeyup="lienketdulieu('dongia', ` + thutu + `)" value="` + vnumber.format(hanghoa.dongia) + `"> </td>
-        <td> <input class="form-control" id="soluong-`+ thutu + `" onkeyup="lienketdulieu('soluong', ` + thutu + `)" value="` + vnumber.format(hanghoa.soluong) + `"> </td>
+        <td> <input autocomplete="off" class="form-control" id="dongia-`+ thutu + `" onkeyup="lienketdulieu('dongia', ` + thutu + `)" value="` + vnumber.format(hanghoa.dongia) + `"> </td>
+        <td> <input autocomplete="off" class="form-control" id="soluong-`+ thutu + `" onkeyup="lienketdulieu('soluong', ` + thutu + `)" value="` + vnumber.format(hanghoa.soluong) + `"> </td>
         <td id="thanhtien-`+ thutu + `"> ` + vnumber.format(hanghoa.thanhtien) + ` </td>
         <td> <button class="btn btn-danger btn-xs" onclick="xoahanghoa(`+ thutu + `)">xóa</button> </td>
       </tr>`

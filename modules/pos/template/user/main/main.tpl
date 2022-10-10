@@ -126,17 +126,16 @@
           <div class="col-xs-24"> Khách thanh toán </div>
           <div class="col-xs-8 pw-input-group">
             <div class="pw-input-header" onclick="chonthanhtoanthuno(0)"> Tiền mặt </div>
-            <input type="text" class="pw-input-content form-control" id="thuno-thanhtoantien" placeholder="Tiền mặt"
-              onkeyup="suathanhtoanthuno(0)">
+            <input autocomplete="off" type="text" class="pw-input-content form-control" id="thuno-thanhtoantien" placeholder="Tiền mặt" onkeyup="suathanhtoanthuno(0)">
           </div>
           <div class="col-xs-8 pw-input-group">
             <div class="pw-input-header" onclick="chonthanhtoanthuno(1)"> Chuyển khoản </div>
-            <input type="text" class="pw-input-content form-control" id="thuno-thanhtoanchuyenkhoan"
+            <input autocomplete="off" type="text" class="pw-input-content form-control" id="thuno-thanhtoanchuyenkhoan"
               placeholder="Chuyển khoản" onkeyup="suathanhtoanthuno(1)">
           </div>
           <div class="col-xs-8 pw-input-group">
             <div class="pw-input-header" onclick="chonthanhtoanthuno(2)">Điểm</div>
-            <input type="text" class="pw-input-content form-control" id="thuno-thanhtoandiem" placeholder="Điểm"
+            <input autocomplete="off" type="text" class="pw-input-content form-control" id="thuno-thanhtoandiem" placeholder="Điểm"
               onkeyup="suathanhtoanthuno(2)">
           </div>
         </div>
@@ -250,17 +249,17 @@
         <div class="col-xs-24"> Khách thanh toán </div>
         <div class="col-xs-8 pw-input-group">
           <div class="pw-input-header" onclick="chonthanhtoan(0)"> Tiền mặt </div>
-          <input type="text" class="pw-input-content form-control" id="thanhtoantien" placeholder="Tiền mặt"
+          <input autocomplete="off" type="text" class="pw-input-content form-control" id="thanhtoantien" placeholder="Tiền mặt"
             onkeyup="suathanhtoan(0)">
         </div>
         <div class="col-xs-8 pw-input-group">
           <div class="pw-input-header" onclick="chonthanhtoan(1)"> Chuyển khoản </div>
-          <input type="text" class="pw-input-content form-control" id="thanhtoanchuyenkhoan" placeholder="Chuyển khoản"
+          <input autocomplete="off" type="text" class="pw-input-content form-control" id="thanhtoanchuyenkhoan" placeholder="Chuyển khoản"
             onkeyup="suathanhtoan(1)">
         </div>
         <div class="col-xs-8 pw-input-group">
           <div class="pw-input-header" onclick="chonthanhtoan(2)">Điểm</div>
-          <input type="text" class="pw-input-content form-control" id="thanhtoandiem" placeholder="Điểm"
+          <input autocomplete="off" type="text" class="pw-input-content form-control" id="thanhtoandiem" placeholder="Điểm"
             onkeyup="suathanhtoan(2)">
         </div>
       </div>

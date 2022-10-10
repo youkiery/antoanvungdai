@@ -44,7 +44,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Từ khóa tìm kiếm </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="tim-tu-khoa">
+            <input autocomplete="off" type="text" class="form-control" id="tim-tu-khoa">
           </div>
         </div>
 
@@ -78,13 +78,13 @@
         <div class="form-group row">
           <div class="col-xs-8"> Mã Hàng </div>
           <div class="col-xs-16">
-            <input type="text" class="modal-them form-control" id="them-ma-hang" placeholder="Mã hàng tự động">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-ma-hang" placeholder="Mã hàng tự động">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-xs-8"> Tên Hàng </div>
           <div class="col-xs-16">
-            <input type="text" class="modal-them form-control" id="them-ten-hang">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-ten-hang">
           </div>
         </div>
         <div class="form-group row">
@@ -98,19 +98,19 @@
         <div class="form-group row">
           <div class="col-xs-8"> Giá nhập </div>
           <div class="col-xs-16">
-            <input type="text" class="modal-them form-control" id="them-gia-nhap">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-gia-nhap">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-xs-8"> Giá bán </div>
           <div class="col-xs-16">
-            <input type="text" class="modal-them form-control" id="them-gia-ban">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-gia-ban">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-xs-8"> Đơn vị </div>
           <div class="col-xs-16">
-            <input type="text" class="modal-them form-control" id="them-don-vi">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-don-vi">
           </div>
         </div>
         <div class="form-group row">

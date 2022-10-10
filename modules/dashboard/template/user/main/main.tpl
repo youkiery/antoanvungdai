@@ -17,7 +17,7 @@
 <div class="pw-content">
   <form>
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Tìm Kiếm" name="keyword" value="">
+      <input autocomplete="off" type="text" class="form-control" placeholder="Tìm Kiếm" name="keyword" value="">
       <div class="input-group-btn">
         <button class="btn btn-default" type="submit">
           <span class="fa fa-search"></span>

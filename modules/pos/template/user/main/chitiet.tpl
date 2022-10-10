@@ -16,7 +16,7 @@
       <td> {mahoadon} </td>
       <td> {dathu} </td>
       <td> {conno} </td>
-      <td> <input type="text" class="form-control" id="thuno-tien{i}" value="0" onkeyup="suatoathanhtoanthuno({i})"> </td>
+      <td> <input autocomplete="off" type="text" class="form-control" id="thuno-tien{i}" value="0" onkeyup="suatoathanhtoanthuno({i})"> </td>
     </tr>
     <!-- END: row -->
   </tbody>

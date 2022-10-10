@@ -44,7 +44,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Tên, điện thoại khách </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="tim-tu-khoa">
+            <input autocomplete="off" type="text" class="form-control" id="tim-tu-khoa">
           </div>
         </div>
 
@@ -68,19 +68,19 @@
         <div class="form-group row">
           <div class="col-xs-8"> Mã khách </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="khach-ma">
+            <input autocomplete="off" type="text" class="form-control" id="khach-ma">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-xs-8"> Khách hàng </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="khach-ten">
+            <input autocomplete="off" type="text" class="form-control" id="khach-ten">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-xs-8"> Điện thoại </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="khach-dien-thoai">
+            <input autocomplete="off" type="text" class="form-control" id="khach-dien-thoai">
           </div>
         </div>
         <div class="form-group row">

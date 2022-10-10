@@ -25,7 +25,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Mã hàng hoặc tên hàng </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="tim-tu-khoa">
+            <input autocomplete="off" type="text" class="form-control" id="tim-tu-khoa">
           </div>
         </div>
 
@@ -49,13 +49,13 @@
         <div class="form-group row">
           <div class="col-xs-8"> Nhà cung cấp </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="nguon-ten">
+            <input autocomplete="off" type="text" class="form-control" id="nguon-ten">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-xs-8"> Điện thoại </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="nguon-dien-thoai">
+            <input autocomplete="off" type="text" class="form-control" id="nguon-dien-thoai">
           </div>
         </div>
         <div class="form-group row">

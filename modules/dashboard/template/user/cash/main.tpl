@@ -10,7 +10,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Tiền thu </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="phieuthutien" onkeyup="tiente('phieuthutien')">
+            <input autocomplete="off" type="text" class="form-control" id="phieuthutien" onkeyup="tiente('phieuthutien')">
           </div>
         </div>
 
@@ -56,7 +56,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Tiền chi </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="phieuchitien" onkeyup="tiente('phieuchitien')">
+            <input autocomplete="off" type="text" class="form-control" id="phieuchitien" onkeyup="tiente('phieuchitien')">
           </div>
         </div>
 
@@ -143,10 +143,10 @@
         <div class="form-group row">
           <div class="col-xs-8"> Thời gian </div>
           <div class="col-xs-8">
-            <input type="text" class="date form-control" id="tim-thoigiandau" value="{batdau}">
+            <input autocomplete="off" type="text" class="date form-control" id="tim-thoigiandau" value="{batdau}">
           </div>
           <div class="col-xs-8">
-            <input type="text" class="date form-control" id="tim-thoigiancuoi" value="{ketthuc}">
+            <input autocomplete="off" type="text" class="date form-control" id="tim-thoigiancuoi" value="{ketthuc}">
           </div>
         </div>
 
@@ -163,7 +163,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Ghi chú </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="tim-ghichu">
+            <input autocomplete="off" type="text" class="form-control" id="tim-ghichu">
           </div>
         </div>
 
@@ -186,7 +186,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Loại thu chi </div>
           <div class="col-xs-16">
-            <input type="text" class="form-control" id="them-loaithuchi">
+            <input autocomplete="off" type="text" class="form-control" id="them-loaithuchi">
           </div>
         </div>
 

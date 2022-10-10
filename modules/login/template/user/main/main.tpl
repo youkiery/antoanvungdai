@@ -11,13 +11,13 @@
     <div class="form-group">
       <div class="input-group">
         <span class="input-group-addon"> <span class="fa fa-user fa-lg"></span> </span>
-        <input class="form-control" id="username" placeholder="Tài khoản"></ion-input>
+        <input autocomplete="off" class="form-control" id="username" placeholder="Tài khoản"></ion-input>
       </div>
     </div>
     <div class="form-group">
       <div class="input-group">
         <span class="input-group-addon"> <span class="fa fa-lock fa-lg"></span> </span>
-        <input class="form-control" type="password" id="password" placeholder="Tài khoản"></ion-input>
+        <input autocomplete="off" class="form-control" type="password" id="password" placeholder="Tài khoản"></ion-input>
       </div>
     </div>
     <div class="text-center">

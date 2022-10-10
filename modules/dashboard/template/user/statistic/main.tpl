@@ -32,11 +32,11 @@
     </div>
     <div class="row">
       <div class="col-xs-12">
-        <input type="text" class="date form-control" id="batdau" value="{homnay}">
+        <input autocomplete="off" type="text" class="date form-control" id="batdau" value="{homnay}">
       </div>
       <div class="col-xs-12">
         <div class="input-group">
-          <input type="text" class="date form-control" id="ketthuc" value="{homnay}">
+          <input autocomplete="off" type="text" class="date form-control" id="ketthuc" value="{homnay}">
           <div class="input-group-btn">
             <button class="btn btn-success" onclick="thongke()"> <span class="fa fa-line-chart"></span> </button>
           </div>
