@@ -206,9 +206,9 @@
 
   <div class="pw-card">
     <div class="pw-card-header">
-      <button class="btn btn-success" onclick="themphieuthu()"> <span class="fa fa-plus"></span> </button>
-      <button class="btn btn-warning" onclick="themphieuchi()"> <span class="fa fa-plus"></span> </button>
-      <button class="btn btn-info" onclick="lochoadon()"> <span class="fa fa-search"></span> </button>
+      <button class="btn btn-success" onclick="themphieuthu()"> <span class="fa fa-plus"></span> Phiếu thu </button>
+      <button class="btn btn-warning" onclick="themphieuchi()"> <span class="fa fa-plus"></span> Phiếu chi </button>
+      <button class="btn btn-info" onclick="lochoadon()"> <span class="fa fa-search"></span> Tìm kiếm </button>
     </div>
     <div class="pw-card-content" id="content">
       {danhsach}

@@ -13,6 +13,23 @@
   </div>
 </div>
 
+<div class="modal fade" id="modal-inma" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"> In tem mã </h4>
+      </div>
+      <div class="modal-body">
+        <div id="inma-danhsach" class="form-group" style="max-height: 500px; overflow-y: scroll;"></div>
+        <div class="text-center">
+          <button class="btn btn-info" onclick="xacnhaninma()"> In tem mã </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="modal-tim-nhap" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -21,7 +38,6 @@
         <h4 class="modal-title"> Tìm kiếm hàng hóa </h4>
       </div>
       <div class="modal-body">
-
         <div class="form-group row">
           <div class="col-xs-8"> Từ khóa tìm kiếm </div>
           <div class="col-xs-16">
@@ -66,7 +82,8 @@
         <div class="form-group row">
           <div class="col-xs-8"> Mã Hàng </div>
           <div class="col-xs-16">
-            <input autocomplete="off" type="text" class="modal-them form-control" id="them-ma-hang" placeholder="Mã hàng tự động">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-ma-hang"
+              placeholder="Mã hàng tự động">
           </div>
         </div>
         <div class="form-group row">
@@ -161,14 +178,15 @@
       </div>
 
       <div class="modal-body">
-        <div class="form-group relative">
-          <div class="input-group">
-            <input autocomplete="off" type="text" class="form-control" id="them-nhap-hang" placeholder="Tìm kiếm hàng hóa">
-            <div class="input-group-btn">
-              <button class="btn btn-success" onclick="themhang()"> <span class="fa fa-plus"></span> </button>
-            </div>
+        <div class="form-group input-group">
+          <div class="pw-suggest-group">
+            <input autocomplete="off" type="text" class="form-control" id="them-nhap-hang"
+              placeholder="Tìm kiếm hàng hóa">
+            <div class="pw-suggest-list" id="goiy-them-nhap-hang"> </div>
           </div>
-          <div class="suggest" id="goiy-them-nhap-hang"> </div>
+          <div class="input-group-btn">
+            <button class="btn btn-success" onclick="themhang()"> <span class="fa fa-plus"></span> </button>
+          </div>
         </div>
 
         <div class="form-group">
@@ -188,7 +206,8 @@
 
         </div>
         <div class="text-center" id="mau-import">
-          Tệp mẫu <button class="btn btn-info" onclick="download('customer')"> <span class="fa fa-download"></span>
+          <button class="btn btn-info" onclick="download('purchase')"> <span class="fa fa-download"></span> 
+            Tải về tệp mẫu
           </button>
           <input type="file" id="import-file" onchange="chonfile()"
             accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
@@ -223,9 +242,9 @@
 
   <div class="pw-card">
     <div class="pw-card-header">
-      <button class="btn btn-info" onclick="xuatfile()"> <span class="fa fa-download"></span> </button>
-      <button class="btn btn-info" onclick="timnhap()"> <span class="fa fa-search"></span> </button>
-      <button class="btn btn-success" onclick="themnhap()"> <span class="fa fa-plus"></span> </button>
+      <button class="btn btn-info" onclick="xuatfile()"> <span class="fa fa-download"></span> Xuất danh sách </button>
+      <button class="btn btn-info" onclick="timnhap()"> <span class="fa fa-search"></span> Tìm kiếm </button>
+      <button class="btn btn-success" onclick="themnhap()"> <span class="fa fa-plus"></span> Nhập hàng </button>
     </div>
     <div class="pw-card-content" id="content">
       {danhsach}
@@ -233,6 +252,7 @@
   </div>
 </div>
 
+<script src="/assets/js/JsBarcode.all.min.js"></script>
 <script>
   var config = {
     apiKey: "AIzaSyDWt6y4laxeTBq2RYDY6Jg4_pOkdxwsjUE",
@@ -557,7 +577,7 @@
       $('#modal-tim-nhap').modal('hide')
     }, (e) => { })
   }
-  
+
   function chonfile() {
     var file = $('#import-file').val()
     $('#loi-import').hide()
@@ -575,6 +595,78 @@
     }, (e) => { })
   }
 
+  function download(filename) {
+    vhttp.post('/dashboard/api/', {
+      action: 'download',
+      filename: filename
+    }).then((resp) => {
+      // nếu trả về link thì download
+      window.location = resp.link;
+    }, (e) => { })
+  }
+
+  function xuatfilechitiet(id) {
+    vhttp.post('/dashboard/api/', {
+      action: 'xuatfilechitietnhaphang',
+      id: id
+    }).then((resp) => {
+      // nếu trả về link thì download
+      window.location = resp.link;
+    }, (e) => { })
+  }
+
+  function inma(id) {
+    vhttp.post('/dashboard/api/', {
+      action: 'danhsachchitietnhaphang',
+      id: id
+    }).then((resp) => {
+      // nếu trả về link thì download
+      global.danhsach = resp.danhsach
+      tailaidanhsachinma()
+      $('#modal-inma').modal('show')
+    }, (e) => { })
+  }
+
+  function xoadanhsachinma(thutuxoa) {
+    global.danhsach = global.danhsach.filter((dulieu, thutu) => {
+      return thutu !== thutuxoa
+    })
+    tailaidanhsachinma()
+  }
+
+  function tailaidanhsachinma() {
+    var html = ``
+    global.danhsach.forEach((dulieu, thutu) => {
+      html += '<tr style="border-bottom: 1px solid lightgray;"><td style="width: 5%; text-align: center; padding-bottom: 2px;"><span class="fa fa-times" onclick="xoadanhsachinma('+ thutu +')"></span></td>  <td style="width: 20%; padding-bottom: 2px;">'+ dulieu.mahang +'</td> <td style="width: 50%; padding-bottom: 2px;">'+ dulieu.tenhang +'</td><td style="width: 25%; padding-bottom: 2px;"><input class="form-control" id="inma-soluong-'+ thutu +'" value="'+ dulieu.soluong +'" onkeyup="thaydoisoluonginma('+ thutu +')"></td></tr>'
+    })
+    $('#inma-danhsach').html(`
+    <table style="width: 100%;">
+      `+ html +`
+    </table>`)
+  }
+
+  function thaydoisoluonginma(thutu) {
+    global.danhsach[thutu].soluong = $('#inma-soluong-'+ thutu).val()
+  }
+
+  function xacnhaninma() {
+    // mở 1 modal mới với preview hay in ngay lập tức
+  }
+
+  function chitiet(id) {
+    if ($('#tr-' + id).attr('load') == '0') {
+      vhttp.post('/dashboard/api/', {
+        action: 'chitietnhaphang',
+        id: id
+      }).then((resp) => {
+        $('#tr-' + id).attr('load', '1')
+        $('#td-' + id).html(resp.html)
+      }, (e) => { })
+    }
+    $('.chitiet').hide()
+    $('#tr-' + id).show()
+  }
+
   function xacnhanimport() {
     var file = $('#import-file')[0].files[0]
     if (!file) {
@@ -582,7 +674,7 @@
       return 0
     }
     var form = new FormData()
-    form.append('file', file); 
+    form.append('file', file);
     form.append('action', 'importnhaphang');
     $.ajax({
       url: '/dashboard/api/',

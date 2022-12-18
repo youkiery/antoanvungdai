@@ -20,7 +20,7 @@
       <td> {tongtien} </td>
       <td> <span class="{cogiamgia}"> {giamgiatien} {giamgiaphantram} </span> </td>
       <td> {thanhtien} </td>
-      <td> {datra} </td>
+      <td {classdatra}> {datra} </td>
     </tr>
     <tr class="chitiet" id="tr-{id}" style="display: none;" load="0">
       <td colspan="7" id="td-{id}"></td>

@@ -44,8 +44,6 @@
 
 <div style="float: right;">
   <button class="btn btn-info" onclick="inhoadon({id})"> In hóa đơn </button>
-</div>
-<div style="float: right;">
   <button class="btn btn-danger" onclick="xoahoadon({id})"> Xóa hóa đơn </button>
 </div>
 <!-- END: main -->

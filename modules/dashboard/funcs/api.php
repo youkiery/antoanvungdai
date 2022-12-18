@@ -35,8 +35,8 @@ function xuatfilenhaphang() {
   if (empty($filter['page'])) $filter['page'] = 1;
   if (empty($filter['batdau'])) $filter['batdau'] = strtotime(date('Y/m/1'));
   else $filter['batdau'] = datetotime($filter['batdau']);
-  if (empty($filter['ketthuc'])) $filter['ketthuc'] = strtotime(date('Y') .'/'. (date('m') + 1) . '/1') - 1;
-  else $filter['ketthuc'] = datetotime($filter['ketthuc']);
+  if (empty($filter['ketthuc'])) $filter['ketthuc'] = strtotime(date('Y/m/t')) + 60 * 60 * 24 - 1;
+  else $filter['ketthuc'] = datetotime($filter['ketthuc']) + 60 * 60 * 24 - 1;
 
   $sql = "select * from pos_nhaphang where thoigian between $filter[batdau] and $filter[ketthuc] order by thoigian desc";
   $danhsach = $db->all($sql);
@@ -69,6 +69,54 @@ function xuatfilenhaphang() {
   }
 
   $outFile = '/uploads/excel/MauXuatFileNhapHang-'. time() .'.xlsx';
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $objWriter->save(NV_ROOTDIR . $outFile);
+  $objPHPExcel->disconnectWorksheets();
+  unset($objWriter, $objPHPExcel);
+  $resp['status'] = 1;
+  $resp['link'] = $outFile;
+}
+
+function danhsachchitietnhaphang() {
+  global $db, $nv_Request, $resp, $xr;
+
+  $id = $nv_Request->get_string('id', 'post', 0);
+  $sql = "select a.soluong, b.mahang, b.tenhang from pos_chitietnhaphang a inner join pos_hanghoa b on a.idhang = b.id and a.idnhaphang = $id";
+  $resp['status'] = 1;
+  $resp['danhsach'] = $danhsach = $db->all($sql);
+}
+
+function xuatfilechitietnhaphang() {
+  global $db, $nv_Request, $resp, $xr;
+
+  include(NV_ROOTDIR .'/includes/plugin/PHPExcel/IOFactory.php');
+  $fileType = 'Excel2007'; 
+  $objPHPExcel = PHPExcel_IOFactory::load(UPATH . 'FileChiTietNhapHang.xlsx');
+  $objPHPExcel->setActiveSheetIndex(0);
+
+  $id = $nv_Request->get_string('id', 'post', 0);
+  $sql = "select * from pos_chitietnhaphang where idnhaphang = $id";
+  $danhsach = $db->all($sql);
+  $i = 2;
+  $thutu = 1;
+
+  foreach ($danhsach as $nhaphang) {
+    $j = 0;
+    $sql = "select * from pos_hanghoa where id = $nhaphang[idhang]";
+    $hanghoa = $db->fetch($sql);
+
+    $objPHPExcel
+      ->setActiveSheetIndex(0)
+      ->setCellValue($xr[$j ++] . $i, $thutu++)
+      ->setCellValue($xr[$j ++] . $i, $hanghoa['mahang'])
+      ->setCellValue($xr[$j ++] . $i, $hanghoa['tenhang'])
+      ->setCellValue($xr[$j ++] . $i, number_format($nhaphang['soluong']))
+      ->setCellValue($xr[$j ++] . $i, number_format($nhaphang['gianhap']))
+      ->setCellValue($xr[$j ++] . $i, number_format($nhaphang['soluong'] * $nhaphang['gianhap']));
+    $i ++;
+  }
+
+  $outFile = '/uploads/excel/FileChiTietNhapHang-'. time() .'.xlsx';
   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
   $objWriter->save(NV_ROOTDIR . $outFile);
   $objPHPExcel->disconnectWorksheets();
@@ -426,7 +474,7 @@ function chitiethoadon() {
     $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
     $hanghoa = $db->fetch($sql);
     $xtpl->assign('mahang', $hanghoa['mahang']);
-    $xtpl->assign('tenhang', $chitiet['tenhang']);
+    $xtpl->assign('tenhang', $hanghoa['tenhang']);
     $xtpl->assign('soluong', number_format($chitiet['soluong']));
     $xtpl->assign('dongia', number_format($chitiet['dongia']));
     $xtpl->assign('giamgiatien', number_format($chitiet['giamgiatien']));
@@ -448,7 +496,7 @@ function chitiethoadon() {
   $xtpl->assign('id', $id);
   $xtpl->assign('mahoadon', $hoadon['mahoadon']);
   $xtpl->assign('ghichu', $hoadon['ghichu']);
-  $xtpl->assign('thoigian', date('d/m/Y H:i'));
+  $xtpl->assign('thoigian', date('d/m/Y H:i'), $hoadon['thoigian']);
   $xtpl->assign('khachhang', $khachhang['ten']);
   $xtpl->assign('ratoa', $ratoa['first_name']);
   $xtpl->assign('banhang', $banhang['first_name']);
@@ -467,6 +515,46 @@ function chitiethoadon() {
   $xtpl->assign('datra', number_format($hoadon['thanhtoan']));
   $xtpl->assign('ghichu', '');
 
+  $xtpl->parse('main');
+
+  $resp['status'] = 1;
+  $resp['html'] = $xtpl->text();
+}
+
+function chitietnhaphang() {
+  global $db, $resp, $nv_Request;
+
+  $id = $nv_Request->get_int('id', 'post');
+  $xtpl = new XTemplate('chitiet.tpl', UPATH . '/purchase/');
+
+  $sql = "select * from pos_nhaphang where id = $id";
+  $nhaphang = $db->fetch($sql);
+
+  $sql = "select * from pos_chitietnhaphang where idnhaphang = $id";
+  $danhsach = $db->all($sql);
+
+  $soluong = 0;
+  foreach ($danhsach as $chitiet) {
+    $soluong += $chitiet['soluong'];
+    $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
+    $hanghoa = $db->fetch($sql);
+    $xtpl->assign('mahang', $hanghoa['mahang']);
+    $xtpl->assign('tenhang', $hanghoa['tenhang']);
+    $xtpl->assign('soluong', number_format($chitiet['soluong']));
+    $xtpl->assign('gianhap', number_format($chitiet['gianhap']));
+    $xtpl->assign('thanhtien', number_format($chitiet['soluong'] * $chitiet['gianhap']));
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->assign('id', $id);
+  $xtpl->assign('manhaphang', $nhaphang['manhaphang']);
+  $xtpl->assign('thoigian', date('d/m/Y H:i'), $nhaphang['thoigian']);
+  $xtpl->assign('sohang', number_format($soluong));
+  $xtpl->assign('thanhtien', number_format($nhaphang['tongtien']));
+  
+  $arr = [0 => 'Lưu tạm', 'Đã hoàn thành'];
+  $xtpl->assign('trangthai', $arr[$nhaphang['trangthai']]);
+  if (!$nhaphang['trangthai']) $xtpl->parse('main.update');
   $xtpl->parse('main');
 
   $resp['status'] = 1;
@@ -787,13 +875,13 @@ function themkhach() {
       $hang = $db->fetch($sql);
       $ma = "KH" . fillzero(($hang['id'] ? $hang['id'] : 0) + 1);
     
-      $sql = "insert into pos_khachhang (makhach, tenkhach, dienthoai, diachi) values('$ma', '$data[ten]', '$data[dienthoai]', '$data[diachi]')";
+      $sql = "insert into pos_khachhang (makhach, tenkhach, dienthoai, diachi) values('$ma', '$data[tenkhach]', '$data[dienthoai]', '$data[diachi]')";
       $id = $db->insert_id($sql);
       $resp['messenger'] = 'Đã thêm khách hàng';
     }
   }
   else {
-    $sql = "update pos_khachhang set makhach = '$data[ma]', tenkhach = '$data[ten]', dienthoai = '$data[dienthoai]', diachi = '$data[diachi]' where id = $id";
+    $sql = "update pos_khachhang set makhach = '$data[ma]', tenkhach = '$data[tenkhach]', dienthoai = '$data[dienthoai]', diachi = '$data[diachi]' where id = $id";
     $db->query($sql);
     $resp['messenger'] = 'Đã cập nhật khách hàng';
   }

@@ -23,7 +23,7 @@ function danhsachhang() {
   $query = array();
   if (empty($filter['page'])) $filter['page'] = 1;
 
-  if (!empty($filter['tukhoa'])) $query []= "tenhang like '%$filter[tukhoa]%'";
+  if (!empty($filter['tukhoa'])) $query []= "(tenhang like '%$filter[tukhoa]%' or mahang like '%$filter[tukhoa]%' or gioithieu like '%$filter[tukhoa]%')";
   if (!empty($filter['loaihang'])) $query []= "loaihang = $filter[loaihang]";
   if (count($query)) $query = " and " . implode(' and ', $query);
   else $query = '';
@@ -83,12 +83,12 @@ function danhsachthuchi() {
     $loaithuchi = $db->fetch($sql);
 
     $sql = "select * from pos_khachhang where id = $row[idkhachhang]";
-    if (empty($doituong = $db->fetch($sql))) $doituong = ['ten' => ''];
+    if (empty($doituong = $db->fetch($sql))) $doituong = ['tenkhach' => ''];
 
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('loaithuchi', $loaithuchi['ten']);
     $xtpl->assign('loaithanhtoan', $loaithanhtoan[$row['loai']]);
-    $xtpl->assign('doituong', $doituong['ten']);
+    $xtpl->assign('doituong', $doituong['tenkhach']);
     $xtpl->assign('mathuchi', $row['mathuchi']);
     $xtpl->assign('thoigian', date('d/m/Y H:i'));
     $xtpl->assign('sotien', number_format($row['sotien']));
@@ -107,8 +107,8 @@ function danhsachnhaphang() {
   if (empty($filter['page'])) $filter['page'] = 1;
   if (empty($filter['batdau'])) $filter['batdau'] = strtotime(date('Y/m/1'));
   else $filter['batdau'] = datetotime($filter['batdau']);
-  if (empty($filter['ketthuc'])) $filter['ketthuc'] = strtotime(date('Y') .'/'. (date('m') + 1) . '/1') - 1;
-  else $filter['ketthuc'] = datetotime($filter['ketthuc']);
+  if (empty($filter['ketthuc'])) $filter['ketthuc'] = strtotime(date('Y/m/t')) + 60 * 60 * 24 - 1;
+  else $filter['ketthuc'] = datetotime($filter['ketthuc']) + 60 * 60 * 24 - 1;
 
   $sql = "select count(*) as count from pos_nhaphang where thoigian between $filter[batdau] and $filter[ketthuc] order by thoigian desc";
   $count = $db->fetch($sql)['count'];
@@ -121,7 +121,7 @@ function danhsachnhaphang() {
   $trangthai = array(0 => 'Phiếu tạm', 'Hoàn thành');
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/purchase/');
   foreach ($danhsach as $i => $row) {
-    $sql = "select * from pos_chitietnhaphang a inner join pos_hanghoa b on a.idhang = b.id and idnhaphang = $row[id] and (tenhang like '%$filter[tukhoa]%' or mahang like '%$filter[tukhoa]%')";
+    $sql = "select * from pos_chitietnhaphang a inner join pos_hanghoa b on a.idhang = b.id and idnhaphang = $row[id] and (b.tenhang like '%$filter[tukhoa]%' or b.mahang like '%$filter[tukhoa]%')";
     if (!empty($db->fetch($sql))) {
       $count ++;
       if ($i >= $lf && $i < $lt) {
@@ -134,7 +134,6 @@ function danhsachnhaphang() {
         $xtpl->assign('nguoncung', $nguoncung['ten']);
         $xtpl->assign('tongtien', number_format($row['tongtien']));
         $xtpl->assign('trangthai', $trangthai[$row['trangthai']]);
-        if ($row['trangthai'] == 0) $xtpl->parse('main.row.update');
         $xtpl->parse('main.row');
       }
     }
@@ -219,7 +218,7 @@ function danhsachhoadon() {
   $xtra = "where ". implode(' and ', $xtra);
 
   if (!empty($filter['hanghoa'])) {
-    $sql = "select a.id from pos_hoadon a inner join pos_chitiethoadon b on a.id = b.idhoadon inner join pos_hanghoa c on b.idhang = c.id where (c.mahang like '%$filter[hanghoa]%' or b.tenhang like '%$filter[hanghoa]%')";
+    $sql = "select a.id from pos_hoadon a inner join pos_chitiethoadon b on a.id = b.idhoadon inner join pos_hanghoa c on b.idhang = c.id where (c.mahang like '%$filter[hanghoa]%' or c.tenhang like '%$filter[hanghoa]%')";
     $danhsachid = $db->arr($sql, 'id');
     $xtra .= " and id in (". implode(', ', $danhsachid) .")";
   }
@@ -242,7 +241,7 @@ function danhsachhoadon() {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('mahoadon', $row['mahoadon']);
     $xtpl->assign('thoigian', date('d/m/Y H:i', $row['thoigian']));
-    $xtpl->assign('khachhang', $khachhang['ten']);
+    $xtpl->assign('khachhang', $khachhang['tenkhach']);
     $xtpl->assign('tongtien', number_format($row['tongtien']));
     $xtpl->assign('thanhtien', number_format($row['thanhtien']));
     $xtpl->assign('giamgiatien', number_format($row['giamgiatien']));
@@ -253,6 +252,8 @@ function danhsachhoadon() {
     else $xtpl->assign('cogiamgia', '');
     // $giamgia = $row['tongtien'] - $row['thanhtien'];
     // $xtpl->assign('giamgia', $giamgia);
+    if ($row['thanhtien'] != $row['thanhtoan']) $xtpl->assign('classdatra', 'style="color: red;"');
+    else $xtpl->assign('classdatra', '');
     $xtpl->assign('datra', number_format($row['thanhtoan']));
     $xtpl->parse('main.row');
   }
@@ -271,8 +272,6 @@ function thongke() {
   if (empty($ketthuc)) $ketthuc = date('d/m/Y');
   $batdau = datetotime($batdau);
   $ketthuc = datetotime($ketthuc) + 60 * 60 * 24 - 1;
-  $sql = "select b.* from pos_thuchi a inner join pos_chitietthuchi b on a.id = b.idthuchi where (a.thoigian between $batdau and $ketthuc)";
-  $danhsach = $db->all($sql);
   $dulieu = [
     'tongthu' => 0,
     'tongchi' => 0,
@@ -287,6 +286,8 @@ function thongke() {
   ];
   $arr = [0 => 'tienmat', 'chuyenkhoan', 'diem'];
 
+  $sql = "select b.* from pos_thuchi a inner join pos_chitietthuchi b on a.id = b.idthuchi where (a.thoigian between $batdau and $ketthuc)";
+  $danhsach = $db->all($sql);
   foreach ($danhsach as $thuchi) {
     if ($thuchi['sotien'] > 0) {
       $dulieu['tongthu'] += $thuchi['sotien'];
@@ -294,17 +295,18 @@ function thongke() {
     }
     else $dulieu['tongchi'] += $thuchi['sotien'];
   }
+
   $dulieu['tongchi'] = $dulieu['tongchi'] * -1;
   $dulieu['doanhthu'] = $dulieu['tongthu'] - $dulieu['tongchi'];
   $dulieu['tienmat2'] = $dulieu['tienmat'] - $dulieu['diem'] - $dulieu['chuyenkhoan'];
 
-  // tính theo hóa đơn thay vì 
-  $sql = "select b.* from pos_hoadon a inner join pos_chitiethoadon b on a.id = b.idhoadon where a.thoigian between $batdau and $ketthuc";
-  $danhsach = $db->all($sql);
+  // comment đoạn tính lợi nhuận theo hóa đơn
+  // $sql = "select b.* from pos_hoadon a inner join pos_chitiethoadon b on a.id = b.idhoadon where a.thoigian between $batdau and $ketthuc";
+  // $danhsach = $db->all($sql);
 
-  foreach ($danhsach as $hoadon) {
-    $dulieu['loinhuan'] += ($hoadon['giaban'] - $hoadon['gianhap']) * $hoadon['soluongthuc'];
-  }
+  // foreach ($danhsach as $hoadon) {
+  //   $dulieu['loinhuan'] += ($hoadon['giaban'] - $hoadon['gianhap']) * $hoadon['soluongthuc'];
+  // }
 
   // lợi nhuận nhập hàng
   $sql = "select * from pos_nhaphang where (thoigian between $batdau and $ketthuc) and trangthai = 1";

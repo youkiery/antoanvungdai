@@ -108,9 +108,9 @@
 
   <div class="pw-card">
     <div class="pw-card-header">
-      <button class="btn btn-info" onclick="importkhach()"> <span class="fa fa-file"></span> </button>
-      <button class="btn btn-info" onclick="timkhach()"> <span class="fa fa-search"></span> </button>
-      <button class="btn btn-success" onclick="themkhach()"> <span class="fa fa-plus"></span> </button>
+      <button class="btn btn-info" onclick="importkhach()"> <span class="fa fa-file"></span> Import khách hàng </button>
+      <button class="btn btn-info" onclick="timkhach()"> <span class="fa fa-search"></span> Tìm kiếm </button>
+      <button class="btn btn-success" onclick="themkhach()"> <span class="fa fa-plus"></span> Thêm khách </button>
     </div>
     <div class="pw-card-content" id="content">
       {danhsach}
@@ -168,13 +168,18 @@
   }
 
   async function xacnhanthemkhach() {
+    var khachhang = global.hoadon[global.chonhoadon].khachhang
     data = {
-      ma: $('#khach-ma').val(),
-      ten: $('#khach-ten').val(),
-      dienthoai: $('#khach-dien-thoai').val(),
+      id: khachhang.id ? khachhang.id : 0,
+      diem: khachhang.diem ? khachhang.diem : 0,
+      kichhoat: khachhang.kichhoat ? khachhang.kichhoat : 0,
+      makhach: khachhang.makhach ? khachhang.makhach : 0,
+      tienno: khachhang.tienno ? khachhang.tienno : 0,
       diachi: $('#khach-dia-chi').val(),
+      dienthoai: $('#khach-dien-thoai').val(),
+      tenkhach: $('#khach-ten').val(),
     }
-    if (!data.ten.length) {
+    if (!data.tenkhach.length) {
       vhttp.notify('Xin hãy nhập tên khách')
       return 0
     }

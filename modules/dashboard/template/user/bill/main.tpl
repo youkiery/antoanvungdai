@@ -191,7 +191,6 @@
   }
 
   function inhoadon(id) {
-
     vhttp.post('/dashboard/api/', {
       action: 'inhoadon',
       id: id

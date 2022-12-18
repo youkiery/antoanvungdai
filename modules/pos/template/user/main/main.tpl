@@ -688,12 +688,18 @@
   }
 
   async function xacnhanthemkhach() {
+    var khachhang = global.hoadon[global.chonhoadon].khachhang
     data = {
-      ten: $('#khach-ten').val(),
-      dienthoai: $('#khach-dien-thoai').val(),
+      id: khachhang.id ? khachhang.id : 0,
+      diem: khachhang.diem ? khachhang.diem : 0,
+      kichhoat: khachhang.kichhoat ? khachhang.kichhoat : 0,
+      makhach: khachhang.makhach ? khachhang.makhach : 0,
+      tienno: khachhang.tienno ? khachhang.tienno : 0,
       diachi: $('#khach-dia-chi').val(),
+      dienthoai: $('#khach-dien-thoai').val(),
+      tenkhach: $('#khach-ten').val(),
     }
-    if (!data.ten.length) {
+    if (!data.tenkhach.length) {
       vhttp.notify('Xin hãy nhập tên khách')
       return 0
     }
@@ -710,8 +716,7 @@
       global.hoadon[global.chonhoadon].khachhang = resp.data
       tailaikhach()
       $('#modal-them-khach').modal('hide')
-    }, (e) => {
-    })
+    }, (e) => { })
   }
 
   function xoakhach() {
@@ -795,6 +800,7 @@
         ten: global.hanghoa[i].ten,
         dongia: global.hanghoa[i].giaban,
         giaban: global.hanghoa[i].giaban,
+        gianhap: global.hanghoa[i].gianhap,
         donvi: global.hanghoa[i].donvi,
         soluong: 0,
         giamgiatien: 0,

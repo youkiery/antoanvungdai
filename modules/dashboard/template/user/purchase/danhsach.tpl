@@ -7,27 +7,19 @@
       <th> Nguồn cung </th>
       <th> Tổng tiền </th>
       <th> Trạng thái </th>
-      <th>  </th>
     </tr>
   </thead>
   <!-- BEGIN: row -->
   <tbody>
-    <tr>
+    <tr onclick="chitiet({id})">
       <td> {manhap} </td>
       <td> {thoigian} </td>
       <td> {nguoncung} </td>
       <td> {tongtien} </td>
       <td> {trangthai} </td>
-      <td> 
-        <!-- BEGIN: update -->
-        <button class="btn btn-info btn-xs" onclick="suanhap({id})">
-          sửa
-        </button>
-        <!-- END: update -->
-        <button class="btn btn-danger btn-xs" onclick="xoanhap({id})">
-          xóa
-        </button>
-      </td>
+    </tr>
+    <tr class="chitiet" id="tr-{id}" style="display: none;" load="0">
+      <td colspan="7" id="td-{id}"></td>
     </tr>
   </tbody>
   <!-- END: row -->

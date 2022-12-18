@@ -83,8 +83,8 @@
 
   <div class="pw-card">
     <div class="pw-card-header">
-      <button class="btn btn-info" onclick="timnguon()"> <span class="fa fa-search"></span> </button>
-      <button class="btn btn-success" onclick="themnguon()"> <span class="fa fa-plus"></span> </button>
+      <button class="btn btn-info" onclick="timnguon()"> <span class="fa fa-search"></span> Tìm kiếm </button>
+      <button class="btn btn-success" onclick="themnguon()"> <span class="fa fa-plus"></span> Thêm nguồn </button>
     </div>
     <div class="pw-card-content" id="content">
       {danhsach}
