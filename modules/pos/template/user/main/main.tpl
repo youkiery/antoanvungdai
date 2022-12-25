@@ -5,6 +5,16 @@
     overflow: hidden;
     text-overflow: ellipsis;
   } */
+  .pw-half-height {
+    height: calc(50vh - 45px);
+    width: 100%;
+    overflow-y: scroll;
+  }
+
+  .popover-content {
+    padding: 0px;
+  }
+
   .input-group-addon {
     width: 40px !important;
     line-height: normal !important;
@@ -59,6 +69,27 @@
     }
   }
 </style>
+
+<div class="modal fade" id="modal-tra-hang" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"> Trả hàng </h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-xs-6">
+            <!-- khung tìm kiếm hóa đơn   -->
+            <!-- nút tìm kiếm, trả nhanh -->
+          </div>
+          <div class="col-xs-18">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="modal-them-khach" role="dialog">
   <div class="modal-dialog">
@@ -126,7 +157,8 @@
           <div class="col-xs-24"> Khách thanh toán </div>
           <div class="col-xs-8 pw-input-group">
             <div class="pw-input-header" onclick="chonthanhtoanthuno(0)"> Tiền mặt </div>
-            <input autocomplete="off" type="text" class="pw-input-content form-control" id="thuno-thanhtoantien" placeholder="Tiền mặt" onkeyup="suathanhtoanthuno(0)">
+            <input autocomplete="off" type="text" class="pw-input-content form-control" id="thuno-thanhtoantien"
+              placeholder="Tiền mặt" onkeyup="suathanhtoanthuno(0)">
           </div>
           <div class="col-xs-8 pw-input-group">
             <div class="pw-input-header" onclick="chonthanhtoanthuno(1)"> Chuyển khoản </div>
@@ -135,13 +167,13 @@
           </div>
           <div class="col-xs-8 pw-input-group">
             <div class="pw-input-header" onclick="chonthanhtoanthuno(2)">Điểm</div>
-            <input autocomplete="off" type="text" class="pw-input-content form-control" id="thuno-thanhtoandiem" placeholder="Điểm"
-              onkeyup="suathanhtoanthuno(2)">
+            <input autocomplete="off" type="text" class="pw-input-content form-control" id="thuno-thanhtoandiem"
+              placeholder="Điểm" onkeyup="suathanhtoanthuno(2)">
           </div>
         </div>
 
         <div class="row form-group" id="thuno-blocktienthua">
-          <div class="col-xs-12">  </div>
+          <div class="col-xs-12"> </div>
           <div class="col-xs-6"> Còn nợ </div>
           <div class="col-xs-6 pw-text-right" id="thuno-tienthua"> 0 </div>
         </div>
@@ -164,7 +196,8 @@
         <div class="input-group">
           <div class="input-group-addon"> <span class="fa fa-search"></span> </div>
           <div class="pw-suggest-group">
-            <input autocomplete="off" type="text" class="form-control" id="tim-hang" placeholder="Tìm kiếm mặt hàng">
+            <input autocomplete="off" type="text" class="form-control" id="tim-hang" placeholder="Tìm kiếm mặt hàng"
+              onfocus="global.loaihang = (global.hoadon[global.chonhoadon].trangthaitrahang ? 'hangtra' : 'hanghoa')">
             <div class="pw-suggest-list" id="goi-y-tim-hang"> </div>
           </div>
         </div>
@@ -172,13 +205,25 @@
       <div class="col-xs-12" id="danhsachhoadon"></div>
       <div class="col-xs-4 pw-head-menu">
         <button class="fa fa-money btn btn-info" onclick="thuno()"></button>
-        <button class="fa fa-share btn btn-info"></button>
+        <button class="fa fa-share btn btn-info" onclick="tranhanh()"></button>
+        <!-- <a href="#" data-toggle="popover" role="button"  data-placement="left" data-trigger="focus" data-html="true" data-content="<div style='border-bottom: 1px solid lightgray; cursor: pointer; padding: 10px;' onclick='tranhanh()'> Trả nhanh </div><div style='padding: 10px; cursor: pointer;' onclick='chonhoadon()'> Chọn hóa đơn </div>"> <span class="fa fa-share btn btn-info"></span> </a> -->
         <button class="fa fa-bars btn btn-info"></button>
       </div>
     </div>
   </div>
   <div class="pw-content">
-    <div class="pw-left-panel" id="danh-sach-hoa-don">
+    <div class="pw-left-panel" id="danh-sach-hoa-don"></div>
+    <div class="pw-left-panel" id="danh-sach-tra-hang">
+      <div class="pw-half-height" id="danh-sach-hang-tra"> </div>
+      <div class="input-group pw-navbar">
+        <div class="input-group-addon"> <span class="fa fa-search"></span> </div>
+        <div class="pw-suggest-group">
+          <input autocomplete="off" type="text" class="form-control" id="tim-tra-hang" placeholder="Tìm kiếm mặt hàng"
+            onfocus="global.loaihang = 'hanghoa'">
+          <div class="pw-suggest-list" id="goi-y-tim-tra-hang"> </div>
+        </div>
+      </div>
+      <div class="pw-half-height" id="danh-sach-hang-lay"> </div>
     </div>
     <div class="pw-right-panel">
       <div class="row form-group">
@@ -220,6 +265,11 @@
       <div class="pw-bill">
         <div class="pw-bill-header"> Hóa đơn </div>
       </div>
+      <div class="row form-group" id="khung-hang-tra" style="display: none;">
+        <div class="col-xs-12"> Tổng giá trị hàng trả </div>
+        <div class="col-xs-12 pw-text-right" id="tonghangtra"> 0 </div>
+      </div>
+
       <div class="row form-group">
         <div class="col-xs-12"> Tổng đơn Hàng </div>
         <div class="col-xs-12 pw-text-right" id="tongtien"> 0 </div>
@@ -245,22 +295,22 @@
         <div class="col-xs-12 pw-text-right" id="cantra"> 0 </div>
       </div>
 
-      <div class="row form-group">
+      <div class="row form-group" id="khung-thanh-toan">
         <div class="col-xs-24"> Khách thanh toán </div>
         <div class="col-xs-8 pw-input-group">
           <div class="pw-input-header" onclick="chonthanhtoan(0)"> Tiền mặt </div>
-          <input autocomplete="off" type="text" class="pw-input-content form-control" id="thanhtoantien" placeholder="Tiền mặt"
-            onkeyup="suathanhtoan(0)">
+          <input autocomplete="off" type="text" class="pw-input-content form-control" id="thanhtoantien"
+            placeholder="Tiền mặt" onkeyup="suathanhtoan(0)">
         </div>
         <div class="col-xs-8 pw-input-group">
           <div class="pw-input-header" onclick="chonthanhtoan(1)"> Chuyển khoản </div>
-          <input autocomplete="off" type="text" class="pw-input-content form-control" id="thanhtoanchuyenkhoan" placeholder="Chuyển khoản"
-            onkeyup="suathanhtoan(1)">
+          <input autocomplete="off" type="text" class="pw-input-content form-control" id="thanhtoanchuyenkhoan"
+            placeholder="Chuyển khoản" onkeyup="suathanhtoan(1)">
         </div>
         <div class="col-xs-8 pw-input-group">
           <div class="pw-input-header" onclick="chonthanhtoan(2)">Điểm</div>
-          <input autocomplete="off" type="text" class="pw-input-content form-control" id="thanhtoandiem" placeholder="Điểm"
-            onkeyup="suathanhtoan(2)">
+          <input autocomplete="off" type="text" class="pw-input-content form-control" id="thanhtoandiem"
+            placeholder="Điểm" onkeyup="suathanhtoan(2)">
         </div>
       </div>
 
@@ -303,9 +353,39 @@
     thanhtoanthuno: ['thuno-thanhtoantien', 'thuno-thanhtoanchuyenkhoan', 'thuno-thanhtoandiem'],
     thututhanhtoan: [[1, 2], [0, 2], [0, 1]]
   }
+
   $(document).ready(() => {
+    $('[data-toggle="popover"]').popover();
     // gợi ý tìm hàng hóa
     vremind.install('#tim-hang', '#goi-y-tim-hang', (key) => {
+      return new Promise(resolve => {
+        vhttp.post('/pos/api/', {
+          action: 'timhang',
+          tukhoa: key
+        }).then((resp) => {
+          html = ``
+          global.hanghoa = resp.danhsach
+          global.hanghoa.forEach((hanghoa, i) => {
+            html += `
+            <div class="suggest-item suggest-item-lg" onclick="themhanghoa(`+ i + `)">
+              <div class="pw-suggest-image"> <img src="`+ hanghoa.hinhanh + `"> </div>
+              <div class="pw-suggest-info">
+                <b>`+ hanghoa.ten + ` ` + (hanghoa.donvi.length ? '(' + hanghoa.donvi + ')' : '') + `</b> <br>
+                `+ hanghoa.ma + ` <br>
+                Giá: `+ vnumber.format(hanghoa.giaban) + `
+                <span style="float: right;"> Tồn: `+ vnumber.format(hanghoa.soluong) + ` </span>
+              </div>
+            </div>`
+          });
+          if (!html.length) html = `Không có kết quả`
+          resolve(html)
+        }, () => {
+          resolve('Không có kết quả')
+        })
+      })
+    }, 300, 300)
+
+    vremind.install('#tim-tra-hang', '#goi-y-tim-tra-hang', (key) => {
       return new Promise(resolve => {
         vhttp.post('/pos/api/', {
           action: 'timhang',
@@ -383,14 +463,42 @@
     themhoadon()
   })
 
+  function tranhanh() {
+    global.hoadon.push({
+      nguoiban: global.idnhanvien,
+      soluong: 0,
+      tongtien: 0,
+      tonghang: 0,
+      thanhtien: 0,
+      giamgiatien: 0,
+      giamgiaphantram: 0,
+      ghichu: '',
+      thanhtoan: [0, 0, 0],
+      suathanhtoan: 1,
+      khachhang: { id: 0, ma: '', ten: '', dienthoai: '' },
+      hanghoa: [],
+      hangtra: [],
+      trangthaitrahang: true,
+      dathanhtoan: false
+    })
+    global.chonhoadon = global.hoadon.length - 1
+    tailaidanhsachhoadon()
+  }
+
+  function chonhoadon() {
+    // hiển thị modal trả hàng    
+    alert('Chức năng đang được xây dựng, xin hãy trả nhanh')
+  }
+
   function thanhtoan() {
+    // chặn nếu trả hàng mà không có hàng trả
     // nếu hóa đơn hiện tại không có hàng hóa, thông báo
     // nếu hóa đơn không có sđt mà nợ thì báo
     var thanhtoan = global.hoadon[global.chonhoadon].thanhtoan
     var tongthanhtoan = thanhtoan[0] + thanhtoan[1] + thanhtoan[2]
     var thanhtien = global.hoadon[global.chonhoadon].thanhtien
     var khachhang = global.hoadon[global.chonhoadon].khachhang.id
-    if (!global.hoadon[global.chonhoadon].hanghoa.length) return vhttp.notify('Chọn hàng hóa trước khi thanh toán')
+    if (!((!global.hoadon[global.chonhoadon].trangthaitrahang && global.hoadon[global.chonhoadon].hanghoa.length) || (global.hoadon[global.chonhoadon].trangthaitrahang && global.hoadon[global.chonhoadon].hangtra.length))) return vhttp.notify('Chọn hàng hóa trước khi thanh toán')
     else if (khachhang == 0 && (thanhtien > tongthanhtoan)) return vhttp.notify('Chưa chọn khách hàng nên không thể ra nợ')
     else {
       vhttp.post('/pos/api/', {
@@ -399,6 +507,7 @@
       }).then((resp) => {
         // thanh toán xong xóa hóa đơn hiện tại
         global.hoadon[global.chonhoadon].hanghoa = []
+        global.hoadon[global.chonhoadon].dathanhtoan = true
         xoahoadon(global.chonhoadon)
         setTimeout(() => {
           $('#printable').html(resp.html)
@@ -406,10 +515,6 @@
         }, 500);
       }, (e) => { })
     }
-  }
-
-  function xacnhanthanhtoan() {
-
   }
 
   function chonthanhtoan(loai) {
@@ -487,7 +592,7 @@
       $('#thuno-noidung').show()
       global.thuno = resp.dulieu
       $('#thuno-noidung').html(resp.noidung)
-      $('#thuno-khachhang').text(khachhang.tenkhach + ' ('+ khachhang.dienthoai +')')
+      $('#thuno-khachhang').text(khachhang.tenkhach + ' (' + khachhang.dienthoai + ')')
       $('#thuno-tienno').text(vnumber.format(khachhang.tienno))
       $('#thuno-diem').text(vnumber.format(khachhang.diem))
       $('#thuno-thongtinkhachhang').show()
@@ -499,12 +604,12 @@
   }
 
   function suatoathanhtoanthuno(i) {
-    var tien = vnumber.clear($('#thuno-tien'+ i).val())
+    var tien = vnumber.clear($('#thuno-tien' + i).val())
     var tongthanhtoan = 0
     if (tien < 0) tien = 0
     else if (tien > global.thuno.hoadon[i].conno) tien = global.thuno.hoadon[i].conno
-    $('#thuno-tien'+ i).val(vnumber.format(tien))
-    
+    $('#thuno-tien' + i).val(vnumber.format(tien))
+
     global.thuno.hoadon[i].thuthem = tien
     global.thuno.hoadon.forEach(thuno => {
       tongthanhtoan += thuno.thuthem
@@ -525,7 +630,6 @@
 
     if (loai == 2) {
       var diem = global.thuno.khachhang.diem * 100
-      console.log(diem);
       global.thuno.thanhtoan[0] = global.thuno.khachhang.tienno - diem
       global.thuno.thanhtoan[2] = diem
     }
@@ -535,7 +639,7 @@
     global.thuno.suathanhtoan = 1
 
     global.thuno.hoadon.forEach((hoadon, i) => {
-      $('#thuno-tien'+i).val(vnumber.format(hoadon.conno))
+      $('#thuno-tien' + i).val(vnumber.format(hoadon.conno))
       global.thuno.hoadon[i].thuthem = hoadon.conno
     });
 
@@ -608,7 +712,7 @@
       else {
         global.thuno.hoadon[i].thuthem = 0
       }
-      $('#thuno-tien'+ i).val(vnumber.format(global.thuno.hoadon[i].thuthem))
+      $('#thuno-tien' + i).val(vnumber.format(global.thuno.hoadon[i].thuthem))
     })
     tinhtienconno()
   }
@@ -737,7 +841,9 @@
       thanhtoan: [0, 0, 0],
       suathanhtoan: 1,
       khachhang: { id: 0, ma: '', ten: '', dienthoai: '' },
-      hanghoa: []
+      hanghoa: [],
+      trangthaitrahang: false,
+      dathanhtoan: false
     })
     global.chonhoadon = global.hoadon.length - 1
     tailaidanhsachhoadon()
@@ -747,7 +853,7 @@
     var html = ``
     global.hoadon.forEach((hd, vitrichay) => {
       html += `
-      <button class="pw-bill-tab btn `+ (global.chonhoadon == vitrichay ? 'btn-warning' : 'btn-info') + `" onclick="chonhoadon(` + vitrichay + `)">
+      <button class="pw-bill-tab btn `+ (global.chonhoadon == vitrichay ? 'btn-info' : (hd.trangthaitrahang ? 'btn-warning': 'btn-default')) + `" onclick="chonhoadon(` + vitrichay + `)">
         <span class="pw-bill-close" onclick="xoahoadon(`+ vitrichay + `)"> x </span>
         `+ (vitrichay + 1) + `
       </button>`
@@ -763,7 +869,14 @@
 
   function xoahoadon(vitri) {
     setTimeout(() => {
-      if (!global.hoadon[vitri].hanghoa.length || confirm('Xác nhận xóa hóa đơn')) {
+    // if (!((!global.hoadon[global.chonhoadon].trangthaitrahang && global.hoadon[global.chonhoadon].hanghoa.length) || (global.hoadon[global.chonhoadon].trangthaitrahang && global.hoadon[global.chonhoadon].hangtra.length))) 
+      var hoadon = global.hoadon[vitri]
+      var trangthaitrahang = hoadon.trangthaitrahang
+      var kiemtra = false
+      if (!trangthaitrahang && !hoadon.hanghoa.length) kiemtra = true
+      else if (trangthaitrahang && !(hoadon.hangtra.length || hoadon.hanghoa.length)) kiemtra = true
+
+      if (hoadon.dathanhtoan || kiemtra || confirm('Xác nhận xóa hóa đơn')) {
         global.hoadon = global.hoadon.filter((hd, vitrichay) => {
           return vitri != vitrichay
         })
@@ -786,7 +899,7 @@
   function themhanghoa(i) {
     // tim xem ma hang co trong hoa don chua
     var vitri = -1
-    var hoadon = global.hoadon[global.chonhoadon].hanghoa
+    var hoadon = global.hoadon[global.chonhoadon][global.loaihang]
     hoadon.forEach((hd, vitrichay) => {
       if (hd.ma == global.hanghoa[i].ma) {
         vitri = vitrichay
@@ -794,7 +907,7 @@
     });
     // neu chua, them vao
     if (vitri < 0) {
-      global.hoadon[global.chonhoadon].hanghoa.push({
+      global.hoadon[global.chonhoadon][global.loaihang].push({
         id: global.hanghoa[i].id,
         ma: global.hanghoa[i].ma,
         ten: global.hanghoa[i].ten,
@@ -806,26 +919,49 @@
         giamgiatien: 0,
         giamgiaphantram: 0,
       })
-      vitri = global.hoadon[global.chonhoadon].hanghoa.length - 1
+      vitri = global.hoadon[global.chonhoadon][global.loaihang].length - 1
     }
     // so luong + 1, day len dau danh sach
-    global.hoadon[global.chonhoadon].hanghoa[vitri].soluong++
+    global.hoadon[global.chonhoadon][global.loaihang][vitri].soluong++
     for (let i = vitri; i > 0; i--) {
       // hoa doi vi tri voi phan tu phia truoc
-      bientam = global.hoadon[global.chonhoadon].hanghoa[i]
-      hoadon[i] = global.hoadon[global.chonhoadon].hanghoa[i - 1]
-      global.hoadon[global.chonhoadon].hanghoa[i - 1] = bientam
+      bientam = global.hoadon[global.chonhoadon][global.loaihang][i]
+      hoadon[i] = global.hoadon[global.chonhoadon][global.loaihang][i - 1]
+      global.hoadon[global.chonhoadon][global.loaihang][i - 1] = bientam
     }
-    tailaihoadon()
-    tailaigia()
+    if (global.hoadon[global.chonhoadon].trangthaitrahang) {
+      tailaihoadontrahang()
+      tailaigiatrahang()
+    }
+    else {
+      tailaihoadon()
+      tailaigia()
+    }
   }
 
   function tailaihoadon() {
+    if (global.hoadon[global.chonhoadon].trangthaitrahang) {
+      $('#tonghangtra').text(0)
+      $('#danh-sach-hoa-don').hide()
+      $('#danh-sach-tra-hang').show()
+      $('#khung-hang-tra').show()
+      tailaihoadontrahang()
+    }
+    else {
+      $('#danh-sach-hoa-don').show()
+      $('#danh-sach-tra-hang').hide()
+      $('#khung-hang-tra').hide()
+      tailaihoadonbanhang()
+    }
+  }
+
+  function tailaihoadonbanhang() {
     let html = ``
     var hoadon = global.hoadon[global.chonhoadon].hanghoa
     var soluong = 0
     var tongtien = 0
     tailaikhach()
+    $('#khung-thanh-toan').show()
     $('#thanhtoantien').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[0]))
     $('#thanhtoanchuyenkhoan').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[1]))
     $('#thanhtoandiem').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[2]))
@@ -893,10 +1029,92 @@
         </div>
       </div>`
     })
-    $(function () {
-      $('[data-toggle="popover"]').popover()
-    })
+    $('[data-toggle="popover"]').popover()
     $('#danh-sach-hoa-don').html(html)
+  }
+
+  function tailaihoadontrahang() {
+    var soluong = 0
+    var tongtien = 0
+    tailaikhach()
+    $('#nguoiban option[value=' + global.hoadon[global.chonhoadon].nguoiban + ']').prop('selected', true)
+    $('#ghichu').val(global.hoadon[global.chonhoadon].ghichu)
+    // $('#thanhtoantien').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[0]))
+    // $('#thanhtoanchuyenkhoan').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[1]))
+    // $('#thanhtoandiem').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtoan[2]))
+    tailaitienthuatrahang()
+    var x = ['hangtra', 'hanghoa']
+    var y = {
+      'hangtra': '#danh-sach-hang-tra',
+      'hanghoa': '#danh-sach-hang-lay'
+    }
+
+    x.forEach(loaihang => {
+      var hoadon = global.hoadon[global.chonhoadon][loaihang]
+      let html = ``
+      hoadon.forEach((hd, vitrichay) => {
+        html += `
+        <div class="pw-card pw-item">
+          <div class="row pw-col">
+            <div class="col-xs-1" id="#xoa-`+ loaihang + `-` + vitrichay + `" onclick="xoatrahang('` + loaihang + `', ` + vitrichay + `)"> <span class="fa fa-remove"> </span> </div>
+            <div class="col-xs-4" id="#ma-`+ loaihang + `-` + vitrichay + `">` + hd.ma + `</div>
+            <div class="col-xs-8" id="#tem-`+ loaihang + `-` + vitrichay + `">` + hd.ten + `</div>
+            <div class="col-xs-5"> 
+              <div class="input-group">
+                <div class="input-group-btn">
+                  <button class="btn btn-info" onclick="bangsuagiatrahang(`+ loaihang + `, ` + vitrichay + `)">
+                    <span class="fa fa-credit-card">
+                  </button>
+                </div>
+                <input autocomplete="off" class="form-control pw-text-right" id="giaban-`+ loaihang + `-` + vitrichay + `" value="` + vnumber.format(hd.giaban) + `" onkeyup="tailaigiatrahang('` + loaihang + `', ` + vitrichay + `)">  
+              </div>
+              <div class="pw-discount-panel" id="banggia-`+ loaihang + `-` + vitrichay + `">
+                <div class="row">
+                  <div class="col-xs-6">
+                    <div class="form-group">Đơn giá</div>
+                  </div>
+                  <div class="col-xs-18">
+                    <div class="form-group"> <input autocomplete="off" class="form-control" id="suadongia-`+ loaihang + `-` + vitrichay + `" onkeyup="suadongiatrahang('` + loaihang + `',` + vitrichay + `)"> </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-6">
+                    <div class="form-group">Giảm giá</div>
+                  </div>
+                  <div class="col-xs-18">
+                    <div class="form-group input-group">
+                      <input autocomplete="off" class="form-control" id="suagiamgiaphantram-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiamgiatrahang('` + loaihang + `', ` + vitrichay + `)"> 
+                      <div class="input-group-addon"> % </div>
+                      </div>
+                    <div class="form-group input-group">
+                      <input autocomplete="off" class="form-control" id="suagiamgiatien-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiamgiatrahang('` + loaihang + `', ` + vitrichay + `)"> 
+                      <div class="input-group-addon">
+                        VND
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-xs-6">
+                    <div class="form-group">Giá bán</div>
+                  </div>
+                  <div class="col-xs-18">
+                    <div class="form-group"> <input autocomplete="off" class="form-control" id="suagiaban-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiabantrahang('` + loaihang + `', ` + vitrichay + `)"> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-2"> 
+              <input autocomplete="off" class="form-control pw-text-right" id="soluong-`+ loaihang + `-` + vitrichay + `" value="` + vnumber.format(hd.soluong) + `" onkeyup="tailaigiatrahang('` + loaihang + `', ` + vitrichay + `)" onchange="tailaigiatrahang('` + loaihang + `', ` + vitrichay + `)">  
+            </div>
+            <div class="col-xs-4 pw-text-right" id="thanhtien-`+ loaihang + `-` + vitrichay + `"> ` + vnumber.format(hd.soluong * hd.giaban) + ` </div>
+          </div>
+        </div>`
+      })
+      $(y[loaihang]).html(html)
+    })
+    $('[data-toggle="popover"]').popover()
   }
 
   function xoahang(vitri) {
@@ -953,31 +1171,31 @@
     tailaigia(vitri)
   }
 
-  function suagiaban(vitri) {
+  function suagiaban(loaihang, vitri) {
     // kiểm tra giới hạn
     // tính giảm giá
     // cập nhật đơn giá, giảm giá
-    var giaban = vnumber.clear($('#suagiaban-' + vitri).val())
-    var dongia = vnumber.clear($('#suadongia-' + vitri).val())
-    var giamgiatien = vnumber.clear($('#suagiamgiatien-' + vitri).val())
-    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-' + vitri).val())
+    var giaban = vnumber.clear($('#suagiaban-' + loaihang + '-' + vitri).val())
+    var dongia = vnumber.clear($('#suadongia-' + loaihang + '-' + vitri).val())
+    var giamgiatien = vnumber.clear($('#suagiamgiatien-' + loaihang + '-' + vitri).val())
+    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-' + loaihang + '-' + vitri).val())
 
     if (giaban > dongia) {
-      global.hoadon[global.chonhoadon].hanghoa[vitri].dongia = giaban
-      $('#dongia-' + vitri).val(vnumber.format(giaban))
+      global.hoadon[global.chonhoadon][loaihang][vitri].dongia = giaban
+      $('#dongia-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
     }
     else if (giaban < 0) giaban = 0
     else {
       // tính giảm giá, bỏ qua phần trăm, còn lại dồn vào giảm tiền
       var dongia = ((100 - giamgiaphantram) / 100 * dongia).toFixed(2)
       giamgia = dongia - giaban
-      global.hoadon[global.chonhoadon].hanghoa[vitri].giamgiatien = giamgia
-      $('#suagiamgiatien-' + vitri).val(vnumber.format(giamgia))
+      global.hoadon[global.chonhoadon][loaihang][vitri].giamgiatien = giamgia
+      $('#suagiamgiatien-' + loaihang + '-' + vitri).val(vnumber.format(giamgia))
     }
 
-    global.hoadon[global.chonhoadon].hanghoa[vitri].giaban = giaban
-    $('#suagiaban-' + vitri).val(vnumber.format(giaban))
-    $('#giaban-' + vitri).val(vnumber.format(giaban))
+    global.hoadon[global.chonhoadon][loaihang][vitri].giaban = giaban
+    $('#suagiaban-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
+    $('#giaban-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
     tailaigia(vitri)
   }
 
@@ -1047,6 +1265,8 @@
   function tailaitienthua() {
     $('#blocktienthua').hide()
     $('#blocktienno').hide()
+    $('#khung-thanh-toan').show()
+
     var thanhtien = global.hoadon[global.chonhoadon].thanhtien
     if (global.hoadon[global.chonhoadon].suathanhtoan) {
       // chưa sửa thanh toán
@@ -1089,6 +1309,187 @@
       $('#banggia-' + vitri).show()
       $('#pw-dismiss').show()
     }
+  }
+  
+  function tailaitienthuatrahang() {
+    $('#blocktienthua').hide()
+    $('#blocktienno').hide()
+    var thanhtien = global.hoadon[global.chonhoadon].thanhtien
+    // nếu tiền thừa trả khách thì ẩn thanh toán
+
+    if (thanhtien < 0) {
+      $('#tienthua').text(vnumber.format(Math.abs(thanhtien)))
+      $('#blocktienthua').show()
+      $('#khung-thanh-toan').hide()
+    }
+    else {
+      $('#khung-thanh-toan').show()
+      if (global.hoadon[global.chonhoadon].suathanhtoan) {
+        global.hoadon[global.chonhoadon].thanhtoan[0] = global.hoadon[global.chonhoadon].thanhtien
+        global.hoadon[global.chonhoadon].thanhtoan[1] = 0
+        global.hoadon[global.chonhoadon].thanhtoan[2] = 0
+        $('#thanhtoantien').val(vnumber.format(global.hoadon[global.chonhoadon].thanhtien))
+        $('#thanhtoanchuyenkhoan').val(0)
+        $('#thanhtoandiem').val(0)
+      }
+      else {
+        // đã sửa thanh toán
+        // tính lại tiền thừa
+        var loaithanhtoan = global.hoadon[global.chonhoadon].thanhtoan
+        var tongthanhtoan = loaithanhtoan[0] + loaithanhtoan[1] + loaithanhtoan[2]
+        if (tongthanhtoan == thanhtien) { }
+        else if (tongthanhtoan > thanhtien) {
+          $('#tienthua').text(vnumber.format(tongthanhtoan - thanhtien))
+          $('#blocktienthua').show()
+        }
+        else {
+          $('#tienno').text(vnumber.format(thanhtien - tongthanhtoan))
+          $('#blocktienno').show()
+        }
+      }
+    }
+  }
+
+  function xoatrahang(loaihang, vitri) {
+    var hoadon = global.hoadon[global.chonhoadon][loaihang]
+    global.hoadon[global.chonhoadon][loaihang] = hoadon.filter((hd, vitrichay) => {
+      return vitri !== vitrichay
+    })
+    tailaihoadontrahang()
+    tailaigiatrahang()
+  }
+
+  function bangsuagiatrahang(loaihang, vitri) {
+    if ($('#banggia-'+ loaihang +'-' + vitri).css('display') == 'block') {
+      $('#banggia-'+ loaihang +'-' + vitri).hide()
+      $('#pw-dismiss').hide()
+    }
+    else {
+      let hanghoa = global.hoadon[global.chonhoadon][loaihang][vitri]
+      $('#suadongia-'+ loaihang +'-' + vitri).val(vnumber.format(hanghoa.dongia))
+      $('#suagiamgiatien-'+ loaihang +'-' + vitri).val(vnumber.format(hanghoa.giamgiatien))
+      $('#suagiamgiaphantram-'+ loaihang +'-' + vitri).val(vnumber.format(hanghoa.giamgiaphantram))
+      $('#suagiaban-'+ loaihang +'-' + vitri).val(vnumber.format(hanghoa.giaban))
+      $('#banggia-'+ loaihang +'-' + vitri).show()
+      $('#pw-dismiss').show()
+    }
+  }
+
+  function tailaigiatrahang(loaihang, vitri = -1) {
+    // tính tổng tiền theo hàng trả, trả hàng
+    
+    if (vitri >= 0) {
+      var soluong = vnumber.clear($('#soluong-'+ loaihang +'-' + vitri).val())
+      var giaban = vnumber.clear($('#giaban-'+ loaihang +'-' + vitri).val())
+      var thanhtien = soluong * giaban
+      global.hoadon[global.chonhoadon][loaihang][vitri].soluong = soluong
+      global.hoadon[global.chonhoadon][loaihang][vitri].giaban = giaban
+      $('#thanhtien-'+ loaihang +'-' + vitri).text(vnumber.format(thanhtien))
+      $('#giaban-'+ loaihang +'-' + vitri).val(vnumber.format(giaban))
+      $('#soluong-'+ loaihang +'-' + vitri).val(vnumber.format(soluong))
+    }
+    var tonghang = 0
+    var tongtien = 0
+    var thanhtoan = 0
+    var tongtra = 0
+    var giamgiatien = global.hoadon[global.chonhoadon].giamgiatien
+    var giamgiaphantram = global.hoadon[global.chonhoadon].giamgiaphantram
+
+    global.hoadon[global.chonhoadon].hanghoa.forEach(hd => {
+      tonghang += hd.soluong * hd.dongia
+      tongtien += hd.soluong * hd.giaban
+    })
+    thanhtien = tongtien * (100 - giamgiaphantram) / 100
+    thanhtien -= giamgiatien
+
+    global.hoadon[global.chonhoadon].hangtra.forEach(hd => {
+      thanhtien -= hd.soluong * hd.giaban
+      tongtra -= hd.soluong * hd.giaban
+    })
+
+    global.hoadon[global.chonhoadon].tonghang = tonghang
+    global.hoadon[global.chonhoadon].tongtien = tongtien
+    global.hoadon[global.chonhoadon].thanhtien = thanhtien
+    // nếu thanh toán nhiều hơn 1 loại thì khóa input thanh toán
+    var loaithanhtoan = global.hoadon[global.chonhoadon].thanhtoan
+
+    tailaitienthuatrahang()
+    $('#tonghangtra').text(vnumber.format(Math.abs(tongtra)))
+    $('#tongtien').text(vnumber.format(tongtien))
+    $('#cantra').text(vnumber.format(Math.abs(thanhtien)))
+  }
+
+  function suagiamgia(vitri) {
+    // kiểm tra giới hạn giảm gia
+    // cập nhật giá bán, giảm giá
+    var dongia = vnumber.clear($('#suadongia-'+ loaihang +'-' + vitri).val())
+    var giamgiatien = vnumber.clear($('#suagiamgiatien-'+ loaihang +'-' + vitri).val())
+    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-'+ loaihang +'-' + vitri).val())
+
+    if (giamgiaphantram < 0) giamgiaphantram = 0
+    else if (giamgiaphantram > 100) giamgiaphantram = 100
+
+    var giaban = (dongia * (100 - giamgiaphantram) / 100).toFixed()
+
+    if (giamgiatien < 0) giamgiatien = 0
+    else if (giamgiatien > giaban) giamgiatien = giaban
+    giaban -= giamgiatien
+
+    global.hoadon[global.chonhoadon][loaihang][vitri].giaban = giaban
+    global.hoadon[global.chonhoadon][loaihang][vitri].giamgiatien = giamgiatien
+    global.hoadon[global.chonhoadon][loaihang][vitri].giamgiaphantram = giamgiaphantram
+    $('#suagiaban-'+ loaihang +'-' + vitri).val(vnumber.format(giaban))
+    $('#suagiamgiatien-'+ loaihang +'-' + vitri).val(vnumber.format(giamgiatien))
+    $('#suagiamgiaphantram-'+ loaihang +'-' + vitri).val(vnumber.format(giamgiaphantram))
+    $('#giaban-'+ loaihang +'-' + vitri).val(vnumber.format(giaban))
+    tailaigiatrahang(loaihang, vitri)
+  }
+
+  function suadongiatrahang(loaihang, vitri) {
+    // thay đổi đơn giá
+    // kiểm tra giảm giá khác 0 thì cập nhật giảm giá
+    // cập nhật giá bán
+    var dongia = vnumber.clear($('#suadongia-'+ loaihang +'-' + vitri).val())
+    var giamgiatien = vnumber.clear($('#suagiamgiatien-'+ loaihang +'-' + vitri).val())
+    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-'+ loaihang +'-' + vitri).val())
+
+    var giaban = dongia * (100 - giamgiaphantram) / 100
+    giaban -= giamgiatien
+
+    global.hoadon[global.chonhoadon][loaihang][vitri].dongia = dongia
+    global.hoadon[global.chonhoadon][loaihang][vitri].giaban = giaban
+    $('#suagiaban-' + vitri).val(vnumber.format(giaban))
+    $('#suadongia-' + vitri).val(vnumber.format(dongia))
+    $('#giaban-' + vitri).val(vnumber.format(giaban))
+    tailaigiatrahang(loaihang, vitri)
+  }
+
+  function suagiabantrahang(loaihang, vitri) {
+    // kiểm tra giới hạn
+    // tính giảm giá
+    // cập nhật đơn giá, giảm giá
+    var giaban = vnumber.clear($('#suagiaban-' + loaihang + '-' + vitri).val())
+    var dongia = vnumber.clear($('#suadongia-' + loaihang + '-' + vitri).val())
+    var giamgiatien = vnumber.clear($('#suagiamgiatien-' + loaihang + '-' + vitri).val())
+    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-' + loaihang + '-' + vitri).val())
+
+    if (giaban > dongia) {
+      global.hoadon[global.chonhoadon][loaihang][vitri].dongia = giaban
+      $('#dongia-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
+    }
+    else if (giaban < 0) giaban = 0
+    else {
+      // tính giảm giá, bỏ qua phần trăm, còn lại dồn vào giảm tiền
+      var dongia = ((100 - giamgiaphantram) / 100 * dongia).toFixed(2)
+      giamgia = dongia - giaban
+      global.hoadon[global.chonhoadon][loaihang][vitri].giamgiatien = giamgia
+      $('#suagiamgiatien-' + loaihang + '-' + vitri).val(vnumber.format(giamgia))
+    }
+
+    global.hoadon[global.chonhoadon][loaihang][vitri].giaban = giaban
+    $('#suagiaban-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
+    $('#giaban-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
+    tailaigiatrahang(loaihang, vitri)
   }
 
   function antoanbo() {

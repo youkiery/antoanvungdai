@@ -25,7 +25,8 @@
   }
 
   body {
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
     height: 100%;
   }
 
@@ -43,7 +44,7 @@
   .pw-right-panel {
     position: relative;
     background: white;
-    height: 100vh;
+    height: calc(100vh - 70px);
     -webkit-box-shadow: 0 2px 15px -4px rgb(0 0 0 / 15%);
     -moz-box-shadow: 0 2px 15px -4px rgba(0, 0, 0, .15);
     box-shadow: 0 2px 15px -4px rgb(0 0 0 / 15%);
@@ -64,7 +65,7 @@
   .pw-footer-panel {
     position: absolute;
     left: 0px;
-    bottom: 60px;
+    bottom: 0px;
     width: 100%;
     padding: 10px;
   }

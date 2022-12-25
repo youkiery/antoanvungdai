@@ -1,6 +1,7 @@
 <!-- BEGIN: main -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title> Mẫu in </title>
   <style>
@@ -9,14 +10,14 @@
       font-family: "Tahoma", sans-serif;
     }
 
-    @media print{
+    @media print {
       @page {
         margin: 0.1in;
       }
     }
-
   </style>
 </head>
+
 <body id="printer">
   <div>BỆNH VIỆN THÚ CƯNG THANH XUÂN</div>
   <div>Chi nhánh: Đăk Lăk</div>
@@ -31,17 +32,35 @@
   <!-- END: khachhang -->
   <div> Thời gian: {thoigian} </div>
   <div style="border-bottom: 1px dashed gray; padding-bottom: 2px;"></div>
-  <!-- BEGIN: row -->
-  <div style="border-bottom: 1px dashed gray; padding-bottom: 2px; clear: both; overflow: auto;">
-    <div> {tenhang} </div>
-    <div style="float: left; width: 40%;">
-      {giaban} 
-      <div style="text-decoration: line-through;"> {dongia} </div>
+  <!-- BEGIN: trahang -->
+  Trả hàng
+  <div style="border-bottom: 1px dashed gray; padding-bottom: 2px; clear: both; overflow: auto; margin-bottom: 5px;">
+    <!-- BEGIN: cot -->
+    <div style="clear: both">
+      <div> {tenhang} </div>
+      <div style="float: left; width: 40%;"> {giaban} </div>
+      <div style="text-align: right; float: right; width: 40%;"> {thanhtien} </div>
+      <div style="text-align: center; float: right; width: 20%;"> {soluong} </div>
     </div>
-    <div style="text-align: right; float: right; width: 40%;"> {thanhtien} </div>
-    <div style="text-align: center; float: right; width: 20%;"> {soluong} </div>
+    <!-- END: cot -->
   </div>
-  <!-- END: row -->
+  <!-- END: trahang -->
+  <!-- BEGIN: banhang -->
+  Mua hàng
+  <div style="border-bottom: 1px dashed gray; padding-bottom: 2px; clear: both; overflow: auto; margin-bottom: 5px;">
+    <!-- BEGIN: cot -->
+    <div style="clear: both">
+      <div> {tenhang} </div>
+      <div style="float: left; width: 40%;">
+        {giaban}
+        <div style="text-decoration: line-through;"> {dongia} </div>
+      </div>
+      <div style="text-align: right; float: right; width: 40%;"> {thanhtien} </div>
+      <div style="text-align: center; float: right; width: 20%;"> {soluong} </div>
+    </div>
+    <!-- END: cot -->
+  </div>
+  <!-- END: banhang -->
   <!-- BEGIN: giamgia -->
   <div style="clear: both;">
     <div style="text-align: right; float: left; width: 70%;">
@@ -69,5 +88,6 @@
     </div>
   </div>
 </body>
+
 </html>
 <!-- END: main -->

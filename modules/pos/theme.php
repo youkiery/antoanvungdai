@@ -40,19 +40,40 @@ function inhoadon($id) {
 
   if ($row['idkhach']) $xtpl->parse('main.khachhang');
 
+  $sql = "select * from pos_chitiettrahang where idhoadon = $id";
+  $danhsachchitiet = $db->all($sql);
+
+  if (count($danhsachchitiet)) {
+    foreach ($danhsachchitiet as $chitiet) {
+      $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
+      $hanghoa = $db->fetch($sql);
+  
+      $xtpl->assign('tenhang', $hanghoa['tenhang']);
+      $xtpl->assign('giaban', number_format($chitiet['giaban']));
+      $xtpl->assign('soluong', number_format($chitiet['soluong']));
+      $xtpl->assign('thanhtien', '-' . number_format($chitiet['thanhtien']));
+      $xtpl->parse('main.trahang.cot');
+    }
+    $xtpl->parse('main.trahang');
+  }
+
   $sql = "select * from pos_chitiethoadon where idhoadon = $id";
   $danhsachchitiet = $db->all($sql);
 
-  foreach ($danhsachchitiet as $chitiet) {
-    $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
-    $hanghoa = $db->fetch($sql);
-
-    $xtpl->assign('tenhang', $hanghoa['tenhang']);
-    if ($chitiet['giaban'] != $chitiet['dongia']) $xtpl->assign('dongia', number_format($chitiet['dongia']));
-    else $xtpl->assign('dongia', '');
-    $xtpl->assign('giaban', number_format($chitiet['giaban']));
-    $xtpl->assign('soluong', number_format($chitiet['soluong']));
-    $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
+  if (count($danhsachchitiet)) {
+    foreach ($danhsachchitiet as $chitiet) {
+      $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
+      $hanghoa = $db->fetch($sql);
+  
+      $xtpl->assign('tenhang', $hanghoa['tenhang']);
+      if ($chitiet['giaban'] != $chitiet['dongia']) $xtpl->assign('dongia', number_format($chitiet['dongia']));
+      else $xtpl->assign('dongia', '');
+      $xtpl->assign('giaban', number_format($chitiet['giaban']));
+      $xtpl->assign('soluong', number_format($chitiet['soluong']));
+      $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
+      $xtpl->parse('main.banhang.cot');
+    }
+    $xtpl->parse('main.banhang');
   }
 
   if ($hoadon['giamgiatien'] > 0 || $hoadon['giamgiaphantram'] > 0) {
@@ -61,7 +82,6 @@ function inhoadon($id) {
     $xtpl->parse('main.giamgia');
   }
   $xtpl->assign('thanhtien', number_format($hoadon['thanhtien']));
-  $xtpl->parse('main.row');
   $xtpl->parse('main');
   
   return $xtpl->text();

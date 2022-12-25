@@ -37,43 +37,57 @@ function thanhtoan() {
   $doidiem = $data['thanhtoan'][2];
   $thukhach = $tienmat + $chuyenkhoan + $doidiem;
   $no = 0;
+  $thoigian = time();
+  $tongtien = 0;
 
   // tính tích điểm
   // cứ 10k/điểm
   // công thức: điểm = (tổng tiền - giảm giá * 10) / 10000
-  $diem = intval(($data['tonghang'] - ($data['tonghang'] - $data['thanhtien'] + $doidiem) * 100) / 10000);
-  if ($diem < 0) $diem = 0;
+  // cần làm: trả hàng trừ tích điểm
+  if ($data['thanhtien'] < 0) {
+    $doidiem = 0;
+    $thukhach = 0;
+    $diem = floor($data['thanhtien'] / 10000);
+    $tongtien = $data['thanhtien'];
 
-  $thanhtoantrutien = $data['thanhtien'] - $chuyenkhoan - $doidiem;
-  if ($tienmat >= $thanhtoantrutien) {
-    $tienmat = $thanhtoantrutien;
-    $data['thanhtoan'][0] = $tienmat;
-    $thukhach = $tienmat + $chuyenkhoan + $doidiem;
+    $sql = "select * from pos_loaithuchi where ten = 'Chi tiền trả khách' and loai = 1";
+    if (empty($loaithuchi = $db->fetch($sql))) {
+      $sql = "insert into pos_loaithuchi (loai, ten) values(1, 'Chi tiền trả khách')";
+      $db->query($sql);
+      $loaithuchi = ['loai' => 1, 'id' => $db->insertid];
+    }
   }
   else {
-    // nợ tiền
-    $no = $data['thanhtien'] - $tienmat - $chuyenkhoan - $doidiem;
+    $diem = intval(($data['tonghang'] - ($data['tonghang'] - $data['thanhtien'] + $doidiem) * 100) / 10000);
+    if ($diem < 0) $diem = 0;
+
+    $thanhtoantrutien = $data['thanhtien'] - $chuyenkhoan - $doidiem;
+    if ($tienmat >= $thanhtoantrutien) {
+      $tienmat = $thanhtoantrutien;
+      $data['thanhtoan'][0] = $tienmat;
+      $thukhach = $tienmat + $chuyenkhoan + $doidiem;
+    }
+    else {
+      // nợ tiền
+      $no = $data['thanhtien'] - $tienmat - $chuyenkhoan - $doidiem;
+    }
+
+    foreach ($data['thanhtoan'] as $loai => $sotien) {
+      if ($sotien) $tongtien += $sotien;
+    }
+  
+    $sql = "select * from pos_loaithuchi where ten = 'Thu tiền khách trả' and loai = 0";
+    if (empty($loaithuchi = $db->fetch($sql))) {
+      $sql = "insert into pos_loaithuchi (loai, ten) values(0, 'Thu tiền khách trả')";
+      $db->query($sql);
+      $loaithuchi = ['loai' => 0, 'id' => $db->insertid];
+    }
   }
 
-
-  if ($idkhach && ($doidiem || $no)) {
+  if ($idkhach && ($doidiem || $diem || $no)) {
     $doidiem = floor($doidiem / 100);
     $sql = "update pos_khachhang set tienno = tienno + $no, diem = diem + $diem - $doidiem where id = $idkhach";
     $db->query($sql);
-  }
-
-  $thoigian = time();
-  $tongtien = 0;
-
-  foreach ($data['thanhtoan'] as $loai => $sotien) {
-    if ($sotien) $tongtien += $sotien;
-  }
-
-  $sql = "select * from pos_loaithuchi where id = 0";
-  if (empty($loaithuchi = $db->fetch($sql))) {
-    $sql = "insert into pos_loaithuchi (id, loai, ten) values(0, 0, 'Thu tiền khách trả')";
-    $db->query($sql);
-    $loaithuchi = ['id' => 0];
   }
 
   $sql = "select id from pos_thuchi order by id desc limit 1";
@@ -82,27 +96,57 @@ function thanhtoan() {
   $idthuchi = $thuchi['id'];
   $mathuchi = "TC" . fillzero(++ $idthuchi);
   $sql = "insert into pos_thuchi (mathuchi, idloaithuchi, idkhachhang, sotien, thoigian, ghichu) values('$mathuchi', $loaithuchi[id], $idkhach, $tongtien, $thoigian, '')";
+
   $idthuchi = $db->insertid($sql);
 
-  foreach ($data['thanhtoan'] as $loai => $sotien) {
-    if ($sotien) {
-      $sql = "insert into pos_chitietthuchi(idthuchi, loai, sotien) values($idthuchi, $loai, $sotien)";
-      $db->query($sql);
-    }
-  }
- 
   $sql = "insert into pos_hoadon (mahoadon, idnguoiban, idnguoiratoa, idkhach, thoigian, soluong, tongtien, giamgiatien, giamgiaphantram, thanhtien, thanhtoan, ghichu) values('$mahoadon', $data[nguoiban], $session[userid], $idkhach, $thoigian, $data[soluong], $data[tongtien], $data[giamgiatien], $data[giamgiaphantram], $data[thanhtien], $thukhach, '$data[ghichu]')";
   $id = $db->insertid($sql);
 
-  $sql = "insert into pos_machitietthuchi (idthuchi, loai, ma) values($idthuchi, 1, '$mahoadon')";
+  $loinhuan = 0;
+  if (count($data['hanghoa'])) {
+    // tính lợi nhuận
+    // đếm lợi nhuận từng mặt hàng
+    foreach ($data['hanghoa'] as $hanghoa) {
+      $loinhuan += ($hanghoa['giaban'] - $hanghoa['gianhap']) * $hanghoa['soluong'];
+
+      $sql = "insert into pos_chitiethoadon (idhoadon, idhang, gianhap, dongia, giamgiatien, giamgiaphantram, giaban, soluong, thanhtien, soluongthuc) values($id, $hanghoa[id], $hanghoa[gianhap], $hanghoa[dongia], $hanghoa[giamgiatien], $hanghoa[giamgiaphantram], $hanghoa[giaban], $hanghoa[soluong], ". ($hanghoa['giaban'] * $hanghoa['soluong']) .", $hanghoa[soluong])";
+      $db->query($sql);
+
+      $sql = "update pos_hanghoa set soluong = soluong - $hanghoa[soluong] where id = $hanghoa[id]";
+      $db->query($sql);
+    }
+    if ($data['trangthaitrahang']) {
+      if ($data['thanhtien'] > 0) $loinhuan = floor($loinhuan * (1 - $data['thanhtoan'][2] / $data['thanhtien']));
+    }
+    else {
+      $loinhuan = floor($loinhuan * ($data['thanhtoan'][0] + $data['thanhtoan'][1]) / $data['thanhtien'] - $data['thanhtoan'][2]);
+    }
+  }
+
+  if (count($data['hangtra'])) {
+    foreach ($data['hangtra'] as $hanghoa) {
+      // thêm mặt hàng khách trả
+      $thanhtienhanghoa = $hanghoa['soluong'] * $hanghoa['giaban'];
+      $loinhuan -= ($hanghoa['giaban'] - $hanghoa['gianhap']) * $hanghoa['soluong'];
+      $sql = "insert into pos_chitiettrahang (idhoadon, idhang, soluong, giaban, thanhtien, loinhuan) values($id, $hanghoa[id], $hanghoa[soluong], $hanghoa[giaban], $thanhtienhanghoa, $loinhuan)";
+      $db->query($sql);
+      
+      // cập nhật số lượng hàng hóa khách trả
+      $sql = "update pos_hanghoa set soluong = soluong + $hanghoa[soluong] where id = $hanghoa[id]";
+      $db->query($sql);
+    }
+  }
+
+  $sql = "insert into pos_machitietthuchi (idthuchi, mahoadon, loinhuan) values($idthuchi, '$mahoadon', $loinhuan)";
   $db->query($sql);
 
-  foreach ($data['hanghoa'] as $hanghoa) {
-    $sql = "insert into pos_chitiethoadon (idhoadon, idhang, gianhap, dongia, giamgiatien, giamgiaphantram, giaban, soluong, thanhtien, soluongthuc) values($id, $hanghoa[id], $hanghoa[gianhap], $hanghoa[dongia], $hanghoa[giamgiatien], $hanghoa[giamgiaphantram], $hanghoa[giaban], $hanghoa[soluong], ". ($hanghoa['giaban'] * $hanghoa['soluong']) .", $hanghoa[soluong])";
-    $db->query($sql);
-
-    $sql = "update pos_hanghoa set soluong = soluong - $hanghoa[soluong] where id = $hanghoa[id]";
-    $db->query($sql);
+  if ($data['thanhtien'] > 0) {
+    foreach ($data['thanhtoan'] as $loai => $sotien) {
+      if ($sotien) {
+        $sql = "insert into pos_chitietthuchi(idthuchi, loai, sotien) values($idthuchi, $loai, $sotien)";
+        $db->query($sql);
+      }
+    }
   }
 
   $resp['status'] = 1;
@@ -136,8 +180,27 @@ function thuno() {
   $sql = "insert into pos_thuchi (mathuchi, idloaithuchi, idkhachhang, sotien, thoigian, ghichu) values('$mathuchi', $loaithuchi[id], $khachhang[id], $tongtien, $thoigian, '')";
   $idthuchi = $db->insertid($sql);
 
+  $dautien = true;
   foreach ($data['hoadon'] as $hoadon) {
-    $sql = "insert into pos_machitietthuchi (idthuchi, loai, ma) values($idthuchi, 1, '$hoadon[mahoadon]')";
+    // tính lợi nhuận
+    // đếm lợi nhuận từng mặt hàng
+    // tính phần trăm theo số tiền thu trên tổng hóa đơn
+    $sql = "select b.* from pos_hoadon a inner join pos_chitiethoadon b on a.mahoadon = '$hoadon[mahoadon]' and a.id = b.idhoadon";
+    $chitiethoadon = $db->all($sql);
+    $tongtien = 0;
+    $loinhuan = 0;
+
+    foreach ($chitiethoadon as $chitiet) {
+      $tongtien += $chitiet['thanhtien'];
+      $loinhuan += ($chitiet['giaban'] - $chitiet['gianhap']) * $chitiet['soluongthuc'];
+    }
+    $loinhuan = floor($loinhuan * $hoadon['thuthem'] / $tongtien);
+    if ($dautien) {
+      $dautien = false;
+      $loinhuan -= $data['thanhtoan'][2];
+    }
+
+    $sql = "insert into pos_machitietthuchi (idthuchi, loai, mahoadon, loinhuan) values($idthuchi, 1, '$hoadon[mahoadon]', $loinhuan)";
     $db->query($sql);
 
     $sql = "update pos_hoadon set thanhtoan = thanhtoan + $hoadon[thuthem] where id = $hoadon[id]";

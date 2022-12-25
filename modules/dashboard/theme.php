@@ -226,11 +226,11 @@ function danhsachhoadon() {
   $sql = "select count(id) as count from pos_hoadon $xtra order by thoigian desc";
   $count = $db->fetch($sql)['count']; 
 
+  $xtpl = new XTemplate('danhsach.tpl', UPATH . '/bill/');
   $sql = "select * from pos_hoadon $xtra order by thoigian desc limit $limit offset ". ($filter['page'] - 1) * $limit;
   // die($sql);
   $danhsach = $db->all($sql);
 
-  $xtpl = new XTemplate('danhsach.tpl', UPATH . '/bill/');
   foreach ($danhsach as $i => $row) {
     if (!$row['idkhach']) $khachhang = ['ten' => 'Khách lẻ'];
     else {
@@ -299,6 +299,12 @@ function thongke() {
   $dulieu['tongchi'] = $dulieu['tongchi'] * -1;
   $dulieu['doanhthu'] = $dulieu['tongthu'] - $dulieu['tongchi'];
   $dulieu['tienmat2'] = $dulieu['tienmat'] - $dulieu['diem'] - $dulieu['chuyenkhoan'];
+
+  $sql = "select b.* from pos_thuchi a inner join pos_machitietthuchi b on a.id = b.idthuchi where (a.thoigian between $batdau and $ketthuc)";
+  $danhsach = $db->all($sql);
+  foreach ($danhsach as $chitiet) {
+    $dulieu['loinhuan'] += $chitiet['loinhuan'];
+  }
 
   // comment đoạn tính lợi nhuận theo hóa đơn
   // $sql = "select b.* from pos_hoadon a inner join pos_chitiethoadon b on a.id = b.idhoadon where a.thoigian between $batdau and $ketthuc";

@@ -4,8 +4,6 @@ if (!defined('NV_IS_MOD_NEWS')) {
   exit('Stop!!!');
 }
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 $action = $nv_Request->get_string('action', 'post');
 $resp = array(
   'status' => 0
@@ -384,8 +382,8 @@ function xoahoadon() {
 function inhoadon() {
   global $db, $nv_Request, $resp;
 
-  $xtpl = new XTemplate('inhoadon.tpl', UPATH);
   $id = $nv_Request->get_string('id', 'post');
+  $xtpl = new XTemplate('inhoadon.tpl', UPATH);
 
   $sql = "select * from pos_hoadon where id = $id";
   $hoadon = $db->fetch($sql);
@@ -401,26 +399,47 @@ function inhoadon() {
 
   $xtpl->assign('mahoadon', $hoadon['mahoadon']);
   $xtpl->assign('nguoiban', $nguoiban['first_name']);
-  $xtpl->assign('khachhang', $khachhang['ten']);
+  $xtpl->assign('khachhang', $khachhang['tenkhach']);
   $xtpl->assign('diachi', $khachhang['diachi']);
   $xtpl->assign('dienthoai', $khachhang['dienthoai']);
   $xtpl->assign('thoigian', date('d/m/Y H:i:s'));
 
   if ($row['idkhach']) $xtpl->parse('main.khachhang');
 
+  $sql = "select * from pos_chitiettrahang where idhoadon = $id";
+  $danhsachchitiet = $db->all($sql);
+
+  if (count($danhsachchitiet)) {
+    foreach ($danhsachchitiet as $chitiet) {
+      $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
+      $hanghoa = $db->fetch($sql);
+  
+      $xtpl->assign('tenhang', $hanghoa['tenhang']);
+      $xtpl->assign('giaban', number_format($chitiet['giaban']));
+      $xtpl->assign('soluong', number_format($chitiet['soluong']));
+      $xtpl->assign('thanhtien', '-' . number_format($chitiet['thanhtien']));
+      $xtpl->parse('main.trahang.cot');
+    }
+    $xtpl->parse('main.trahang');
+  }
+
   $sql = "select * from pos_chitiethoadon where idhoadon = $id";
   $danhsachchitiet = $db->all($sql);
 
-  foreach ($danhsachchitiet as $chitiet) {
-    $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
-    $hanghoa = $db->fetch($sql);
-
-    $xtpl->assign('tenhang', $hanghoa['tenhang']);
-    if ($chitiet['giaban'] != $chitiet['dongia']) $xtpl->assign('dongia', number_format($chitiet['dongia']));
-    else $xtpl->assign('dongia', '');
-    $xtpl->assign('giaban', number_format($chitiet['giaban']));
-    $xtpl->assign('soluong', number_format($chitiet['soluong']));
-    $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
+  if (count($danhsachchitiet)) {
+    foreach ($danhsachchitiet as $chitiet) {
+      $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
+      $hanghoa = $db->fetch($sql);
+  
+      $xtpl->assign('tenhang', $hanghoa['tenhang']);
+      if ($chitiet['giaban'] != $chitiet['dongia']) $xtpl->assign('dongia', number_format($chitiet['dongia']));
+      else $xtpl->assign('dongia', '');
+      $xtpl->assign('giaban', number_format($chitiet['giaban']));
+      $xtpl->assign('soluong', number_format($chitiet['soluong']));
+      $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
+      $xtpl->parse('main.banhang.cot');
+    }
+    $xtpl->parse('main.banhang');
   }
 
   if ($hoadon['giamgiatien'] > 0 || $hoadon['giamgiaphantram'] > 0) {
@@ -429,9 +448,8 @@ function inhoadon() {
     $xtpl->parse('main.giamgia');
   }
   $xtpl->assign('thanhtien', number_format($hoadon['thanhtien']));
-  $xtpl->parse('main.row');
   $xtpl->parse('main');
-
+  
   $resp['status'] = 1;
   $resp['html'] = $xtpl->text();
 }
@@ -465,29 +483,47 @@ function chitiethoadon() {
     $khachhang = $db->fetch($sql);
   }
 
+  $sql = "select * from pos_chitiettrahang where idhoadon = $id";
+  $danhsachtrahang = $db->all($sql);
+
+  if (count($danhsachtrahang)) {
+    foreach ($danhsachtrahang as $chitiet) {
+      $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
+      $hanghoa = $db->fetch($sql);
+      $xtpl->assign('mahang', $hanghoa['mahang']);
+      $xtpl->assign('tenhang', $hanghoa['tenhang']);
+      $xtpl->assign('soluong', number_format($chitiet['soluong']));
+      $xtpl->assign('giaban', number_format($chitiet['giaban']));
+      $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
+      $xtpl->parse('main.hangtra.cot');
+    }
+    $xtpl->parse('main.hangtra');
+  }
+
   $sql = "select * from pos_chitiethoadon where idhoadon = $id";
   $danhsach = $db->all($sql);
 
   $soluong = 0;
-  foreach ($danhsach as $chitiet) {
-    $soluong += $chitiet['soluong'];
-    $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
-    $hanghoa = $db->fetch($sql);
-    $xtpl->assign('mahang', $hanghoa['mahang']);
-    $xtpl->assign('tenhang', $hanghoa['tenhang']);
-    $xtpl->assign('soluong', number_format($chitiet['soluong']));
-    $xtpl->assign('dongia', number_format($chitiet['dongia']));
-    $xtpl->assign('giamgiatien', number_format($chitiet['giamgiatien']));
-    if (!empty($chitiet['giamgiaphantram'])) {
-      $xtpl->assign('giamgiaphantram', "+ $chitiet[giamgiaphantram]%");
-      $xtpl->assign('giamgiatienphantram', "(". (number_format($chitiet['giamgiaphantram'] * $chitiet['dongia'] / 100)) .")");
-    } 
-    $xtpl->assign('giaban', number_format($chitiet['giaban']));
-    $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
-
-    $xtpl->parse('main.row');
+  if (count($danhsach)) {
+    foreach ($danhsach as $chitiet) {
+      $soluong += $chitiet['soluong'];
+      $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
+      $hanghoa = $db->fetch($sql);
+      $xtpl->assign('mahang', $hanghoa['mahang']);
+      $xtpl->assign('tenhang', $hanghoa['tenhang']);
+      $xtpl->assign('soluong', number_format($chitiet['soluong']));
+      $xtpl->assign('dongia', number_format($chitiet['dongia']));
+      $xtpl->assign('giamgiatien', number_format($chitiet['giamgiatien']));
+      if (!empty($chitiet['giamgiaphantram'])) {
+        $xtpl->assign('giamgiaphantram', "+ $chitiet[giamgiaphantram]%");
+        $xtpl->assign('giamgiatienphantram', "(". (number_format($chitiet['giamgiaphantram'] * $chitiet['dongia'] / 100)) .")");
+      } 
+      $xtpl->assign('giaban', number_format($chitiet['giaban']));
+      $xtpl->assign('thanhtien', number_format($chitiet['thanhtien']));
+      $xtpl->parse('main.hangban.cot');
+    }
+    $xtpl->parse('main.hangban');
   }
-
   $sql = "select first_name from pet_users where userid = $hoadon[idnguoiban]";
   $banhang = $db->fetch($sql);
   $sql = "select first_name from pet_users where userid = $hoadon[idnguoiratoa]";

@@ -19,17 +19,39 @@
   </div>
 </div>
 
+<!-- BEGIN: hangtra -->
 <table class="table table-bordered">
   <tr>
     <th> Mã hàng </th>
-    <th> Tên hàng </th>
+    <th> Hàng trả </th>
+    <th> Số lượng </th>
+    <th> Giá bán </th>
+    <th> Tổng tiền </th>
+  </tr>
+  <!-- BEGIN: cot -->
+  <tr>
+    <td> {mahang} </td>
+    <td> {tenhang} </td>
+    <td> {soluong} </td>
+    <td> {giaban} </td>
+    <td> {thanhtien} </td>
+  </tr>
+  <!-- END: cot -->
+</table>
+<!-- END: hangtra -->
+
+<!-- BEGIN: hangban -->
+<table class="table table-bordered">
+  <tr>
+    <th> Mã hàng </th>
+    <th> Hàng bán </th>
     <th> Số lượng </th>
     <th> Đơn giá </th>
     <th> Giảm giá </th>
     <th> Giá bán </th>
     <th> Thành tiền </th>
   </tr>
-  <!-- BEGIN: row -->
+  <!-- BEGIN: cot -->
   <tr>
     <td> {mahang} </td>
     <td> {tenhang} </td>
@@ -39,8 +61,9 @@
     <td> {giaban} </td>
     <td> {thanhtien} </td>
   </tr>
-  <!-- END: row -->
+  <!-- END: cot -->
 </table>
+<!-- END: hangban -->
 
 <div style="float: right;">
   <button class="btn btn-info" onclick="inhoadon({id})"> In hóa đơn </button>
