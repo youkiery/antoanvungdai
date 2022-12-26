@@ -66,6 +66,29 @@
   </div>
 </div>
 
+<div class="modal fade" id="modal-them-loai-hang" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"> Thêm loại hàng </h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-xs-8"> Loại hàng </div>
+          <div class="col-xs-16">
+            <input autocomplete="off" type="text" class="form-control" id="ten-loai-hang">
+          </div>
+        </div>
+
+        <button class="btn btn-success btn-block" onclick="xacnhanthemloaihang()">
+          Thêm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="modal-them-hang" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -78,7 +101,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Mã Hàng </div>
           <div class="col-xs-16">
-            <input autocomplete="off" type="text" class="modal-them form-control" id="them-ma-hang" placeholder="Mã hàng tự động">
+            <input autocomplete="off" type="text" class="modal-them form-control" id="them-ma-hang" placeholder="Mã hàng tự động" disabled>
           </div>
         </div>
         <div class="form-group row">
@@ -90,9 +113,14 @@
         <div class="form-group row">
           <div class="col-xs-8"> Loại hàng </div>
           <div class="col-xs-16">
-            <select id="them-loai-hang" class="modal-them form-control">
-              {loaihang}
-            </select>
+            <div class="input-group">
+              <select id="them-loai-hang" class="modal-them form-control">
+                {loaihang}
+              </select>
+              <div class="input-group-btn">
+                <button class="btn btn-success" onclick="themloaihang()"> <span class="fa fa-plus"></span> </button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="form-group row">
@@ -229,6 +257,22 @@
 
       }
     }).fail(() => { });
+  }
+
+  function themloaihang() {
+    $('#ten-loai-hang').val('')
+    $('#modal-them-loai-hang').modal('show')
+  }
+
+  function xacnhanthemloaihang() {
+    vhttp.post('/dashboard/api/', {
+      action: 'themloaihang',
+      loaihang: $('#ten-loai-hang').val()
+    }).then((resp) => {
+      $('#them-loai-hang').html(resp.danhsach)
+      $('#them-loai-hang').val(resp.id)
+      $('#modal-them-loai-hang').modal('hide')
+    }, (e) => { })
   }
 
   function themhang() {

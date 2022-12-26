@@ -363,10 +363,33 @@ function xoahoadon() {
   $sql = "select * from pos_chitiethoadon where idhoadon = $id";
   $chitiethoadon = $db->all($sql);
 
+  $sql = "select * from pos_hoadon where id = $id";
+  $hoadon = $db->fetch($sql);
+
   foreach ($chitiethoadon as $key => $chitiet) {
     $sql = "update pos_hanghoa set soluong = soluong + $chitiet[soluongthuc] where id = $chitiet[idhang]";
     $db->query($sql);
   }
+  // xóa chi tiết hóa đơn
+  $sql = "delete from pos_chitiethoadon where idhoadon = $id";
+  $db->query($sql);
+  // xóa chi tiết hóa đơn
+  $sql = "select * from pos_machitietthuchi where mahoadon = $hoadon[mahoadon]";
+  $chitietthuchi = $db->fetch($sql);
+
+  $sql = "delete from pos_machitietthuchi where mahoadon = $hoadon[mahoadon]";
+  $db->query($sql);
+
+  // $sql = "delete from pos_thuchi where id = $chitietthuchi[idthuchi]";
+  // $db->query($sql);
+
+  // $sql = "delete from pos_chitietthuchi where idthuchi = $chitietthuchi[idthuchi]";
+  // $db->query($sql);
+
+  // $sql = "delete from pos_chitiettrahang where idhoadon = $id";
+  // $db->query($sql);
+
+  // xóa tích điểm
   // xóa chi tiết hóa đơn
   $sql = "delete from pos_chitiethoadon where idhoadon = $id";
   $db->query($sql);
@@ -613,6 +636,32 @@ function thongtinhang() {
   $resp['data'] = $hang;
 }
 
+function themloaihang() {
+  global $db, $resp, $nv_Request;
+
+  $loaihang = $nv_Request->get_string('loaihang', 'post');
+  $sql = "select * from pos_phanloai where module = 'hanghoa' and ten = '$loaihang'";
+  if (!empty($dulieuloaihang = $db->fetch($sql))) {
+    $sql = "update pos_phanloai set kichhoat = 1 where id = $dulieuloaihang[id]";
+    $db->query($sql);
+
+    $resp['status'] = 1;
+    $resp['messenger'] = 'Loại hàng đã tồn tại';
+  }
+  else {
+    $sql = "insert into pos_phanloai (ten, module, kichhoat, thutu) values('$loaihang', 'hanghoa', 1, 1)";
+    $id = $db->insertid($sql);
+
+    $sql = "select * from pos_phanloai where module = 'hanghoa' and kichhoat = 1 order by thutu asc, id asc";
+    $loaihang = $db->all($sql);
+      
+    $resp['status'] = 1;
+    $resp['id'] = $id;
+    $resp['danhsach'] = option($loaihang, 'ten', 'id');
+    $resp['messenger'] = 'Đã thêm loại hàng hóa';
+  }
+}
+
 function themhang() {
   global $db, $resp, $nv_Request;
 
@@ -850,6 +899,10 @@ function themnguon() {
   $id = $nv_Request->get_string('id', 'post');
 
   if (empty($id)) {
+    $sql = "select id from pos_nguoncung order by id desc limit 1";
+    $hang = $db->fetch($sql);
+    $ma = "NC" . fillzero(($hang['id'] ? $hang['id'] : 0) + 1);
+
     $sql = "insert into pos_nguoncung (ten, dienthoai, diachi) values('$data[ten]', '$data[dienthoai]', '$data[diachi]')";
     $id = $db->insert_id($sql);
     $resp['messenger'] = 'Đã thêm nguồn cung';

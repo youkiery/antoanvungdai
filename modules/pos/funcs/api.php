@@ -4,8 +4,6 @@ if (!defined('NV_IS_MOD_NEWS')) {
   exit('Stop!!!');
 }
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 $action = $nv_Request->get_string('action', 'post');
 $resp = array(
   'status' => 0
@@ -137,7 +135,7 @@ function thanhtoan() {
     }
   }
 
-  $sql = "insert into pos_machitietthuchi (idthuchi, mahoadon, loinhuan) values($idthuchi, '$mahoadon', $loinhuan)";
+  $sql = "insert into pos_machitietthuchi (idthuchi, mahoadon, sotien, loinhuan) values($idthuchi, '$mahoadon', $data[thanhtien], $loinhuan)";
   $db->query($sql);
 
   if ($data['thanhtien'] > 0) {
@@ -147,6 +145,10 @@ function thanhtoan() {
         $db->query($sql);
       }
     }
+  }
+  else {
+    $sql = "insert into pos_chitietthuchi(idthuchi, loai, sotien) values($idthuchi, 0, $data[thanhtien])";
+    $db->query($sql);
   }
 
   $resp['status'] = 1;
@@ -200,7 +202,7 @@ function thuno() {
       $loinhuan -= $data['thanhtoan'][2];
     }
 
-    $sql = "insert into pos_machitietthuchi (idthuchi, loai, mahoadon, loinhuan) values($idthuchi, 1, '$hoadon[mahoadon]', $loinhuan)";
+    $sql = "insert into pos_machitietthuchi (idthuchi, mahoadon, sotien, loinhuan) values($idthuchi, '$hoadon[mahoadon]', $hoadon[thuthem], $loinhuan)";
     $db->query($sql);
 
     $sql = "update pos_hoadon set thanhtoan = thanhtoan + $hoadon[thuthem] where id = $hoadon[id]";

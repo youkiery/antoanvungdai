@@ -47,6 +47,12 @@
       </div>
       <div class="modal-body">
         <div class="form-group row">
+          <div class="col-xs-8"> Mã nguồn cung </div>
+          <div class="col-xs-16">
+            <input autocomplete="off" type="text" class="form-control" id="nguon-ma" placeholder="Mã nguồn cung tự động" disabled>
+          </div>
+        </div>
+        <div class="form-group row">
           <div class="col-xs-8"> Nhà cung cấp </div>
           <div class="col-xs-16">
             <input autocomplete="off" type="text" class="form-control" id="nguon-ten">
@@ -132,8 +138,9 @@
     $('#modal-them-nguon').modal('show')
   }
 
-  function suanguon(id, ten, diachi, dienthoai) {
+  function suanguon(id, ma, ten, diachi, dienthoai) {
     global.id = id
+    $('#nguon-ma').val(ma)
     $('#nguon-ten').val(ten)
     $('#nguon-dien-thoai').val(diachi)
     $('#nguon-dia-chi').val(dienthoai)

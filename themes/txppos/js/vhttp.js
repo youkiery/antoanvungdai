@@ -5,7 +5,7 @@ var vhttp = {
     if (!vhttp.init) {
       var html = `
       <div id="alert-vhttp" class="alert alert-info pw-alert" role="alert"> </div>`
-      $('body').append(html)
+      $('.nonprintable').append(html)
       vhttp.init = true
     }
   },

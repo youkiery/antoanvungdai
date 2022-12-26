@@ -5,8 +5,8 @@
     Dương Duy Khánh <br>
     Nhân viên
     <a href="/pos" class="btn btn-success btn-block"> Bán hàng </a>
-    <button class="btn btn-info btn-block"> Cài đặt </button>
-    <button class="btn btn-danger btn-block"> Đăng xuất </button>
+    <button onclick="vhttp.notify('Chức năng đang được xây dựng')" class="btn btn-info btn-block"> Cài đặt </button>
+    <a href="/dashboard/logout" class="btn btn-danger btn-block"> Đăng xuất </a>
   </div>
   <div class="pw-menu-group">
     <div class="pw-menu-header">

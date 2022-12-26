@@ -151,16 +151,17 @@ function danhsachnguoncung() {
   if (empty($filter['page'])) $filter['page'] = 1;
   if (empty($filter['tukhoa'])) $filter['tukhoa'] = '';
 
-  $sql = "select count(id) as count from pos_nguoncung where kichhoat = 1 and (ten like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%')";
+  $sql = "select count(id) as count from pos_nguoncung where kichhoat = 1 and (manguoncung like '%$filter[tukhoa]%' or ten like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%')";
   $count = $db->fetch($sql)['count']; 
 
-  $sql = "select * from pos_nguoncung where  kichhoat = 1 and (ten like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%') order by id desc limit $limit offset ". ($filter['page'] - 1) * $limit;
+  $sql = "select * from pos_nguoncung where  kichhoat = 1 and (manguoncung like '%$filter[tukhoa]%' or ten like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%') order by id desc limit $limit offset ". ($filter['page'] - 1) * $limit;
   $danhsach = $db->all($sql);
 
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/source/');
   foreach ($danhsach as $i => $row) {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('ten', $row['ten']);
+    $xtpl->assign('manguon', $row['manguoncung']);
     $xtpl->assign('dienthoai', $row['dienthoai']);
     $xtpl->assign('diachi', $row['diachi']);
     $xtpl->parse('main.row');
@@ -298,6 +299,7 @@ function thongke() {
 
   $dulieu['tongchi'] = $dulieu['tongchi'] * -1;
   $dulieu['doanhthu'] = $dulieu['tongthu'] - $dulieu['tongchi'];
+  $dulieu['tienmat'] -= $dulieu['tongchi'];
   $dulieu['tienmat2'] = $dulieu['tienmat'] - $dulieu['diem'] - $dulieu['chuyenkhoan'];
 
   $sql = "select b.* from pos_thuchi a inner join pos_machitietthuchi b on a.id = b.idthuchi where (a.thoigian between $batdau and $ketthuc)";

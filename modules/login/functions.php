@@ -7,9 +7,6 @@ define('NV_IS_MOD_NEWS', true);
 define('PATH', NV_ROOTDIR . '/modules/'. $module_file . '/template/user/'. $op);
 require_once NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 function login_userid($userid) {
   global $db;
 

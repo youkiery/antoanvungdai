@@ -68,7 +68,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Mã khách </div>
           <div class="col-xs-16">
-            <input autocomplete="off" type="text" class="form-control" id="khach-ma">
+            <input autocomplete="off" type="text" class="form-control" id="khach-ma" placeholder="Mã khách hàng tự động" disabled>
           </div>
         </div>
         <div class="form-group row">
@@ -168,13 +168,12 @@
   }
 
   async function xacnhanthemkhach() {
-    var khachhang = global.hoadon[global.chonhoadon].khachhang
     data = {
-      id: khachhang.id ? khachhang.id : 0,
-      diem: khachhang.diem ? khachhang.diem : 0,
-      kichhoat: khachhang.kichhoat ? khachhang.kichhoat : 0,
-      makhach: khachhang.makhach ? khachhang.makhach : 0,
-      tienno: khachhang.tienno ? khachhang.tienno : 0,
+      id: 0,
+      diem: 0,
+      kichhoat: 0,
+      tienno: 0,
+      makhach: $('khach-ma').val(),
       diachi: $('#khach-dia-chi').val(),
       dienthoai: $('#khach-dien-thoai').val(),
       tenkhach: $('#khach-ten').val(),

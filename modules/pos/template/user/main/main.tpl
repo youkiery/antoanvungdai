@@ -100,6 +100,12 @@
       </div>
       <div class="modal-body">
         <div class="form-group row">
+          <div class="col-xs-8"> Mã khách </div>
+          <div class="col-xs-16">
+            <input autocomplete="off" type="text" class="form-control" id="khach-ma" placeholder="Mã khách hàng tự động" disabled>
+          </div>
+        </div>
+        <div class="form-group row">
           <div class="col-xs-8"> Khách hàng </div>
           <div class="col-xs-16">
             <input autocomplete="off" type="text" class="form-control" id="khach-ten">
@@ -204,10 +210,10 @@
       </div>
       <div class="col-xs-12" id="danhsachhoadon"></div>
       <div class="col-xs-4 pw-head-menu">
-        <button class="fa fa-money btn btn-info" onclick="thuno()"></button>
-        <button class="fa fa-share btn btn-info" onclick="tranhanh()"></button>
+        <button class="btn btn-info" onclick="thuno()"> <span class="fa fa-money"></span> </button>
+        <button class="btn btn-info" onclick="tranhanh()"> <span class="fa fa-share"></span> </button>
         <!-- <a href="#" data-toggle="popover" role="button"  data-placement="left" data-trigger="focus" data-html="true" data-content="<div style='border-bottom: 1px solid lightgray; cursor: pointer; padding: 10px;' onclick='tranhanh()'> Trả nhanh </div><div style='padding: 10px; cursor: pointer;' onclick='chonhoadon()'> Chọn hóa đơn </div>"> <span class="fa fa-share btn btn-info"></span> </a> -->
-        <button class="fa fa-bars btn btn-info"></button>
+        <a href="/dashboard" role="button" class="btn btn-info"> <span class="fa fa-desktop"></span></a>
       </div>
     </div>
   </div>
@@ -505,9 +511,25 @@
         action: 'thanhtoan',
         data: global.hoadon[global.chonhoadon]
       }).then((resp) => {
-        // thanh toán xong xóa hóa đơn hiện tại
+        // thanh toán xong xóa hóa đơn hiện tại        
         global.hoadon[global.chonhoadon].hanghoa = []
         global.hoadon[global.chonhoadon].dathanhtoan = true
+        
+        vhttp.post('/pos/api/', {
+          action: 'timkhach',
+          tukhoa: ''
+        }).then((resp) => {
+          html = ``
+          global.khachhang = resp.danhsach
+          global.khachhang.forEach((khachhang, i) => {
+            html += `
+              <div class="suggest-item" onclick="chonkhachhang(`+ i + `)">
+                `+ khachhang.tenkhach + ` <span style="float: right;"> ` + khachhang.dienthoai + ` </span> <br>
+                `+ khachhang.makhach + `
+              </div>`
+          })
+        }, (e) => {})
+
         xoahoadon(global.chonhoadon)
         setTimeout(() => {
           $('#printable').html(resp.html)
@@ -770,6 +792,7 @@
 
   function themkhach() {
     global.id = 0
+    $('#khach-ma').val('')
     $('#khach-ten').val('')
     $('#khach-dien-thoai').val($('#tim-khach').val())
     $('#khach-dia-chi').val('')
@@ -797,8 +820,8 @@
       id: khachhang.id ? khachhang.id : 0,
       diem: khachhang.diem ? khachhang.diem : 0,
       kichhoat: khachhang.kichhoat ? khachhang.kichhoat : 0,
-      makhach: khachhang.makhach ? khachhang.makhach : 0,
       tienno: khachhang.tienno ? khachhang.tienno : 0,
+      makhach: $('#khach-ma').val(),
       diachi: $('#khach-dia-chi').val(),
       dienthoai: $('#khach-dien-thoai').val(),
       tenkhach: $('#khach-ten').val(),
