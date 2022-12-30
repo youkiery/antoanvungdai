@@ -2,10 +2,10 @@
 <div class="pw-side-bar nonprintable">
   <div class="pw-info-panel">
     <div class="pw-avatar"> </div>
-    Dương Duy Khánh <br>
+    {nhanvien} <br>
     Nhân viên
     <a href="/pos" class="btn btn-success btn-block"> Bán hàng </a>
-    <button onclick="vhttp.notify('Chức năng đang được xây dựng')" class="btn btn-info btn-block"> Cài đặt </button>
+    <a href="/dashboard/setting" class="btn btn-info btn-block"> Cài đặt </button>
     <a href="/dashboard/logout" class="btn btn-danger btn-block"> Đăng xuất </a>
   </div>
   <div class="pw-menu-group">

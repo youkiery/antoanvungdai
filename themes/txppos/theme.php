@@ -248,6 +248,10 @@ function nv_site_theme($contents, $full = true)
     ];
     $html_js[] = [
         'ext' => 1,
+        'content' => NV_STATIC_URL . 'themes/' . $global_config['module_theme'] . '/js/Chart.js'
+    ];
+    $html_js[] = [
+        'ext' => 1,
         'content' => NV_STATIC_URL . 'themes/' . $global_config['module_theme'] . '/js/vremind.js'
     ];
     $html_js[] = [

@@ -5,11 +5,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   } */
-  .pw-half-height {
-    height: calc(50vh - 45px);
-    width: 100%;
-    overflow-y: scroll;
-  }
 
   .popover-content {
     padding: 0px;
@@ -22,51 +17,6 @@
 
   .input-group {
     width: 100%;
-  }
-
-  .pw-input-group {
-    position: relative;
-    height: 55px;
-    padding: 2px;
-  }
-
-  .pw-input-group.col-xs-8 {
-    width: calc(33% - 4px);
-    margin: 2px;
-  }
-
-  .pw-input-header {
-    background: lightgreen;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    text-align: center;
-    padding: 3px;
-    width: 100%;
-    position: absolute;
-    top: 0px;
-  }
-
-  .pw-input-header:hover {
-    cursor: pointer;
-  }
-
-  .pw-input-content {
-    position: absolute;
-    top: 25px;
-  }
-
-  #printable {
-    display: none;
-  }
-
-  @media print {
-    #printable {
-      display: block;
-    }
-
-    .nonprintable {
-      display: none;
-    }
   }
 </style>
 
