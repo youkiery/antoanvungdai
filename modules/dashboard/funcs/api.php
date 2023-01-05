@@ -903,7 +903,7 @@ function themnguon() {
     $hang = $db->fetch($sql);
     $ma = "NC" . fillzero(($hang['id'] ? $hang['id'] : 0) + 1);
 
-    $sql = "insert into pos_nguoncung (ten, dienthoai, diachi) values('$data[ten]', '$data[dienthoai]', '$data[diachi]')";
+    $sql = "insert into pos_nguoncung (manguoncung, ten, dienthoai, diachi) values('$ma', '$data[ten]', '$data[dienthoai]', '$data[diachi]')";
     $id = $db->insert_id($sql);
     $resp['messenger'] = 'Đã thêm nguồn cung';
   }
@@ -1059,6 +1059,37 @@ function themphieuchi() {
   $resp['status'] = 1;
   $resp['messenger'] = 'Đã thêm phiếu thu';
   $resp['html'] = danhsachthuchi();
+}
+
+function taimauhoadon() {
+  global $db, $resp;
+
+  $sql = "select * from pos_cauhinh where module = 'mauhoadon'";
+  if (empty($cauhinh = $db->fetch($sql))) {
+    $sql = "insert into pos_cauhinh (module, giatri) values('mauhoadon', '')";
+    $db->query($sql);
+    $cauhinh = ['giatri' => ''];
+  }
+
+  $resp['status'] = 1;
+  $resp['html'] = $cauhinh['giatri'];
+}
+
+function luumauhoadon() {
+  global $db, $resp, $nv_Request;
+
+  $mauin = $nv_Request->get_string('mauin', 'post');
+  $sql = "select * from pos_cauhinh where module = 'mauhoadon'";
+  if (empty($cauhinh = $db->fetch($sql))) {
+    $sql = "insert into pos_cauhinh (module, giatri) values('mauhoadon', '$mauin')";
+  }
+  else {
+    $sql = "update pos_cauhinh set giatri = '$mauin' where id = $cauhinh[id]";
+  }
+  $db->query($sql);
+
+  $resp['status'] = 1;
+  $resp['messenger'] = 'Đã lưu';
 }
 
 function xemthongke() {

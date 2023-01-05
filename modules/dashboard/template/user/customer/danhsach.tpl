@@ -4,8 +4,9 @@
     <tr>
       <th> Mã khách </th>
       <th> Khách hàng </th>
-      <th> Địa chỉ </th>
       <th> Điện thoại </th>
+      <th> Mua hàng </th>
+      <th> Tiền nợ </th>
       <th>  </th>
     </tr>
   </thead>
@@ -14,8 +15,9 @@
     <tr>
       <td> {makhach} </td>
       <td> {ten} </td>
-      <td> {diachi} </td>
       <td> {dienthoai} </td>
+      <td> {muahang} </td>
+      <td> {tienno} </td>
       <td> 
         <button class="btn btn-info btn-xs" onclick="suakhach({id}, '{makhach}', '{ten}', '{diachi}', '{dienthoai}')">
           sửa
@@ -27,6 +29,14 @@
     </tr>
   </tbody>
   <!-- END: row -->
+  <!-- BEGIN: khongkhach -->
+  <tbody>
+    <tr>
+      <td colspan="6" class="text-center"> Không tìm thấy khách hàng </td>
+      </td>
+    </tr>
+  </tbody>
+  <!-- END: khongkhach -->
 </table>
 
 {navbar}

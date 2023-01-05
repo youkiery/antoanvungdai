@@ -32,19 +32,12 @@
   <!-- END: row -->
 </table>
 
-<!-- BEGIN: update -->
 <div style="float: right;">
-  <button class="btn btn-info" onclick="suanhap({id})"> Sửa </button>
-</div>
-<!-- END: update -->
-
-<div style="float: right;">
-  <button class="btn btn-info" onclick="inma({id})"> In </button>
-</div>
-<div style="float: right;">
-  <button class="btn btn-info" onclick="xuatfilechitiet({id})"> Xuất file </button>
-</div>
-<div style="float: right;">
-  <button class="btn btn-danger" onclick="xoanhap({id})"> Xóa </button>
+  <!-- BEGIN: update -->
+  <button class="btn btn-info" onclick="suanhap({id})"> <span class="fa fa-pencil"></span> Sửa </button>
+  <!-- END: update -->
+  <button class="btn btn-info" onclick="inma({id})"> <span class="fa fa-print"></span> In </button>
+  <button class="btn btn-info" onclick="xuatfilechitiet({id})"> <span class="fa fa-download"></span> Xuất file </button>
+  <button class="btn btn-danger" onclick="xoanhap({id})"> <span class="fa fa-close"></span> Xóa </button>
 </div>
 <!-- END: main -->

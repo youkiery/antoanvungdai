@@ -18,7 +18,7 @@ function danhsachhang() {
   global $db, $nv_Request;
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/item/');
 
-  $limit = 10;
+  $gioihan = 10;
   $filter = $nv_Request->get_array('filter', 'post');
   $query = array();
   if (empty($filter['page'])) $filter['page'] = 1;
@@ -31,7 +31,7 @@ function danhsachhang() {
   $sql = "select count(id) as count from pos_hanghoa where kichhoat = 1 $query";
   $total = $db->fetch($sql)['count']; 
 
-  $sql = "select * from pos_hanghoa where kichhoat = 1 $query order by id desc limit $limit offset ". ($filter['page'] - 1) * $limit;
+  $sql = "select * from pos_hanghoa where kichhoat = 1 $query order by id desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $list = $db->all($sql);
 
   foreach ($list as $row) {
@@ -48,7 +48,7 @@ function danhsachhang() {
     $xtpl->assign('soluong', number_format($row['soluong']));
     $xtpl->parse('main.row');
   }
-  $xtpl->assign('navbar', navbar($filter['page'], $total, $limit, 'onclick="timkiem({p})"'));
+  $xtpl->assign('navbar', navbar($filter['page'], $total, $gioihan, 'onclick="timkiem({p})"'));
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -57,7 +57,7 @@ function danhsachthuchi() {
   global $db, $nv_Request;
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/cash/');
 
-  $limit = 10;
+  $gioihan = 10;
   $filter = $nv_Request->get_array('filter', 'post');
   $query = array();
   if (empty($filter['page'])) $filter['page'] = 1;
@@ -73,7 +73,7 @@ function danhsachthuchi() {
   $sql = "select count(b.id) as count from pos_thuchi a inner join pos_chitietthuchi b on a.id = b.idthuchi where $query";
   $total = $db->fetch($sql)['count']; 
 
-  $sql = "select a.mathuchi, a.idloaithuchi, a.idkhachhang, a.thoigian, b.loai, b.sotien from pos_thuchi a inner join pos_chitietthuchi b on a.id = b.idthuchi where $query order by b.id desc limit $limit offset ". ($filter['page'] - 1) * $limit;
+  $sql = "select a.mathuchi, a.idloaithuchi, a.idkhachhang, a.thoigian, b.loai, b.sotien from pos_thuchi a inner join pos_chitietthuchi b on a.id = b.idthuchi where $query order by b.id desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $list = $db->all($sql);
 
   $loaithanhtoan = [0 => 'Tiền mặt', 'Chuyển khoản', 'Điểm'];
@@ -94,7 +94,7 @@ function danhsachthuchi() {
     $xtpl->assign('sotien', number_format($row['sotien']));
     $xtpl->parse('main.row');
   }
-  $xtpl->assign('navbar', navbar($filter['page'], $total, $limit, 'onclick="timkiem({p})"'));
+  $xtpl->assign('navbar', navbar($filter['page'], $total, $gioihan, 'onclick="timkiem({p})"'));
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -102,7 +102,7 @@ function danhsachthuchi() {
 function danhsachnhaphang() {
   global $db, $nv_Request;
 
-  $limit = 10;
+  $gioihan = 10;
   $filter = $nv_Request->get_array('filter', 'post');
   if (empty($filter['page'])) $filter['page'] = 1;
   if (empty($filter['batdau'])) $filter['batdau'] = strtotime(date('Y/m/1'));
@@ -113,11 +113,11 @@ function danhsachnhaphang() {
   $sql = "select count(*) as count from pos_nhaphang where thoigian between $filter[batdau] and $filter[ketthuc] order by thoigian desc";
   $count = $db->fetch($sql)['count'];
 
-  $sql = "select * from pos_nhaphang where thoigian between $filter[batdau] and $filter[ketthuc] order by thoigian desc limit $limit offset ". ($filter['page'] - 1) * $limit;
+  $sql = "select * from pos_nhaphang where thoigian between $filter[batdau] and $filter[ketthuc] order by thoigian desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $danhsach = $db->all($sql);
 
-  $lf = ($filter['page'] - 1) * $limit;
-  $lt = $lf + $limit;
+  $lf = ($filter['page'] - 1) * $gioihan;
+  $lt = $lf + $gioihan;
   $trangthai = array(0 => 'Phiếu tạm', 'Hoàn thành');
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/purchase/');
   foreach ($danhsach as $i => $row) {
@@ -138,7 +138,7 @@ function danhsachnhaphang() {
       }
     }
   }
-  $xtpl->assign('navbar', navbar($filter['page'], $count, $limit, 'onclick="timkiem({p})"'));
+  $xtpl->assign('navbar', navbar($filter['page'], $count, $gioihan, 'onclick="timkiem({p})"'));
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -146,7 +146,7 @@ function danhsachnhaphang() {
 function danhsachnguoncung() {
   global $db, $nv_Request;
 
-  $limit = 10;
+  $gioihan = 10;
   $filter = $nv_Request->get_array('filter', 'post');
   if (empty($filter['page'])) $filter['page'] = 1;
   if (empty($filter['tukhoa'])) $filter['tukhoa'] = '';
@@ -154,7 +154,7 @@ function danhsachnguoncung() {
   $sql = "select count(id) as count from pos_nguoncung where kichhoat = 1 and (manguoncung like '%$filter[tukhoa]%' or ten like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%')";
   $count = $db->fetch($sql)['count']; 
 
-  $sql = "select * from pos_nguoncung where  kichhoat = 1 and (manguoncung like '%$filter[tukhoa]%' or ten like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%') order by id desc limit $limit offset ". ($filter['page'] - 1) * $limit;
+  $sql = "select * from pos_nguoncung where  kichhoat = 1 and (manguoncung like '%$filter[tukhoa]%' or ten like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%') order by id desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $danhsach = $db->all($sql);
 
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/source/');
@@ -166,7 +166,7 @@ function danhsachnguoncung() {
     $xtpl->assign('diachi', $row['diachi']);
     $xtpl->parse('main.row');
   }
-  $xtpl->assign('navbar', navbar($filter['page'], $count, $limit, 'onclick="timkiem({p})"'));
+  $xtpl->assign('navbar', navbar($filter['page'], $count, $gioihan, 'onclick="timkiem({p})"'));
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -174,27 +174,66 @@ function danhsachnguoncung() {
 function danhsachkhach() {
   global $db, $nv_Request;
 
-  $limit = 10;
+  $gioihan = 10;
   $filter = $nv_Request->get_array('filter', 'post');
   if (empty($filter['page'])) $filter['page'] = 1;
   if (empty($filter['tukhoa'])) $filter['tukhoa'] = '';
 
-  $sql = "select count(id) as count from pos_khachhang where kichhoat = 1 and (tenkhach like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%' or makhach like '%$filter[tukhoa]%')";
-  $count = $db->fetch($sql)['count']; 
+  $xtratienno = khoangsosanh('tienno', $filter['khachnotu'], $filter['khachnoden']);
+  if (!empty($xtratienno)) $xtra = " and $xtratienno";
+  else $xtra = '';
 
-  $sql = "select * from pos_khachhang where  kichhoat = 1 and (tenkhach like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%' or makhach like '%$filter[tukhoa]%') order by id desc limit $limit offset ". ($filter['page'] - 1) * $limit;
-  $danhsach = $db->all($sql);
+  $sql = "select * from pos_khachhang where kichhoat = 1 and (tenkhach like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%' or makhach like '%$filter[tukhoa]%') $xtra order by id desc";
+  $danhsachtam = $db->all($sql);
+  $danhsach = [];
+
+  $xtrathoigian = khoangsosanh('thoigian', chuyenthoigian($filter['thoigiantu']), chuyenthoigian($filter['thoigianden']));
+  if (!empty($xtrathoigian)) $xtra = " and $xtrathoigian";
+  else $xtra = '';
+
+  $thutu = 0;
+  if (!empty($filter['khachmuatu'])) $thutu += 1;
+  if (!empty($filter['khachmuaden'])) $thutu += 2;
+
+  foreach ($danhsachtam as $khachhang) {
+    $sql = "select sum(thanhtoan) as tongtien from pos_hoadon where idkhach = $khachhang[id] $xtra";
+    $tongtien = $db->fetch($sql);
+    if (empty($tongtien)) $khachhang['tongtien'] = 0;
+    else $khachhang['tongtien'] = $tongtien['tongtien'];
+    switch ($thutu) {
+      case 0:
+        $danhsach []= $khachhang;
+        break;
+      case 1:
+        if ($khachhang['tongtien'] > $filter['khachmuatu']) $danhsach []= $khachhang;
+        break;
+      case 2:
+        if ($khachhang['tongtien'] < $filter['khachmuaden']) $danhsach []= $khachhang;
+        break;
+      case 3:
+        if ($khachhang['tongtien'] < $filter['khachmuaden'] && $khachhang['tongtien'] > $filter['khachmuatu']) $danhsach []= $khachhang;
+        break;
+    }
+  }
 
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/customer/');
-  foreach ($danhsach as $i => $row) {
+  $chaydencuoi = $filter['page'] * $gioihan;
+  $count = count($danhsach);
+  $demchay = 0;
+  for ($i = ($filter['page'] - 1) * $gioihan; $i < $chaydencuoi; $i++) { 
+    $row = $danhsach[$i];
+    if (empty($row)) continue;
+    $demchay ++;
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('makhach', $row['makhach']);
     $xtpl->assign('ten', $row['tenkhach']);
     $xtpl->assign('dienthoai', $row['dienthoai']);
-    $xtpl->assign('diachi', $row['diachi']);
+    $xtpl->assign('muahang', number_format($row['tongtien']));
+    $xtpl->assign('tienno', number_format($row['tienno']));
     $xtpl->parse('main.row');
   }
-  $xtpl->assign('navbar', navbar($filter['page'], $count, $limit, 'onclick="timkiem({p})"'));
+  if (empty($demchay)) $xtpl->parse('main.khongkhach');
+  $xtpl->assign('navbar', navbar($filter['page'], $count, $gioihan, 'onclick="timkiem({p})"'));
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -202,7 +241,7 @@ function danhsachkhach() {
 function danhsachhoadon() {
   global $db, $nv_Request;
 
-  $limit = 10;
+  $gioihan = 10;
   $filter = $nv_Request->get_array('filter', 'post');
   $xtra = array();
   if (empty($filter['page'])) $filter['page'] = 1;
@@ -228,7 +267,7 @@ function danhsachhoadon() {
   $count = $db->fetch($sql)['count']; 
 
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/bill/');
-  $sql = "select * from pos_hoadon $xtra order by thoigian desc limit $limit offset ". ($filter['page'] - 1) * $limit;
+  $sql = "select * from pos_hoadon $xtra order by thoigian desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   // die($sql);
   $danhsach = $db->all($sql);
 
@@ -258,7 +297,7 @@ function danhsachhoadon() {
     $xtpl->assign('datra', number_format($row['thanhtoan']));
     $xtpl->parse('main.row');
   }
-  $xtpl->assign('navbar', navbar($filter['page'], $count, $limit, 'onclick="timkiem({p})"'));
+  $xtpl->assign('navbar', navbar($filter['page'], $count, $gioihan, 'onclick="timkiem({p})"'));
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -349,9 +388,9 @@ function tuychonnhanvien() {
   return $xtpl->text();
 }
 
-function navbar($page, $total, $limit, $surfix) {
+function navbar($page, $total, $gioihan, $surfix) {
   $xtpl = new XTemplate('navbar.tpl', UPATH);
-  $pagelength = floor($total / $limit) + (fmod($total, $limit) ? 1 : 0);
+  $pagelength = floor($total / $gioihan) + (fmod($total, $gioihan) ? 1 : 0);
   for ($i = 1; $i <= $pagelength; $i++) {
     $s = str_replace('{p}', $i, $surfix);
     if ($page == $i) $xtpl->assign('active', 'class="active"');

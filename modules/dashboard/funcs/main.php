@@ -117,8 +117,9 @@ if (count($danhsachhoadon)) {
 }
 
 // top mặt hàng bán chạy tháng trước
-$dauthangtruoc = strtotime(date('Y/m/1'));
-$cuoithangtruoc = strtotime(date('Y/m/t')) + 60 * 60 * 24 - 1;
+$dauthang = strtotime(date('Y/m/1'));
+$dauthangtruoc = strtotime(date('Y/m/1', $dauthang - 1));
+$cuoithangtruoc = strtotime(date('Y/m/t', $dauthangtruoc)) + 60 * 60 * 24 - 1;
 $sql = "select id from pos_hoadon where (thoigian between $dauthangtruoc and $cuoithangtruoc)";
 $danhsachidhoadon = $db->arr($sql, 'id');
 $thongkehangthang = ['nhan' => [], 'mau' => [], 'dulieu' => []];

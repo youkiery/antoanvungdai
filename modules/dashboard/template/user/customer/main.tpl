@@ -40,11 +40,40 @@
         <h4 class="modal-title"> Tìm kiếm khách hàng </h4>
       </div>
       <div class="modal-body">
-
         <div class="form-group row">
           <div class="col-xs-8"> Tên, điện thoại khách </div>
           <div class="col-xs-16">
             <input autocomplete="off" type="text" class="form-control" id="tim-tu-khoa">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-xs-8"> Tổng hóa đơn (đ) </div>
+          <div class="col-xs-8">
+            <input autocomplete="off" type="text" class="form-control" id="khach-mua-tu" placeholder="Khách mua từ" oninput="$('#khach-mua-tu').val(vnumber.format($('#khach-mua-tu').val()))">
+          </div>
+          <div class="col-xs-8">
+            <input autocomplete="off" type="text" class="form-control" id="khach-mua-den" placeholder="Khách mua đến" oninput="$('#khach-mua-den').val(vnumber.format($('#tim-no-den').val()))">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-xs-8"> Thời gian lọc </div>
+          <div class="col-xs-8">
+            <input autocomplete="off" type="text" class="form-control date" id="thoi-gian-tu" placeholder="Từ ngày">
+          </div>
+          <div class="col-xs-8">
+            <input autocomplete="off" type="text" class="form-control date" id="thoi-gian-den" placeholder="Đến ngày">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-xs-8"> Khách nợ (đ) </div>
+          <div class="col-xs-8">
+            <input autocomplete="off" type="text" class="form-control" id="khach-no-tu" placeholder="Khách nợ từ" oninput="$('#khach-no-tu').val(vnumber.format($('#khach-no-tu').val()))">
+          </div>
+          <div class="col-xs-8">
+            <input autocomplete="off" type="text" class="form-control" id="khach-no-den" placeholder="Khách nợ đến" oninput="$('#khach-no-den').val(vnumber.format($('#khach-no-den').val()))">
           </div>
         </div>
 
@@ -109,7 +138,7 @@
   <div class="pw-card">
     <div class="pw-card-header">
       <button class="btn btn-info" onclick="importkhach()"> <span class="fa fa-file"></span> Import khách hàng </button>
-      <button class="btn btn-info" onclick="timkhach()"> <span class="fa fa-search"></span> Tìm kiếm </button>
+      <button class="btn btn-info" onclick="timkhach()"> <span class="fa fa-search"></span> Lọc khách </button>
       <button class="btn btn-success" onclick="themkhach()"> <span class="fa fa-plus"></span> Thêm khách </button>
     </div>
     <div class="pw-card-content" id="content">
@@ -130,6 +159,9 @@
   $(document).ready(() => {
     // install filter
     vhttp.alert()
+    $('.date').datepicker({
+      dateFormat: 'dd/mm/yy'
+    })
   })
 
   function xoakhach(id) {
@@ -186,11 +218,20 @@
       vhttp.notify('Xin hãy nhập số điện thoại')
       return 0
     }
+    global.filter.tukhoa = $('#tim-tu-khoa').val()
+    global.filter.khachnotu = vnumber.clear($('#khach-no-tu').val())
+    global.filter.khachnoden = vnumber.clear($('#khach-no-den').val())
+    global.filter.khachmuatu = vnumber.clear($('#khach-mua-tu').val())
+    global.filter.khachmuaden = vnumber.clear($('#khach-mua-den').val())
+    global.filter.thoigiantu = $('#thoi-gian-tu').val()
+    global.filter.thoigianden = $('#thoi-gian-den').val()
+
     vhttp.post('/dashboard/api/', {
       action: 'themkhach',
       vitri: 'khachhang',
       id: global.id,
-      data: data
+      data: data,
+      filter: laydulieuloc()
     }).then((resp) => {
       $('#content').html(resp.danhsach)
       $('#modal-them-khach').modal('hide')
@@ -203,13 +244,22 @@
     $('#modal-tim-khach').modal('show')
   }
 
-  function timkiem(page) {
-    global.filter.page = page
+  function laydulieuloc(trang = 0) {
+    if (trang) global.filter.page = trang
     global.filter.tukhoa = $('#tim-tu-khoa').val()
+    global.filter.khachnotu = vnumber.clear($('#khach-no-tu').val())
+    global.filter.khachnoden = vnumber.clear($('#khach-no-den').val())
+    global.filter.khachmuatu = vnumber.clear($('#khach-mua-tu').val())
+    global.filter.khachmuaden = vnumber.clear($('#khach-mua-den').val())
+    global.filter.thoigiantu = $('#thoi-gian-tu').val()
+    global.filter.thoigianden = $('#thoi-gian-den').val()
+    return global.filter
+  }
 
+  function timkiem(page) {
     vhttp.post('/dashboard/api/', {
       action: 'taikhach',
-      filter: global.filter
+      filter: laydulieuloc(page)
     }).then((resp) => {
       $('#content').html(resp.danhsach)
       $('#modal-tim-khach').modal('hide')
