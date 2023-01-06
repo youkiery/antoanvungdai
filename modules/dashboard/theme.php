@@ -110,16 +110,15 @@ function danhsachnhaphang() {
   if (empty($filter['ketthuc'])) $filter['ketthuc'] = strtotime(date('Y/m/t')) + 60 * 60 * 24 - 1;
   else $filter['ketthuc'] = datetotime($filter['ketthuc']) + 60 * 60 * 24 - 1;
 
-  $sql = "select count(*) as count from pos_nhaphang where thoigian between $filter[batdau] and $filter[ketthuc] order by thoigian desc";
-  $count = $db->fetch($sql)['count'];
-
-  $sql = "select * from pos_nhaphang where thoigian between $filter[batdau] and $filter[ketthuc] order by thoigian desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
+  $sql = "select * from pos_nhaphang where (thoigian between $filter[batdau] and $filter[ketthuc]) and trangthai = 1 and thanhtoan = 1 order by thoigian desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $danhsach = $db->all($sql);
 
   $lf = ($filter['page'] - 1) * $gioihan;
   $lt = $lf + $gioihan;
   $trangthai = array(0 => 'Phiếu tạm', 'Hoàn thành');
+  $thanhtoan = array(0 => 'Chưa thanh toán', 'Đã thanh toán');
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/purchase/');
+  $count = 0;
   foreach ($danhsach as $i => $row) {
     $sql = "select * from pos_chitietnhaphang a inner join pos_hanghoa b on a.idhang = b.id and idnhaphang = $row[id] and (b.tenhang like '%$filter[tukhoa]%' or b.mahang like '%$filter[tukhoa]%')";
     if (!empty($db->fetch($sql))) {
@@ -138,7 +137,34 @@ function danhsachnhaphang() {
       }
     }
   }
+  if (!$count) $xtpl->parse('main.khongco');
   $xtpl->assign('navbar', navbar($filter['page'], $count, $gioihan, 'onclick="timkiem({p})"'));
+  
+  $sql = "select * from pos_nhaphang where (thoigian < $filter[batdau] and trangthai = 0 and thanhtoan = 1) or thanhtoan = 0 order by thoigian desc";
+  $danhsach = $db->all($sql);
+  $count = 0;
+
+  foreach ($danhsach as $i => $row) {
+    $count ++;
+    $thoigian = date('d/m/Y', $row['thoigian']);
+    $sql = "select * from pos_nguoncung where id = $row[idnguoncung]";
+    $nguoncung = $db->fetch($sql);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('manhap', $row['manhap']);
+    $xtpl->assign('thoigian', $thoigian);
+    $xtpl->assign('nguoncung', $nguoncung['ten']);
+    $xtpl->assign('tongtien', number_format($row['tongtien']));
+    $xtpl->assign('thanhtoan', $thanhtoan[$row['thanhtoan']]);
+    $xtpl->assign('trangthai', $trangthai[$row['trangthai']]);
+    
+    if (!$row['thanhtoan']) $xtpl->assign('classthanhtoan', 'pw-bad');
+    else $xtpl->assign('classthanhtoan', ''); 
+    if (!$row['trangthai']) $xtpl->assign('classtrangthai', 'pw-bad');
+    else $xtpl->assign('classtrangthai', ''); 
+    $xtpl->parse('main.phieutam.row');
+  }
+  if ($count) $xtpl->parse('main.phieutam');
+  
   $xtpl->parse('main');
   return $xtpl->text();
 }

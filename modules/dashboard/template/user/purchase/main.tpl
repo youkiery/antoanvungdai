@@ -1,4 +1,10 @@
 <!-- BEGIN: main -->
+<style>
+  .pw-bad {
+    background: pink;
+  }
+</style>
+
 <div class="modal fade" id="modal-xoa-nhap" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -7,6 +13,20 @@
         <div class="text-center">
           Xác nhận xóa phiếu nhập
           <button class="btn btn-danger btn-block" onclick="xacnhanxoanhap()"> Xóa </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-thanh-toan" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <div class="text-center">
+          Xác nhận thanh toán phiếu nhập
+          <button class="btn btn-success btn-block" onclick="xacnhanthanhtoan()"> Xác nhận </button>
         </div>
       </div>
     </div>
@@ -59,6 +79,17 @@
               <div class="input-group-addon"> <span class="fa fa-calendar"></span> </div>
             </div>
           </div>
+        </div>
+
+        <div class="form-group">
+          <button class="btn btn-info btn-xs" onclick="chonngay(1)"> Hôm nay </button>
+          <button class="btn btn-info btn-xs" onclick="chonngay(2)"> Hôm qua </button>
+          <button class="btn btn-info btn-xs" onclick="chonngay(3)"> Tuần này </button>
+          <button class="btn btn-info btn-xs" onclick="chonngay(4)"> Tuần trước </button>
+          <button class="btn btn-info btn-xs" onclick="chonngay(5)"> Tháng này </button>
+          <button class="btn btn-info btn-xs" onclick="chonngay(6)"> Tháng trước </button>
+          <button class="btn btn-info btn-xs" onclick="chonngay(7)"> Năm nay </button>
+          <button class="btn btn-info btn-xs" onclick="chonngay(8)"> Năm ngoái </button>
         </div>
 
         <button class="btn btn-info btn-block" onclick="timkiem(1)">
@@ -178,24 +209,28 @@
       </div>
 
       <div class="modal-body">
-        <div class="form-group input-group">
-          <div class="pw-suggest-group">
-            <input autocomplete="off" type="text" class="form-control" id="them-nhap-hang"
-              placeholder="Tìm kiếm hàng hóa">
-            <div class="pw-suggest-list" id="goiy-them-nhap-hang"> </div>
+        <div class="form-group row">
+          <div class="col-xs-12">
+            <div class="input-group">
+              <div class="pw-suggest-group">
+                <input autocomplete="off" type="text" class="form-control" id="them-nhap-hang"
+                  placeholder="Tìm kiếm hàng hóa">
+                <div class="pw-suggest-list" id="goiy-them-nhap-hang"> </div>
+              </div>
+              <div class="input-group-btn">
+                <button class="btn btn-success" onclick="themhang()"> <span class="fa fa-plus"></span> </button>
+              </div>
+            </div>
           </div>
-          <div class="input-group-btn">
-            <button class="btn btn-success" onclick="themhang()"> <span class="fa fa-plus"></span> </button>
-          </div>
-        </div>
 
-        <div class="form-group">
-          <div class="input-group">
-            <select class="form-control" id="them-nguon-cung">
-              {nguoncung}
-            </select>
-            <div class="input-group-btn">
-              <button class="btn btn-success" onclick="themnguon()"> <span class="fa fa-plus"></span> </button>
+          <div class="col-xs-12">
+            <div class="input-group">
+              <select class="form-control" id="them-nguon-cung">
+                {nguoncung}
+              </select>
+              <div class="input-group-btn">
+                <button class="btn btn-success" onclick="themnguon()"> <span class="fa fa-plus"></span> </button>
+              </div>
             </div>
           </div>
         </div>
@@ -216,19 +251,25 @@
           </button>
         </div>
 
-        <div> <b> Thành tiền: </b> <span id="thanh-tien"></span> </div>
+        <div class="form-group"> <b> Thành tiền: </b> <span id="thanh-tien"></span> </div>
 
-        <div class="row">
+        <div class="form-group row">
           <div class="col-xs-12">
-            <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(1)">
+            <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(1, 0)">
               Xác nhận
             </button>
           </div>
           <div class="col-xs-12">
-            <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(0)">
+            <button class="insert btn btn-info btn-block" onclick="xacnhanthemnhap(0, 0)">
               Lưu tạm
             </button>
           </div>
+        </div>
+
+        <div>
+          <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(1, 1)">
+            Xác nhận + thanh toán
+          </button>
         </div>
       </div>
     </div>
@@ -246,6 +287,13 @@
       <button class="btn btn-info" onclick="timnhap()"> <span class="fa fa-search"></span> Tìm kiếm </button>
       <button class="btn btn-success" onclick="themnhap()"> <span class="fa fa-plus"></span> Nhập hàng </button>
     </div>
+
+    <!-- BEGIN: tongno -->
+    <div class="form-group">
+      <b class="pw-bad"> Tổng nợ: {tongno} </b>
+    </div>
+    <!-- END: tongno -->
+
     <div class="pw-card-content" id="content">
       {danhsach}
     </div>
@@ -448,7 +496,23 @@
     $('#thanh-tien').text(vnumber.format(thanhtien))
   }
 
-  async function xacnhanthemnhap(trangthai) {
+  function thanhtoan(id) {
+    global.id = id
+    $('#modal-thanh-toan').modal('show')
+  }
+
+  function xacnhanthanhtoan() {
+    vhttp.post('/dashboard/api/', {
+      action: 'thanhtoannhaphang',
+      id: global.id,
+      filter: global.filter,
+    }).then((resp) => {
+      $('#content').html(resp.danhsach)
+      $('#modal-thanh-toan').modal('hide')
+    }, (e) => { })
+  }
+
+  async function xacnhanthemnhap(trangthai, thanhtoan) {
     let tinnhan = ''
     let nguoncung = $('#them-nguon-cung').val()
     if (!global.danhsach.length) tinnhan = 'Xin hãy nhập ít nhất 1 loại hàng hóa'
@@ -462,6 +526,7 @@
       id: global.id,
       filter: global.filter,
       idnguoncung: nguoncung,
+      thanhtoan: thanhtoan,
       trangthai: trangthai,
       danhsach: global.danhsach
     }).then((resp) => {
@@ -653,18 +718,22 @@
     // mở 1 modal mới với preview hay in ngay lập tức
   }
 
-  function chitiet(id) {
-    if ($('#tr-' + id).attr('load') == '0') {
+  function chitiet(loai, id) {
+    var load = $('#'+ loai +'-' + id)
+    if (load.attr('load') == '0') {
       vhttp.post('/dashboard/api/', {
         action: 'chitietnhaphang',
         id: id
       }).then((resp) => {
-        $('#tr-' + id).attr('load', '1')
-        $('#td-' + id).html(resp.html)
+        load.attr('load', '1')
+        $('#td'+ loai +'-' + id).html(resp.html)
       }, (e) => { })
     }
-    $('.chitiet').hide()
-    $('#tr-' + id).show()
+    if (load.css('display') == 'none') {
+      $('.chitiet:visible').hide().delay(200)
+      load.fadeToggle()
+    }
+    else load.fadeToggle()
   }
 
   function xacnhanimport() {
@@ -711,6 +780,64 @@
 
       }
     }).fail(() => { });
+  }
+
+  function chonngay(loai) {
+    var batdau = $('#tim-bat-dau')
+    var ketthuc = $('#tim-ket-thuc')
+    var homnay = new Date()
+    var cuoithang = new Date(homnay.getFullYear(), homnay.getMonth() + 1, 0);
+    
+    switch (loai) {
+      case 1:
+        // hôm nay 
+        batdau.val(timetodate(homnay.getTime()))
+        ketthuc.val(timetodate(homnay.getTime()))
+      break;
+      case 2:
+        // hôm qua 
+        batdau.val(timetodate(homnay.getTime() - 60 * 60 * 24 * 1000))
+        ketthuc.val(timetodate(homnay.getTime() - 60 * 60 * 24 * 1000))
+      break;
+      case 3:
+        // tuần này 
+        date = homnay.getDay()
+        if (date == 0) date = 7
+        batdau.val(timetodate(homnay.getTime() - (date - 1) * 60 * 60 * 24 * 1000))
+        ketthuc.val(timetodate(homnay.getTime() + (7 - date) * 60 * 60 * 24 * 1000))
+      break;
+      case 4:
+        // tuần trước 
+        date = homnay.getDay()
+        if (date == 0) date = 7
+        batdau.val(timetodate(homnay.getTime() + (1 - date - 7) * 60 * 60 * 24 * 1000))
+        ketthuc.val(timetodate(homnay.getTime() - date * 60 * 60 * 24 * 1000))
+      break;
+      case 5:
+        // tháng này
+        var cuoithang = new Date(homnay.getFullYear(), homnay.getMonth() + 1, 0);
+        batdau.val('01/' + dienso(cuoithang.getMonth() + 1) +'/'+ cuoithang.getFullYear())
+        ketthuc.val(cuoithang.getDate() + '/' + dienso(cuoithang.getMonth() + 1) +'/'+ cuoithang.getFullYear()) 
+      break;
+      case 6:
+        // tháng trước
+        var cuoithang = new Date(homnay.getFullYear(), homnay.getMonth(), 0);
+        batdau.val('01/' + dienso(cuoithang.getMonth() + 1) +'/'+ cuoithang.getFullYear())
+        ketthuc.val(cuoithang.getDate() + '/' + dienso(cuoithang.getMonth() + 1) +'/'+ cuoithang.getFullYear()) 
+      break;
+      case 7:
+        // năm này
+        var cuoinam = new Date(homnay.getFullYear() + 1, 0, 0);
+        batdau.val('01/01/'+ cuoinam.getFullYear())
+        ketthuc.val(cuoinam.getDate() +'/'+ (cuoinam.getMonth() + 1) +'/'+ cuoinam.getFullYear())
+      break;
+      case 8:
+        // năm trước
+        var cuoinam = new Date(homnay.getFullYear(), 0, 0);
+        batdau.val('01/01/'+ cuoinam.getFullYear())
+        ketthuc.val(cuoinam.getDate() +'/'+ (cuoinam.getMonth() + 1) +'/'+ cuoinam.getFullYear())
+      break;
+    }    
   }
 </script>
 <!-- END: main -->

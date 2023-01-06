@@ -3,13 +3,12 @@
   <div class="col-xs-12">
     Mã nhập hàng: {mahoadon} <br>
     Thời gian: {thoigian} <br>
-    Nguồn cung: {khachhang} <br>
-    Người nhập: {ratoa} <br>
+    Nguồn cung: {nguoncung} <br>
   </div>
   <div class="col-xs-12">
     Số hàng: {sohang} <br>
     Thành tiền: {thanhtien} <br>
-    Trạng thái: 
+    Người nhập: {ratoa} <br>
   </div>
 </div>
 
@@ -33,6 +32,9 @@
 </table>
 
 <div style="float: right;">
+  <!-- BEGIN: thanhtoan -->
+  <button class="btn btn-info" onclick="thanhtoan({id})"> <span class="fa fa-money"></span> Thanh toán </button>
+  <!-- END: thanhtoan -->
   <!-- BEGIN: update -->
   <button class="btn btn-info" onclick="suanhap({id})"> <span class="fa fa-pencil"></span> Sửa </button>
   <!-- END: update -->

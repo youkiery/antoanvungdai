@@ -8,3 +8,18 @@
  */
 
 /* Các tùy chỉnh JS của giao diện nên để vào đây */
+
+function timetodate(time) {
+  let datetime = new Date(Number(time))
+  let date = datetime.getDate().toString()
+  date = (Number(date) < 10 ? '0' + date : date)
+  let month = (datetime.getMonth() + 1).toString()
+  month = (Number(month) < 10 ? '0' + month : month)
+  let year = datetime.getFullYear()
+  return date + '/' + month + '/' + year
+}
+
+function dienso(so) {
+  if (so < 10) so = '0' + so
+  return so
+}

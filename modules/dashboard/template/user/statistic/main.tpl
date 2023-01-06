@@ -43,6 +43,18 @@
         </div>
       </div>
     </div>
+
+    <div class="form-group">
+      <button class="btn btn-info btn-xs" onclick="chonngay(1)"> Hôm nay </button>
+      <button class="btn btn-info btn-xs" onclick="chonngay(2)"> Hôm qua </button>
+      <button class="btn btn-info btn-xs" onclick="chonngay(3)"> Tuần này </button>
+      <button class="btn btn-info btn-xs" onclick="chonngay(4)"> Tuần trước </button>
+      <button class="btn btn-info btn-xs" onclick="chonngay(5)"> Tháng này </button>
+      <button class="btn btn-info btn-xs" onclick="chonngay(6)"> Tháng trước </button>
+      <button class="btn btn-info btn-xs" onclick="chonngay(7)"> Năm nay </button>
+      <button class="btn btn-info btn-xs" onclick="chonngay(8)"> Năm ngoái </button>
+    </div>
+
     <div class="pw-card-content" id="content">
       {danhsach}
     </div>
@@ -65,5 +77,64 @@
       $('#content').html(resp.html)
     }, (e) => { })
   }
+
+  
+  function chonngay(loai) {
+    var batdau = $('#batdau')
+    var ketthuc = $('#ketthuc')
+    var homnay = new Date()
+    var cuoithang = new Date(homnay.getFullYear(), homnay.getMonth() + 1, 0);
+    
+    switch (loai) {
+      case 1:
+        // hôm nay 
+        batdau.val(timetodate(homnay.getTime()))
+        ketthuc.val(timetodate(homnay.getTime()))
+      break;
+      case 2:
+        // hôm qua 
+        batdau.val(timetodate(homnay.getTime() - 60 * 60 * 24 * 1000))
+        ketthuc.val(timetodate(homnay.getTime() - 60 * 60 * 24 * 1000))
+      break;
+      case 3:
+        // tuần này 
+        date = homnay.getDay()
+        if (date == 0) date = 7
+        batdau.val(timetodate(homnay.getTime() - (date - 1) * 60 * 60 * 24 * 1000))
+        ketthuc.val(timetodate(homnay.getTime() + (7 - date) * 60 * 60 * 24 * 1000))
+      break;
+      case 4:
+        // tuần trước 
+        date = homnay.getDay()
+        if (date == 0) date = 7
+        batdau.val(timetodate(homnay.getTime() + (1 - date - 7) * 60 * 60 * 24 * 1000))
+        ketthuc.val(timetodate(homnay.getTime() - date * 60 * 60 * 24 * 1000))
+      break;
+      case 5:
+        // tháng này
+        var cuoithang = new Date(homnay.getFullYear(), homnay.getMonth() + 1, 0);
+        batdau.val('01/' + dienso(cuoithang.getMonth() + 1) +'/'+ cuoithang.getFullYear())
+        ketthuc.val(cuoithang.getDate() + '/' + dienso(cuoithang.getMonth() + 1) +'/'+ cuoithang.getFullYear()) 
+      break;
+      case 6:
+        // tháng trước
+        var cuoithang = new Date(homnay.getFullYear(), homnay.getMonth(), 0);
+        batdau.val('01/' + dienso(cuoithang.getMonth() + 1) +'/'+ cuoithang.getFullYear())
+        ketthuc.val(cuoithang.getDate() + '/' + dienso(cuoithang.getMonth() + 1) +'/'+ cuoithang.getFullYear()) 
+      break;
+      case 7:
+        // năm này
+        var cuoinam = new Date(homnay.getFullYear() + 1, 0, 0);
+        batdau.val('01/01/'+ cuoinam.getFullYear())
+        ketthuc.val(cuoinam.getDate() +'/'+ (cuoinam.getMonth() + 1) +'/'+ cuoinam.getFullYear())
+      break;
+      case 8:
+        // năm trước
+        var cuoinam = new Date(homnay.getFullYear(), 0, 0);
+        batdau.val('01/01/'+ cuoinam.getFullYear())
+        ketthuc.val(cuoinam.getDate() +'/'+ (cuoinam.getMonth() + 1) +'/'+ cuoinam.getFullYear())
+      break;
+    }    
+  }  
 </script>
 <!-- END: main -->

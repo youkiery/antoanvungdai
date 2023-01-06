@@ -13,11 +13,15 @@ $loaihang = $db->all($sql);
 $sql = "select * from pos_nguoncung where kichhoat = 1 order by ten asc";
 $nguoncung = $db->all($sql);
 
+$sql = "select sum(tongtien) as tongno from pos_nhaphang where thanhtoan = 0";
+$tongno = $db->query($sql)->fetch()['tongno'];
+
 $xtpl->assign('nguoncung', option($nguoncung, 'ten', 'id'));
 $xtpl->assign('loaihang', option($loaihang, 'ten', 'id'));
 $xtpl->assign('batdau', date('01/m/Y'));
-// $xtpl->assign('ketthuc', date('d/m/Y', strtotime(date('Y') .'/'. (date('m') + 1) . '/1') - 1));
 $xtpl->assign('ketthuc', date('t/m/Y'));
+$xtpl->assign('tongno', number_format($tongno));
+if ($tongno) $xtpl->parse('main.tongno');
 $xtpl->assign('danhsach', danhsachnhaphang());
 $xtpl->parse('main');
 $contents = $xtpl->text();

@@ -589,6 +589,14 @@ function chitietnhaphang() {
   $sql = "select * from pos_nhaphang where id = $id";
   $nhaphang = $db->fetch($sql);
 
+  $sql = "select * from pos_nguoncung where id = $nhaphang[idnguoncung]";
+  $nguoncung = $db->fetch($sql);
+  $xtpl->assign('nguoncung', $nguoncung['ten']);
+
+  $sql = "select first_name from pet_users where userid = $nhaphang[idnguoitao]";
+  $nhanvien = $db->fetch($sql);
+  $xtpl->assign('ratoa', $nhanvien['first_name']);
+
   $sql = "select * from pos_chitietnhaphang where idnhaphang = $id";
   $danhsach = $db->all($sql);
 
@@ -597,6 +605,7 @@ function chitietnhaphang() {
     $soluong += $chitiet['soluong'];
     $sql = "select * from pos_hanghoa where id = $chitiet[idhang]";
     $hanghoa = $db->fetch($sql);
+
     $xtpl->assign('mahang', $hanghoa['mahang']);
     $xtpl->assign('tenhang', $hanghoa['tenhang']);
     $xtpl->assign('soluong', number_format($chitiet['soluong']));
@@ -614,6 +623,7 @@ function chitietnhaphang() {
   $arr = [0 => 'Lưu tạm', 'Đã hoàn thành'];
   $xtpl->assign('trangthai', $arr[$nhaphang['trangthai']]);
   if (!$nhaphang['trangthai']) $xtpl->parse('main.update');
+  if (!$nhaphang['thanhtoan']) $xtpl->parse('main.thanhtoan');
   $xtpl->parse('main');
 
   $resp['status'] = 1;
@@ -789,6 +799,19 @@ function timnhaphang() {
   $resp['danhsach'] = $danhsach;
 }
 
+function thanhtoannhaphang() {
+  global $db, $resp, $nv_Request;
+
+  $id = $nv_Request->get_string('id', 'post');
+
+  $sql = "update pos_nhaphang set thanhtoan = 1 where id = $id";
+  $db->query($sql);
+
+  $resp['status'] = 1;
+  $resp['danhsach'] = danhsachnhaphang();
+  $resp['messenger'] = 'Đã xác nhận thanh toán';
+}
+
 function themnhaphang() {
   global $db, $resp, $nv_Request;
 
@@ -797,6 +820,7 @@ function themnhaphang() {
   $id = $nv_Request->get_string('id', 'post');
   $idnguoncung = $nv_Request->get_string('idnguoncung', 'post');
   $trangthai = $nv_Request->get_string('trangthai', 'post', 0);
+  $thanhtoan = $nv_Request->get_string('thanhtoan', 'post', 0);
   $danhsach = $nv_Request->get_array('danhsach', 'post');
 
   if (empty($id)) {
@@ -804,11 +828,11 @@ function themnhaphang() {
     $nhaphang = $db->fetch($sql);
     $manhap = "NH". fillzero($nhaphang['id'] + 1);
     
-    $sql = "insert into pos_nhaphang (manhap, tongtien, thoigian, idnguoncung, trangthai, idnguoitao) values('$manhap', 0, $thoigian, $idnguoncung, $trangthai, $userid)";
+    $sql = "insert into pos_nhaphang (manhap, tongtien, thoigian, idnguoncung, trangthai, thanhtoan, idnguoitao) values('$manhap', 0, $thoigian, $idnguoncung, $thanhtoan, $userid)";
     $id = $db->insertid($sql);
   }
   else {
-    $sql = "update pos_nhaphang set thoigian = $thoigian, idnguoncung = $idnguoncung, trangthai = $trangthai, idnguoitao = $userid";
+    $sql = "update pos_nhaphang set thoigian = $thoigian, idnguoncung = $idnguoncung, trangthai = $trangthai, thanhtoan = $thanhtoan, idnguoitao = $userid where id = $id";
     $db->query($sql);
 
     $sql = "delete from pos_chitietnhaphang where idnhaphang = $id";
