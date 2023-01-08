@@ -414,6 +414,26 @@ function tuychonnhanvien() {
   return $xtpl->text();
 }
 
+function danhsachnhanvien() {
+  global $db, $nv_Request;
+
+  $xtpl = new XTemplate('danhsach.tpl', UPATH . '/setting/');
+  $sql = "select * from pet_users where active = 1 order by userid desc";
+  $danhsach = $db->all($sql);
+  $thutu = 0;
+
+  foreach ($danhsach as $nhanvien) {
+    $xtpl->assign('thutu', ++$thutu);
+    $xtpl->assign('userid', $nhanvien['userid']);
+    $xtpl->assign('tennhanvien', $nhanvien['first_name']);
+    $xtpl->assign('taikhoan', $nhanvien['username']);
+    $xtpl->parse('main.nhanvien');
+  }
+  if (empty($thutu)) $xtpl->parse('main.khongco');
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function navbar($page, $total, $gioihan, $surfix) {
   $xtpl = new XTemplate('navbar.tpl', UPATH);
   $pagelength = floor($total / $gioihan) + (fmod($total, $gioihan) ? 1 : 0);

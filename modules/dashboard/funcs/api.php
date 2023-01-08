@@ -26,7 +26,7 @@ function xuatfilenhaphang() {
 
   include(NV_ROOTDIR .'/includes/plugin/PHPExcel/IOFactory.php');
   $fileType = 'Excel2007'; 
-  $objPHPExcel = PHPExcel_IOFactory::load(UPATH . 'MauXuatFileNhapHang.xlsx');
+  $objPHPExcel = PHPExcel_IOFactory::load(UPATH . 'FileMauXuatNhapHang.xlsx');
   $objPHPExcel->setActiveSheetIndex(0);
 
   $filter = $nv_Request->get_array('filter', 'post');
@@ -66,7 +66,7 @@ function xuatfilenhaphang() {
     $i ++;
   }
 
-  $outFile = '/uploads/excel/MauXuatFileNhapHang-'. time() .'.xlsx';
+  $outFile = '/uploads/excel/FileMauXuatNhapHang-'. time() .'.xlsx';
   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
   $objWriter->save(NV_ROOTDIR . $outFile);
   $objPHPExcel->disconnectWorksheets();
@@ -1114,6 +1114,252 @@ function luumauhoadon() {
 
   $resp['status'] = 1;
   $resp['messenger'] = 'Đã lưu';
+}
+
+function themnhanvien() {
+  global $db, $resp, $nv_Request, $global_config, $crypt;
+
+  $dulieu = $nv_Request->get_array('dulieu', 'post');
+  // kiem tra co nhan vien nao dang active cung ten thi bao loi
+  $sql = "select * from pet_users where username = '$dulieu[taikhoan]' and active = 1";
+  if (!empty($db->fetch($sql))) $resp['messenger'] = 'Tên tài khoản đã tồn tại';
+  else {
+    $sql = "select * from pet_users where email = '$dulieu[email]' and active = 1";
+    if (!empty($db->fetch($sql))) $resp['messenger'] = 'Tên tài khoản đã tồn tại';
+  
+    $matkhau = $crypt->hash_password($dulieu['password'], $global_config['hashprefix']);
+    $ngaysinh = datetotime($dulieu['sinhnhat']);
+    $homnay = time();
+    $sql = "insert into pet_users(group_id, username, md5username, password, email, first_name, last_name, gender, photo, birthday, sig, regdate, question, answer, passlostkey, view_mail, remember, in_groups, active, active2step, secretkey, checknum, last_login, last_ip, last_agent, last_openid, last_update, idsite, safemode, safekey, email_verification_time, active_obj) values(4, '$dulieu[taikhoan]', '". md5($dulieu['taikhoan']) ."', '$matkhau', '$dulieu[email]', '$dulieu[hoten]', '', 0, '', $ngaysinh, '', $homnay, '', '', '', 0, 1, '4', 1, 0, '', '', 0, '', '', '', $homnay, 0, 0, '', -1, 'SYSTEM')";
+    $db->query($sql);
+    $resp['messenger'] = 'Đã thêm tài khoản';
+    $resp['danhsach'] = danhsachnhanvien();
+  }
+
+  $resp['status'] = 1;
+}
+
+function chitietnhanvien() {
+  global $db, $resp, $nv_Request;
+
+  $phanquyen = [
+    'Hệ Thống' => [
+      'Mẫu In' => [
+        'Xem',
+        'Sửa',
+      ],
+      'Người Dùng' => [
+        'Xem',
+        'Thêm',
+        'Sửa',
+        'Xóa',
+        'Export',
+      ],
+      'Tổng quan'
+    ],
+    'Hàng Hóa' => [
+      'Danh Sách' => [
+        'Xem',
+        'Thêm',
+        'Sửa',
+        'Xóa',
+        'Giá Nhập',
+        'Giá Vốn',
+        'Import',
+        'Export',
+      ]
+    ],
+    'Giao Dịch' => [
+      'Hóa Đơn' => [
+        'Xem',
+        'Thêm',
+        'Sửa',
+        'Xóa',
+        'Import',
+        'Export',
+        'Xem Tồn',
+        'Sửa Giá Bán',
+        'Sửa Giá Vốn',
+        'Giảm Giá',
+        'Chọn Người Bán',
+        'Sao Chép',
+        'In Hóa Đơn',
+      ],
+      'Nhập Hàng' => [
+        'Xem',
+        'Thêm',
+        'Cập Nhật',
+        'Xóa',
+        'Cập Nhật Hoàn Thành',
+        'Xuất',
+        'Sao Chép',
+      ]
+    ],
+    'Đối Tác' => [
+      'Khách Hàng' => [
+        'Xem',
+        'Thêm',
+        'Sửa',
+        'Xóa',
+        'Điện Thoại',
+        'Import',
+        'Export',
+      ],
+      'Công Nợ Khách' => [
+        'Xem',
+        'Thêm',
+        'Xóa',
+        'Cập Nhật',
+      ],
+      'Thanh Toán Khách' => [
+        'Thêm',
+        'Xóa',
+        'Cập Nhật',
+      ],
+      'Tích Điểm' => [
+        'Xem',
+        'Cập Nhật',
+      ],
+      'Nhà Cung Cấp' => [
+        'Xem',
+        'Thêm',
+        'Sửa',
+        'Xóa',
+        'Điện Thoại',
+        'Import',
+        'Export',
+      ],
+      'Công Nợ Nhà Cung Cấp' => [
+        'Xem',
+        'Thêm',
+        'Sửa',
+        'Xóa',
+      ],
+      'Thanh Toán Nhà Cung Cấp' => [
+        'Thêm',
+        'Xóa',
+        'Cập Nhật',
+      ]
+    ],
+    'Báo Cáo' => [
+      'Cuối Ngày' => [
+        'Tổng Hợp',
+        'Hàng Hóa',
+        'Thu Chi',
+        'Bán Hàng',
+      ]
+    ],
+      // Bán Hàng
+      //   Nhân Viên
+      //   Lợi Nhuận
+      //   Giảm Giá Hóa Đơn
+      //   Trả Hàng
+      //   Thời Gian
+      // Hàng Hóa
+      //   Giá Trị Kho
+      //   Hạn Sử Dụng
+      //   Khách Theo Hàng Bán
+      //   Nhà Cung Cấp Theo Hàng Nhập
+      //   Nhân Viên Theo Hàng Bán
+      //   Xuất Nhập Tồn
+      //   Xuât Nhập Tồn Chi Tiết
+      //   Lợi Nhuận
+      //   Bán Hàng
+      // Khách Hàng
+      //   Công Nợ
+      //   Hàng Theo Khách
+      //   Bán Hàng
+      //   Lợi Nhuận
+      // Nhà Cung Cấp
+      //   Công Nợ
+      //   Hàng Nhập Theo Nhà Cung Cấp
+      //   Nhập Hàng
+      // Nhân Viên
+      //   Lợi Nhuận
+      //   Hàng Bán Theo Nhân Viên
+      //   Bán Hàng
+    'Sổ Quỹ' => [
+      'Xem',
+      'Thêm',
+      'Sửa',
+      'Xóa',
+      'Export',
+    ]
+    // nhân viên
+    // khuyến mãi
+    // voucher
+    // coupon
+  ];
+
+  $id = $nv_Request->get_int('id', 'post');
+  $xtpl = new XTemplate('chitiet.tpl', UPATH . '/setting/');
+  $xtpl->assign('id', $id);
+
+  $l1 = 0;
+  foreach ($phanquyen as $vitri1 => $quyen1) {
+    $l2 = 0;
+    $l1 ++;
+    $xtpl->assign('l1', $l1);
+    $xtpl->assign('l1checked', kiemtraphanquyen($id, $l1));
+    if (!is_array($quyen1)) {
+      $xtpl->assign('header1', $quyen1);
+      $xtpl->parse('main.l1a');
+    }
+    else {
+      $xtpl->assign('header1', $vitri1);
+      foreach ($quyen1 as $vitri2 => $quyen2) {
+        $l3 = 0;
+        $l2 ++;
+        $xtpl->assign('l2', $l1 . $l2);
+        $xtpl->assign('l2checked', kiemtraphanquyen($id, $l1 . $l2));
+        if (!is_array($quyen2)) {
+          $xtpl->assign('header2', $quyen2);
+          $xtpl->parse('main.l1.l2a');
+        }
+        else {
+          $xtpl->assign('header2', $vitri2);
+          foreach ($quyen2 as $vitri3) {
+            $l3 ++;
+            $xtpl->assign('l3', $l1 . $l2 . $l3);
+            $xtpl->assign('l3checked', kiemtraphanquyen($id, $l1 . $l2 . $l3));
+            $xtpl->assign('header3', $vitri3);
+            $xtpl->parse('main.l1.l2.l3');
+          }
+          $xtpl->parse('main.l1.l2');
+        }
+      }
+      $xtpl->parse('main.l1');
+    }
+  }
+
+  $xtpl->parse('main');
+  $resp['status'] = 1;
+  $resp['html'] = $xtpl->text();
+}
+
+function luuphanquyen() {
+  global $db, $resp, $nv_Request;
+
+  $id = $nv_Request->get_int('id', 'post');
+  $dulieu = $nv_Request->get_array('dulieu', 'post');
+  $dathem = [];
+
+  foreach ($dulieu as $quyen => $giatri) {
+    if ($giatri > 0) {
+
+      $sql = "select * from pos_phanquyen where quyen = $quyen and userid = $id";
+      if (empty($db->fetch($sql))) {
+        $sql = "insert into pos_phanquyen (quyen, userid) values ($quyen, $id)";
+        $db->query($sql);
+      }
+      $dathem []= $quyen;
+    }
+  }
+  if (count($dathem)) $sql = "delete from pos_phanquyen where quyen not in (". implode(', ', $dathem) .") and userid = $id";
+  else $sql = "delete from pos_phanquyen where userid = $id";
+  $db->query($sql);
+  $resp['status'] = 1;
+  $resp['messenger'] = 'Đã lưu phân quyền';
 }
 
 function xemthongke() {

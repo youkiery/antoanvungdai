@@ -8,8 +8,13 @@ define('UPATH', NV_ROOTDIR . '/modules/'. $module_file . '/template/user/');
 define('URPATH', '/modules/'. $module_file . '/template/user/');
 require_once NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+function kiemtraphanquyen($userid, $quyen) {
+  global $db;
+
+  $sql = "select * from pos_phanquyen where userid = $userid and quyen = '$quyen'";
+  if (empty($db->fetch($sql))) return '';
+  return 'checked';
+}
 
 function khoangsosanh($tenbien, $batdau, $ketthuc) {
   $thutu = 0;
