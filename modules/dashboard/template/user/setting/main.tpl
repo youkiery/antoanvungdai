@@ -24,28 +24,6 @@
 
 <div id="printable"></div>
 <div class="pw-content nonprintable">
-  <div class="modal fade" id="modal-cau-hinh" role="dialog">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title"> Cấu hình hóa đơn </h4>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <button class="btn btn-info" onclick="inthu()">
-              <span class="fa fa-print"></span> In thử
-            </button>
-            <button class="btn btn-info" onclick="luumau()">
-              <span class="fa fa-floppy-o"></span> Lưu mẫu
-            </button>
-          </div>
-          <div id="chantrang"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="modal fade" id="modal-them-nhan-vien" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -88,19 +66,24 @@
     </div>
   </div>
 
-  <div class="pw-header">
-    Cài đặt
-  </div>
-
+  <!-- BEGIN: nhanvien -->
   <div class="pw-card">
-    <!-- <button class="btn btn-info" id="cauhinhoadon" onclick="cauhinhhoadon()" style="display: none;">
-      Cấu hình hóa đơn
-    </button> -->
+    <div class="pw-header">
+      Phân quyền
+    </div>
     <div style="float: right;">
+      <!-- BEGIN: them -->
       <button class="btn btn-success" onclick="themnhanvien()">
         <span class="fa fa-plus"></span>
         Thêm nhân viên
       </button>
+      <!-- END: them -->
+      <!-- BEGIN: export -->
+      <button class="btn btn-info">
+        <span class="fa fa-file"></span>
+        Export
+      </button>
+      <!-- END: export -->
     </div>
 
     <div class="form-group" style="clear: both;"></div>
@@ -109,6 +92,36 @@
       {danhsach}
     </div>
   </div>
+  <!-- END: nhanvien -->
+
+  <!-- BEGIN: mauin -->
+  <div class="pw-card">
+    <div class="pw-header">
+      Cấu hình hóa đơn
+    </div>
+
+    <!-- BEGIN: sua -->
+    <div class="form-group">
+      <button class="btn btn-info" onclick="inthu()">
+        <span class="fa fa-print"></span> In thử
+      </button>
+      <button class="btn btn-info" onclick="luumau()">
+        <span class="fa fa-floppy-o"></span> Lưu mẫu
+      </button>
+    </div>
+    <div id="chantrang"></div>
+
+    <div class="form-group"></div>
+    <!-- END: sua -->
+
+    <div class="pw-card">
+      <div class="pw-header">
+        Mẫu in
+      </div>
+      {mauin}
+    </div>
+  </div>
+  <!-- END: mauin -->
 </div>
 
 <script src="/assets/editors/ckeditor/ckeditor.js"></script>

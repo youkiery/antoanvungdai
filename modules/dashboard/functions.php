@@ -16,6 +16,15 @@ function kiemtraphanquyen($userid, $quyen) {
   return 'checked';
 }
 
+function quyennguoidung($quyen) {
+  global $db;
+
+  $userid = checkuserid();
+  $sql = "select * from pos_phanquyen where userid = $userid and quyen = '$quyen'";
+  if (empty($db->fetch($sql))) return false;
+  return true;
+}
+
 function khoangsosanh($tenbien, $batdau, $ketthuc) {
   $thutu = 0;
   $trave = '';

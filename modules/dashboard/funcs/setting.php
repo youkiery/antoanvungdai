@@ -6,8 +6,29 @@ if (!defined('NV_IS_MOD_NEWS')) {
 $page_title = $lang_module['title'];
 
 $xtpl = new XTemplate('main.tpl', PATH);
-$xtpl->assign('homnay', date('d/m/Y'));
-$xtpl->assign('danhsach', danhsachnhanvien());
+if (quyennguoidung(111) || quyennguoidung(11)) {
+  if (quyennguoidung(112)) $xtpl->parse('main.mauin.sua');
+
+  $sql = "select * from pos_cauhinh where module = 'mauhoadon'";
+  if (empty($cauhinh = $db->fetch($sql))) {
+    $sql = "insert into pos_cauhinh (module, giatri) values('mauhoadon', '')";
+    $db->query($sql);
+    $cauhinh = ['giatri' => ''];
+  }
+
+  $xtpl->assign('mauin', $cauhinh['giatri']);
+  $xtpl->parse('main.mauin');
+}
+
+if (quyennguoidung(121) || quyennguoidung(12)) {
+  if (quyennguoidung(121)) $xtpl->parse('main.nhanvien.them');
+  if (quyennguoidung(125)) $xtpl->parse('main.nhanvien.export');
+
+  $xtpl->assign('homnay', date('d/m/Y'));
+  $xtpl->assign('danhsach', danhsachnhanvien());
+  $xtpl->parse('main.nhanvien');
+}
+
 $xtpl->parse('main');
 $contents = $xtpl->text();
 

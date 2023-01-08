@@ -1085,20 +1085,6 @@ function themphieuchi() {
   $resp['html'] = danhsachthuchi();
 }
 
-function taimauhoadon() {
-  global $db, $resp;
-
-  $sql = "select * from pos_cauhinh where module = 'mauhoadon'";
-  if (empty($cauhinh = $db->fetch($sql))) {
-    $sql = "insert into pos_cauhinh (module, giatri) values('mauhoadon', '')";
-    $db->query($sql);
-    $cauhinh = ['giatri' => ''];
-  }
-
-  $resp['status'] = 1;
-  $resp['html'] = $cauhinh['giatri'];
-}
-
 function luumauhoadon() {
   global $db, $resp, $nv_Request;
 
@@ -1154,6 +1140,7 @@ function chitietnhanvien() {
         'Sửa',
         'Xóa',
         'Export',
+        'Phân quyền',
       ],
       'Tổng quan'
     ],
@@ -1249,35 +1236,40 @@ function chitietnhanvien() {
         'Bán Hàng',
       ]
     ],
-      // Bán Hàng
-      //   Nhân Viên
-      //   Lợi Nhuận
-      //   Giảm Giá Hóa Đơn
-      //   Trả Hàng
-      //   Thời Gian
-      // Hàng Hóa
-      //   Giá Trị Kho
-      //   Hạn Sử Dụng
-      //   Khách Theo Hàng Bán
-      //   Nhà Cung Cấp Theo Hàng Nhập
-      //   Nhân Viên Theo Hàng Bán
-      //   Xuất Nhập Tồn
-      //   Xuât Nhập Tồn Chi Tiết
-      //   Lợi Nhuận
-      //   Bán Hàng
-      // Khách Hàng
-      //   Công Nợ
-      //   Hàng Theo Khách
-      //   Bán Hàng
-      //   Lợi Nhuận
-      // Nhà Cung Cấp
-      //   Công Nợ
-      //   Hàng Nhập Theo Nhà Cung Cấp
-      //   Nhập Hàng
-      // Nhân Viên
-      //   Lợi Nhuận
-      //   Hàng Bán Theo Nhân Viên
-      //   Bán Hàng
+    'Bán Hàng' => [
+      'Nhân Viên',
+      'Lợi Nhuận',
+      'Giảm Giá Hóa Đơn',
+      'Trả Hàng',
+      'Thời Gian',
+    ],
+    'Hàng Hóa' => [
+      'Giá Trị Kho',
+      'Hạn Sử Dụng',
+      'Khách Theo Hàng Bán',
+      'Nhà Cung Cấp Theo Hàng Nhập',
+      'Nhân Viên Theo Hàng Bán',
+      'Xuất Nhập Tồn',
+      'Xuât Nhập Tồn Chi Tiết',
+      'Lợi Nhuận',
+      'Bán Hàng',
+    ],
+    'Khách Hàng' => [
+      'Công Nợ',
+      'Hàng Theo Khách',
+      'Bán Hàng',
+      'Lợi Nhuận',
+    ],
+    'Nhà Cung Cấp' => [
+      'Công Nợ',
+      'Hàng Nhập Theo Nhà Cung Cấp',
+      'Nhập Hàng',
+    ],
+    'Nhân Viên' => [
+      'Lợi Nhuận',
+      'Hàng Bán Theo Nhân Viên',
+      'Bán Hàng',
+    ],
     'Sổ Quỹ' => [
       'Xem',
       'Thêm',
@@ -1295,42 +1287,49 @@ function chitietnhanvien() {
   $xtpl = new XTemplate('chitiet.tpl', UPATH . '/setting/');
   $xtpl->assign('id', $id);
 
-  $l1 = 0;
-  foreach ($phanquyen as $vitri1 => $quyen1) {
-    $l2 = 0;
-    $l1 ++;
-    $xtpl->assign('l1', $l1);
-    $xtpl->assign('l1checked', kiemtraphanquyen($id, $l1));
-    if (!is_array($quyen1)) {
-      $xtpl->assign('header1', $quyen1);
-      $xtpl->parse('main.l1a');
-    }
-    else {
-      $xtpl->assign('header1', $vitri1);
-      foreach ($quyen1 as $vitri2 => $quyen2) {
-        $l3 = 0;
-        $l2 ++;
-        $xtpl->assign('l2', $l1 . $l2);
-        $xtpl->assign('l2checked', kiemtraphanquyen($id, $l1 . $l2));
-        if (!is_array($quyen2)) {
-          $xtpl->assign('header2', $quyen2);
-          $xtpl->parse('main.l1.l2a');
-        }
-        else {
-          $xtpl->assign('header2', $vitri2);
-          foreach ($quyen2 as $vitri3) {
-            $l3 ++;
-            $xtpl->assign('l3', $l1 . $l2 . $l3);
-            $xtpl->assign('l3checked', kiemtraphanquyen($id, $l1 . $l2 . $l3));
-            $xtpl->assign('header3', $vitri3);
-            $xtpl->parse('main.l1.l2.l3');
-          }
-          $xtpl->parse('main.l1.l2');
-        }
+  if (quyennguoidung(126)) {
+    $l1 = 0;
+    foreach ($phanquyen as $vitri1 => $quyen1) {
+      $l2 = 0;
+      $l1 ++;
+      $xtpl->assign('l1', $l1);
+      $xtpl->assign('l1checked', kiemtraphanquyen($id, $l1));
+      if (!is_array($quyen1)) {
+        $xtpl->assign('header1', $quyen1);
+        $xtpl->parse('main.phanquyen.l1a');
       }
-      $xtpl->parse('main.l1');
+      else {
+        $xtpl->assign('header1', $vitri1);
+        foreach ($quyen1 as $vitri2 => $quyen2) {
+          $l3 = 0;
+          $l2 ++;
+          $xtpl->assign('l2', $l1 . $l2);
+          $xtpl->assign('l2checked', kiemtraphanquyen($id, $l1 . $l2));
+          if (!is_array($quyen2)) {
+            $xtpl->assign('header2', $quyen2);
+            $xtpl->parse('main.phanquyen.l1.l2a');
+          }
+          else {
+            $xtpl->assign('header2', $vitri2);
+            foreach ($quyen2 as $vitri3) {
+              $l3 ++;
+              $xtpl->assign('l3', $l1 . $l2 . $l3);
+              $xtpl->assign('l3checked', kiemtraphanquyen($id, $l1 . $l2 . $l3));
+              $xtpl->assign('header3', $vitri3);
+              $xtpl->parse('main.phanquyen.l1.l2.l3');
+            }
+            $xtpl->parse('main.phanquyen.l1.l2');
+          }
+        }
+        $xtpl->parse('main.phanquyen.l1');
+      }
+      $xtpl->parse('main.phanquyen');
     }
+    $xtpl->parse('main.phanquyen2');
   }
+
+  if (quyennguoidung(123)) $xtpl->parse('main.sua');
+  if (quyennguoidung(124)) $xtpl->parse('main.xoa');
 
   $xtpl->parse('main');
   $resp['status'] = 1;
