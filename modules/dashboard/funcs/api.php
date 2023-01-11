@@ -574,10 +574,8 @@ function chitiethoadon() {
   $xtpl->assign('datra', number_format($hoadon['thanhtoan']));
   $xtpl->assign('ghichu', '');
 
-  if (quyennguoidung(313)) $xtpl->parse('main.xoahoadon');
-  if (quyennguoidung(314)) $xtpl->parse('main.xoahoadon');
-  if (quyennguoidung(3112)) $xtpl->parse('main.saochep');
-  if (quyennguoidung(3113)) $xtpl->parse('main.inhoadon');
+  if (quyennhanvien(323)) $xtpl->parse('main.xoahoadon');
+  if (quyennhanvien(326)) $xtpl->parse('main.inhoadon');
 
   $xtpl->parse('main');
 
@@ -627,8 +625,11 @@ function chitietnhaphang() {
   
   $arr = [0 => 'Lưu tạm', 'Đã hoàn thành'];
   $xtpl->assign('trangthai', $arr[$nhaphang['trangthai']]);
-  if (!$nhaphang['trangthai']) $xtpl->parse('main.update');
-  if (!$nhaphang['thanhtoan']) $xtpl->parse('main.thanhtoan');
+  
+  if (quyennhanvien(333) && !$nhaphang['trangthai']) $xtpl->parse('main.update');
+  if (quyennhanvien(337) && !$nhaphang['thanhtoan']) $xtpl->parse('main.thanhtoan');
+  if (quyennhanvien(334)) $xtpl->parse('main.xoa');
+  if (quyennhanvien(336)) $xtpl->parse('main.export');
   $xtpl->parse('main');
 
   $resp['status'] = 1;
@@ -833,7 +834,7 @@ function themnhaphang() {
     $nhaphang = $db->fetch($sql);
     $manhap = "NH". fillzero($nhaphang['id'] + 1);
     
-    $sql = "insert into pos_nhaphang (manhap, tongtien, thoigian, idnguoncung, trangthai, thanhtoan, idnguoitao) values('$manhap', 0, $thoigian, $idnguoncung, $thanhtoan, $userid)";
+    $sql = "insert into pos_nhaphang (manhap, tongtien, thoigian, idnguoncung, trangthai, thanhtoan, idnguoitao) values('$manhap', 0, $thoigian, $idnguoncung, $trangthai, $thanhtoan, $userid)";
     $id = $db->insertid($sql);
   }
   else {
@@ -1134,7 +1135,7 @@ function chitietnhanvien() {
   global $db, $resp, $nv_Request;
 
   $phanquyen = [
-    'Hệ Thống' => [
+    'Hệ Thống/Cài đặt' => [
       'Mẫu In' => [
         'Xem',
         'Sửa',
@@ -1161,19 +1162,22 @@ function chitietnhanvien() {
       ]
     ],
     'Giao Dịch' => [
+      'Bán Hàng' => [
+        'Thanh toán',
+        'Xem Tồn',
+        'Sửa Đơn Giá',
+        'Sửa Giá Bán',
+        'Giảm Giá',
+        'Chọn Người Bán',
+        'In Hóa Đơn',
+        'Sao Chép',
+      ],
       'Hóa Đơn' => [
         'Xem',
         'Thêm',
-        'Sửa',
         'Xóa',
         'Import',
         'Export',
-        'Xem Tồn',
-        'Sửa Giá Bán',
-        'Sửa Giá Vốn',
-        'Giảm Giá',
-        'Chọn Người Bán',
-        'Sao Chép',
         'In Hóa Đơn',
       ],
       'Nhập Hàng' => [
@@ -1181,9 +1185,9 @@ function chitietnhanvien() {
         'Thêm',
         'Cập Nhật',
         'Xóa',
-        'Cập Nhật Hoàn Thành',
-        'Xuất',
-        'Sao Chép',
+        'Xác nhận Hoàn Thành',
+        'Export',
+        'Thanh toán',
       ]
     ],
     'Đối Tác' => [
@@ -1291,7 +1295,7 @@ function chitietnhanvien() {
   $xtpl = new XTemplate('chitiet.tpl', UPATH . '/setting/');
   $xtpl->assign('id', $id);
 
-  if (quyennguoidung(126)) {
+  if (quyennhanvien(126)) {
     $l1 = 0;
     foreach ($phanquyen as $vitri1 => $quyen1) {
       $l2 = 0;
@@ -1332,8 +1336,8 @@ function chitietnhanvien() {
     $xtpl->parse('main.phanquyen2');
   }
 
-  if (quyennguoidung(123)) $xtpl->parse('main.sua');
-  if (quyennguoidung(124)) $xtpl->parse('main.xoa');
+  if (quyennhanvien(123)) $xtpl->parse('main.sua');
+  if (quyennhanvien(124)) $xtpl->parse('main.xoa');
 
   $xtpl->parse('main');
   $resp['status'] = 1;

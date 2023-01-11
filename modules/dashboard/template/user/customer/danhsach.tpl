@@ -1,5 +1,5 @@
 <!-- BEGIN: main -->
-<table class="table table-bordered"> 
+<table class="table table-bordered">
   <thead>
     <tr>
       <th> Mã khách </th>
@@ -7,7 +7,7 @@
       <th> Điện thoại </th>
       <th> Mua hàng </th>
       <th> Tiền nợ </th>
-      <th>  </th>
+      <th> </th>
     </tr>
   </thead>
   <!-- BEGIN: row -->
@@ -18,13 +18,17 @@
       <td> {dienthoai} </td>
       <td> {muahang} </td>
       <td> {tienno} </td>
-      <td> 
+      <td>
+        <!-- BEGIN: sua -->
         <button class="btn btn-info btn-xs" onclick="suakhach({id}, '{makhach}', '{ten}', '{diachi}', '{dienthoai}')">
           sửa
         </button>
+        <!-- END: sua -->
+        <!-- BEGIN: xoa -->
         <button class="btn btn-danger btn-xs" onclick="xoakhach({id})">
           xóa
         </button>
+        <!-- END: xoa -->
       </td>
     </tr>
   </tbody>

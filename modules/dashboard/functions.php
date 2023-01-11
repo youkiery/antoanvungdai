@@ -16,7 +16,7 @@ function kiemtraphanquyen($userid, $quyen) {
   return 'checked';
 }
 
-function quyennguoidung($quyen) {
+function quyennhanvien($quyen) {
   global $db;
 
   $userid = checkuserid();

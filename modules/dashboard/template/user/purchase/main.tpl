@@ -253,24 +253,27 @@
 
         <div class="form-group"> <b> Thành tiền: </b> <span id="thanh-tien"></span> </div>
 
+        <!-- BEGIN: xacnhan -->
         <div class="form-group row">
           <div class="col-xs-12">
-            <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(1, 0)">
-              Xác nhận
-            </button>
+            <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(1, 0)"> Xác nhận </button>
           </div>
           <div class="col-xs-12">
-            <button class="insert btn btn-info btn-block" onclick="xacnhanthemnhap(0, 0)">
-              Lưu tạm
-            </button>
+            <button class="insert btn btn-info btn-block" onclick="xacnhanthemnhap(0, 0)"> Lưu tạm </button>
           </div>
         </div>
-
-        <div>
-          <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(1, 1)">
-            Xác nhận + thanh toán
-          </button>
+        <!-- END: xacnhan -->
+        <!-- BEGIN: phieutam -->
+        <div class="form-group row">
+          <button class="insert btn btn-info btn-block" onclick="xacnhanthemnhap(0, 0)"> Lưu tạm </button>
         </div>
+        <!-- END: xacnhan -->
+
+        <!-- BEGIN: xacnhanthanhtoan -->
+        <button class="insert btn btn-success btn-block" onclick="xacnhanthemnhap(1, 1)">
+          Xác nhận + thanh toán
+        </button>
+        <!-- END: xacnhanthanhtoan -->
       </div>
     </div>
   </div>

@@ -5,11 +5,11 @@ if (!defined('NV_IS_MOD_NEWS')) {
 }
 $page_title = $lang_module['title'];
 
-if (!quyennguoidung(1))  $contents = 'Tài khoản không có quyền xem mục này';
+if (!quyennhanvien(1))  $contents = 'Tài khoản không có quyền xem mục này';
 else {
   $xtpl = new XTemplate('main.tpl', PATH);
-  if (quyennguoidung(111) || quyennguoidung(11)) {
-    if (quyennguoidung(112)) $xtpl->parse('main.mauin.sua');
+  if (quyennhanvien(111) || quyennhanvien(11)) {
+    if (quyennhanvien(112)) $xtpl->parse('main.mauin.sua');
 
     $sql = "select * from pos_cauhinh where module = 'mauhoadon'";
     if (empty($cauhinh = $db->fetch($sql))) {
@@ -22,9 +22,9 @@ else {
     $xtpl->parse('main.mauin');
   }
 
-  if (quyennguoidung(121) || quyennguoidung(12)) {
-    if (quyennguoidung(121)) $xtpl->parse('main.nhanvien.them');
-    if (quyennguoidung(125)) $xtpl->parse('main.nhanvien.export');
+  if (quyennhanvien(121) || quyennhanvien(12)) {
+    if (quyennhanvien(121)) $xtpl->parse('main.nhanvien.them');
+    if (quyennhanvien(125)) $xtpl->parse('main.nhanvien.export');
 
     $xtpl->assign('homnay', date('d/m/Y'));
     $xtpl->assign('danhsach', danhsachnhanvien());

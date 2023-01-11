@@ -5,7 +5,7 @@ if (!defined('NV_IS_MOD_NEWS')) {
 }
 $page_title = $lang_module['title'];
 
-if (!(quyennguoidung(5) || quyennguoidung(51)))  $contents = 'Tài khoản không có quyền xem mục này';
+if (!(quyennhanvien(5) || quyennhanvien(51)))  $contents = 'Tài khoản không có quyền xem mục này';
 else {
   $xtpl = new XTemplate('main.tpl', PATH);
   $xtpl->assign('homnay', date('d/m/Y'));

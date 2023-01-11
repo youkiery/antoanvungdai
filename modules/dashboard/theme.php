@@ -34,9 +34,9 @@ function danhsachhang() {
   $sql = "select * from pos_hanghoa where kichhoat = 1 $query order by id desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $list = $db->all($sql);
 
-  $quyensua = quyennguoidung(213);
-  $quyenxoa = quyennguoidung(214);
-  $quyengia = quyennguoidung(215);
+  $quyensua = quyennhanvien(213);
+  $quyenxoa = quyennhanvien(214);
+  $quyengia = quyennhanvien(215);
   if ($quyengia) $xtpl->parse('main.gianhap');
 
   foreach ($list as $row) {
@@ -121,8 +121,8 @@ function danhsachnhaphang() {
   $sql = "select * from pos_nhaphang where (thoigian between $filter[batdau] and $filter[ketthuc]) and trangthai = 1 and thanhtoan = 1 order by thoigian desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $danhsach = $db->all($sql);
 
-  $quyensua = quyennguoidung(63);
-  $quyenxoa = quyennguoidung(64);
+  $quyensua = quyennhanvien(63);
+  $quyenxoa = quyennhanvien(64);
 
   $lf = ($filter['page'] - 1) * $gioihan;
   $lt = $lf + $gioihan;
@@ -255,9 +255,9 @@ function danhsachkhach() {
     }
   }
 
-  $quyensua = quyennguoidung(413);
-  $quyenxoa = quyennguoidung(414);
-  $quyendienthoai = quyennguoidung(415);
+  $quyensua = quyennhanvien(413);
+  $quyenxoa = quyennhanvien(414);
+  $quyendienthoai = quyennhanvien(415);
 
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/customer/');
   $chaydencuoi = $filter['page'] * $gioihan;
@@ -270,7 +270,7 @@ function danhsachkhach() {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('makhach', $row['makhach']);
     $xtpl->assign('ten', $row['tenkhach']);
-    $xtpl->assign('dienthoai', $row['dienthoai']);
+    $xtpl->assign('dienthoai', rutgondienthoai($row['dienthoai']));
     $xtpl->assign('muahang', number_format($row['tongtien']));
     $xtpl->assign('tienno', number_format($row['tienno']));
     if ($quyensua) $xtpl->parse('main.row.sua');
@@ -281,6 +281,19 @@ function danhsachkhach() {
   $xtpl->assign('navbar', navbar($filter['page'], $count, $gioihan, 'onclick="timkiem({p})"'));
   $xtpl->parse('main');
   return $xtpl->text();
+}
+
+function rutgondienthoai($dienthoai) {
+  // nếu không có quyền điền thoại thì rút gọn
+  if (!quyennhanvien(415)) {
+    // nếu < 6 rút được 1 số đầu cuối
+    // còn lại rút được 2 số đầu cuối
+    $chieudai = strlen($dienthoai);
+    $dienthoai = substr($dienthoai, 0, 1) . '[..]' . substr($dienthoai, $chieudai - 3);
+    // if ($chieudai <= 6) 
+    // else $dienthoai = substr($dienthoai, 0, 2) . '[..]' . substr($dienthoai, $chieudai - 2);
+  }
+  return $dienthoai;
 }
 
 function danhsachhoadon() {

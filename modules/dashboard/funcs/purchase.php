@@ -5,7 +5,7 @@ if (!defined('NV_IS_MOD_NEWS')) {
 }
 $page_title = $lang_module['title'];
 
-if (!(quyennguoidung(32) || quyennguoidung(321))) $contents = 'Tài khoản không có quyền xem mục này';
+if (!(quyennhanvien(33) || quyennhanvien(331))) $contents = 'Tài khoản không có quyền xem mục này';
 else {
   $xtpl = new XTemplate('main.tpl', PATH);
   $sql = "select * from pos_phanloai where module = 'hanghoa' and kichhoat = 1 order by thutu asc, id asc";
@@ -24,6 +24,11 @@ else {
   $xtpl->assign('tongno', number_format($tongno));
   if ($tongno) $xtpl->parse('main.tongno');
   $xtpl->assign('danhsach', danhsachnhaphang());
+  if (quyennhanvien(335)) {
+    $xtpl->parse('main.xacnhan');
+    if (quyennhanvien(337)) $xtpl->parse('main.xacnhanthanhtoan');
+  }
+  else $xtpl->parse('main.phieutam');
   $xtpl->parse('main');
   $contents = $xtpl->text();
 }

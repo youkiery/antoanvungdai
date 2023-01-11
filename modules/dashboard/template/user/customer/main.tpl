@@ -137,9 +137,16 @@
 
   <div class="pw-card">
     <div class="pw-card-header">
-      <button class="btn btn-info" onclick="importkhach()"> <span class="fa fa-file"></span> Import khách hàng </button>
+      <!-- BEGIN: import -->
+      <button class="btn btn-info" onclick="importkhach()"> <span class="fa fa-file"></span> Import </button>
+      <!-- END: import -->
+      <!-- BEGIN: export -->
+      <button class="btn btn-info"> <span class="fa fa-file"></span> Export </button>
+      <!-- END: export -->
       <button class="btn btn-info" onclick="timkhach()"> <span class="fa fa-search"></span> Lọc khách </button>
+      <!-- BEGIN: them -->
       <button class="btn btn-success" onclick="themkhach()"> <span class="fa fa-plus"></span> Thêm khách </button>
+      <!-- END: them -->
     </div>
     <div class="pw-card-content" id="content">
       {danhsach}

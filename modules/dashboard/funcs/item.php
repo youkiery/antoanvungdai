@@ -5,7 +5,7 @@ if (!defined('NV_IS_MOD_NEWS')) {
 }
 $page_title = $lang_module['title'];
 
-if (!(quyennguoidung(2) || quyennguoidung(21) || quyennguoidung(211))) $contents = 'Tài khoản không có quyền xem mục này';
+if (!(quyennhanvien(2) || quyennhanvien(21) || quyennhanvien(211))) $contents = 'Tài khoản không có quyền xem mục này';
 else {
   $xtpl = new XTemplate('main.tpl', PATH);
   $sql = "select * from pos_phanloai where module = 'hanghoa' and kichhoat = 1 order by thutu asc, id asc";
@@ -16,9 +16,9 @@ else {
   $xtpl->parse('main.danhsach');
   $xtpl->parse('main.danhsach2');
 
-  if (quyennguoidung(212)) $xtpl->parse('main.them');
-  if (quyennguoidung(216)) $xtpl->parse('main.import');
-  if (quyennguoidung(217)) $xtpl->parse('main.export');
+  if (quyennhanvien(212)) $xtpl->parse('main.them');
+  if (quyennhanvien(216)) $xtpl->parse('main.import');
+  if (quyennhanvien(217)) $xtpl->parse('main.export');
 
   $xtpl->parse('main');
   $contents = $xtpl->text();

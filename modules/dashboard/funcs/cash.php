@@ -5,7 +5,7 @@ if (!defined('NV_IS_MOD_NEWS')) {
 }
 $page_title = $lang_module['title'];
 
-if (!(quyennguoidung(6) || quyennguoidung(61))) $contents = 'Tài khoản không có quyền xem mục này';
+if (!(quyennhanvien(6) || quyennhanvien(61))) $contents = 'Tài khoản không có quyền xem mục này';
 else {
   $xtpl = new XTemplate('main.tpl', PATH);
   $sql = "select * from pos_loaithuchi where loai = 0 order by id";
@@ -21,8 +21,8 @@ else {
   $xtpl->assign('ketthuc', date('d/m/Y'));
   $xtpl->assign('danhsach', danhsachthuchi());
 
-  if (quyennguoidung(62)) $xtpl->parse('main.them');
-  if (quyennguoidung(65)) $xtpl->parse('main.export');
+  if (quyennhanvien(62)) $xtpl->parse('main.them');
+  if (quyennhanvien(65)) $xtpl->parse('main.export');
 
   $xtpl->parse('main');
   $contents = $xtpl->text();

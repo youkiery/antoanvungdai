@@ -5,14 +5,14 @@ if (!defined('NV_IS_MOD_NEWS')) {
 }
 $page_title = $lang_module['title'];
 
-if (!(quyennguoidung(31) || quyennguoidung(311))) $contents = 'Tài khoản không có quyền xem mục này';
+if (!(quyennhanvien(32) || quyennhanvien(321))) $contents = 'Tài khoản không có quyền xem mục này';
 else {
   $xtpl = new XTemplate('main.tpl', PATH);
   $dauthang = date('01/m/Y');
   $cuoithang = date('t/m/Y');
   
-  if (quyennguoidung(315)) $xtpl->parse('main.import');
-  if (quyennguoidung(316)) $xtpl->parse('main.export');
+  if (quyennhanvien(325)) $xtpl->parse('main.import');
+  if (quyennhanvien(326)) $xtpl->parse('main.export');
 
   $xtpl->assign('dauthang', $dauthang);
   $xtpl->assign('cuoithang', $cuoithang);

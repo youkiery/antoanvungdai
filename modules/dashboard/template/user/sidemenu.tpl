@@ -4,8 +4,12 @@
     <div class="pw-avatar"> </div>
     {nhanvien} <br>
     Nhân viên
+    <!-- BEGIN: banhang -->
     <a href="/pos" class="btn btn-success btn-block"> Bán hàng </a>
+    <!-- END: banhang -->
+    <!-- BEGIN: caidat -->
     <a href="/dashboard/setting" class="btn btn-info btn-block"> Cài đặt </button>
+    <!-- END: caidat -->
     <a href="/dashboard/logout" class="btn btn-danger btn-block"> Đăng xuất </a>
   </div>
   <div class="pw-menu-group">
