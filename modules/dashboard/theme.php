@@ -34,6 +34,11 @@ function danhsachhang() {
   $sql = "select * from pos_hanghoa where kichhoat = 1 $query order by id desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $list = $db->all($sql);
 
+  $quyensua = quyennguoidung(213);
+  $quyenxoa = quyennguoidung(214);
+  $quyengia = quyennguoidung(215);
+  if ($quyengia) $xtpl->parse('main.gianhap');
+
   foreach ($list as $row) {
     $hinhanh = explode(',', $row['hinhanh']);
     if (count($hinhanh) && !empty($hinhanh[0])) $hinhanh = $hinhanh[0];
@@ -41,11 +46,14 @@ function danhsachhang() {
     $xtpl->assign('hinhanh', $hinhanh);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('mahang', $row['mahang']);
-    $xtpl->assign('tenhang', $row['tenhang']);
+    $xtpl->assign('tenhang', $row['tenhang'] . (strlen($row['donvi']) ? " ($row[donvi])" : ''));
     $xtpl->assign('donvi', $row['donvi']);
     $xtpl->assign('gianhap', number_format($row['gianhap']));
     $xtpl->assign('giaban', number_format($row['giaban']));
     $xtpl->assign('soluong', number_format($row['soluong']));
+    if ($quyensua) $xtpl->parse('main.row.sua');
+    if ($quyenxoa) $xtpl->parse('main.row.xoa');
+    if ($quyengia) $xtpl->parse('main.row.gianhap2');
     $xtpl->parse('main.row');
   }
   $xtpl->assign('navbar', navbar($filter['page'], $total, $gioihan, 'onclick="timkiem({p})"'));
@@ -113,6 +121,9 @@ function danhsachnhaphang() {
   $sql = "select * from pos_nhaphang where (thoigian between $filter[batdau] and $filter[ketthuc]) and trangthai = 1 and thanhtoan = 1 order by thoigian desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $danhsach = $db->all($sql);
 
+  $quyensua = quyennguoidung(63);
+  $quyenxoa = quyennguoidung(64);
+
   $lf = ($filter['page'] - 1) * $gioihan;
   $lt = $lf + $gioihan;
   $trangthai = array(0 => 'Phiếu tạm', 'Hoàn thành');
@@ -133,6 +144,8 @@ function danhsachnhaphang() {
         $xtpl->assign('nguoncung', $nguoncung['ten']);
         $xtpl->assign('tongtien', number_format($row['tongtien']));
         $xtpl->assign('trangthai', $trangthai[$row['trangthai']]);
+        if ($quyensua) $xtpl->parse('main.row.sua');
+        if ($quyenxoa) $xtpl->parse('main.row.xoa');
         $xtpl->parse('main.row');
       }
     }
@@ -242,6 +255,10 @@ function danhsachkhach() {
     }
   }
 
+  $quyensua = quyennguoidung(413);
+  $quyenxoa = quyennguoidung(414);
+  $quyendienthoai = quyennguoidung(415);
+
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/customer/');
   $chaydencuoi = $filter['page'] * $gioihan;
   $count = count($danhsach);
@@ -256,6 +273,8 @@ function danhsachkhach() {
     $xtpl->assign('dienthoai', $row['dienthoai']);
     $xtpl->assign('muahang', number_format($row['tongtien']));
     $xtpl->assign('tienno', number_format($row['tienno']));
+    if ($quyensua) $xtpl->parse('main.row.sua');
+    if ($quyenxoa) $xtpl->parse('main.row.xoa');
     $xtpl->parse('main.row');
   }
   if (empty($demchay)) $xtpl->parse('main.khongkhach');

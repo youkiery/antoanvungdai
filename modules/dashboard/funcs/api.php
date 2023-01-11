@@ -574,6 +574,11 @@ function chitiethoadon() {
   $xtpl->assign('datra', number_format($hoadon['thanhtoan']));
   $xtpl->assign('ghichu', '');
 
+  if (quyennguoidung(313)) $xtpl->parse('main.xoahoadon');
+  if (quyennguoidung(314)) $xtpl->parse('main.xoahoadon');
+  if (quyennguoidung(3112)) $xtpl->parse('main.saochep');
+  if (quyennguoidung(3113)) $xtpl->parse('main.inhoadon');
+
   $xtpl->parse('main');
 
   $resp['status'] = 1;
@@ -1151,7 +1156,6 @@ function chitietnhanvien() {
         'Sửa',
         'Xóa',
         'Giá Nhập',
-        'Giá Vốn',
         'Import',
         'Export',
       ]
@@ -1234,41 +1238,41 @@ function chitietnhanvien() {
         'Hàng Hóa',
         'Thu Chi',
         'Bán Hàng',
-      ]
-    ],
-    'Bán Hàng' => [
-      'Nhân Viên',
-      'Lợi Nhuận',
-      'Giảm Giá Hóa Đơn',
-      'Trả Hàng',
-      'Thời Gian',
-    ],
-    'Hàng Hóa' => [
-      'Giá Trị Kho',
-      'Hạn Sử Dụng',
-      'Khách Theo Hàng Bán',
-      'Nhà Cung Cấp Theo Hàng Nhập',
-      'Nhân Viên Theo Hàng Bán',
-      'Xuất Nhập Tồn',
-      'Xuât Nhập Tồn Chi Tiết',
-      'Lợi Nhuận',
-      'Bán Hàng',
-    ],
-    'Khách Hàng' => [
-      'Công Nợ',
-      'Hàng Theo Khách',
-      'Bán Hàng',
-      'Lợi Nhuận',
-    ],
-    'Nhà Cung Cấp' => [
-      'Công Nợ',
-      'Hàng Nhập Theo Nhà Cung Cấp',
-      'Nhập Hàng',
-    ],
-    'Nhân Viên' => [
-      'Lợi Nhuận',
-      'Hàng Bán Theo Nhân Viên',
-      'Bán Hàng',
+      ],
+      'Bán Hàng' => [
+        'Nhân Viên',
+        'Lợi Nhuận',
+        'Giảm Giá Hóa Đơn',
+        'Trả Hàng',
+        'Thời Gian',
+      ],
+      'Hàng Hóa' => [
+        'Giá Trị Kho',
+        'Hạn Sử Dụng',
+        'Khách Theo Hàng Bán',
+        'Nhà Cung Cấp Theo Hàng Nhập',
+        'Nhân Viên Theo Hàng Bán',
+        'Xuất Nhập Tồn',
+        'Xuât Nhập Tồn Chi Tiết',
+        'Lợi Nhuận',
+        'Bán Hàng',
+      ],
+      'Khách Hàng' => [
+        'Công Nợ',
+        'Hàng Theo Khách',
+        'Bán Hàng',
+        'Lợi Nhuận',
+      ],
+      'Nhà Cung Cấp' => [
+        'Công Nợ',
+        'Hàng Nhập Theo Nhà Cung Cấp',
+        'Nhập Hàng',
+      ],
+      'Nhân Viên' => [
+        'Lợi Nhuận',
+        'Hàng Bán Theo Nhân Viên',
+        'Bán Hàng',
+      ],
     ],
     'Sổ Quỹ' => [
       'Xem',

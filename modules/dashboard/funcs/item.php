@@ -5,15 +5,24 @@ if (!defined('NV_IS_MOD_NEWS')) {
 }
 $page_title = $lang_module['title'];
 
-$xtpl = new XTemplate('main.tpl', PATH);
+if (!(quyennguoidung(2) || quyennguoidung(21) || quyennguoidung(211))) $contents = 'Tài khoản không có quyền xem mục này';
+else {
+  $xtpl = new XTemplate('main.tpl', PATH);
+  $sql = "select * from pos_phanloai where module = 'hanghoa' and kichhoat = 1 order by thutu asc, id asc";
+  $loaihang = $db->all($sql);
+  
+  $xtpl->assign('loaihang', option($loaihang, 'ten', 'id'));
+  $xtpl->assign('danhsachhang', danhsachhang());
+  $xtpl->parse('main.danhsach');
+  $xtpl->parse('main.danhsach2');
 
-$sql = "select * from pos_phanloai where module = 'hanghoa' and kichhoat = 1 order by thutu asc, id asc";
-$loaihang = $db->all($sql);
+  if (quyennguoidung(212)) $xtpl->parse('main.them');
+  if (quyennguoidung(216)) $xtpl->parse('main.import');
+  if (quyennguoidung(217)) $xtpl->parse('main.export');
 
-$xtpl->assign('loaihang', option($loaihang, 'ten', 'id'));
-$xtpl->assign('danhsachhang', danhsachhang());
-$xtpl->parse('main');
-$contents = $xtpl->text();
+  $xtpl->parse('main');
+  $contents = $xtpl->text();
+} 
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);

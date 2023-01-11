@@ -177,9 +177,9 @@
 
   function caidattoggle() {
     $('.pw-toggle .pw-toggle-head').click(e => {
-        element = e.currentTarget.parentElement.children[1]
-        if (element.style.display == 'block' && e.target.tagName !== 'INPUT') element.style.display = 'none'
-        else element.style.display = 'block'
+      element = e.currentTarget.parentElement.children[1]
+      if (element.style.display == 'block' && e.target.tagName !== 'INPUT') element.style.display = 'none'
+      else element.style.display = 'block'
     })
   }
 

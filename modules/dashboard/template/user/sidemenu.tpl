@@ -16,27 +16,41 @@
       <a href="/dashboard/" class="pw-menu-item {overview}">
         Tổng quan
       </a>
+      <!-- BEGIN: item -->
       <a href="/dashboard/item" class="pw-menu-item {item}">
         Hàng hóa
       </a>
+      <!-- END: item -->
+      <!-- BEGIN: purchase -->
       <a href="/dashboard/purchase" class="pw-menu-item {purchase}">
         Nhập hàng
       </a>
+      <!-- END: purchase -->
+      <!-- BEGIN: source -->
       <a href="/dashboard/source" class="pw-menu-item {source}">
         Nhà cung cấp
       </a>
+      <!-- END: source -->
+      <!-- BEGIN: customer -->
       <a href="/dashboard/customer" class="pw-menu-item {customer}">
         Khách hàng
       </a>
+      <!-- END: customer -->
+      <!-- BEGIN: bill -->
       <a href="/dashboard/bill" class="pw-menu-item {bill}">
         Hóa đơn
       </a>
+      <!-- END: bill -->
+      <!-- BEGIN: cash -->
       <a href="/dashboard/cash" class="pw-menu-item {cash}">
         Sổ quỹ
       </a>
+      <!-- END: cash -->
+      <!-- BEGIN: statistic -->
       <a href="/dashboard/statistic" class="pw-menu-item {statistic}">
         Thống kê
       </a>
+      <!-- END: statistic -->
     </div>
   </div>
 </div>

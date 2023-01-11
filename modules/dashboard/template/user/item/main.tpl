@@ -167,13 +167,24 @@
 
   <div class="pw-card">
     <div class="pw-card-header">
-      <button class="btn btn-info" onclick="importhang()"> <span class="fa fa-file"></span> Import file </button>
+      <!-- BEGIN: import -->
+      <button class="btn btn-info" onclick="importhang()"> <span class="fa fa-file"></span> Import </button>
+      <!-- END: import -->
+      <!-- BEGIN: export -->
+      <button class="btn btn-info"> <span class="fa fa-file"></span> Export </button>
+      <!-- END: export -->
+      <!-- BEGIN: danhsach2 -->
       <button class="btn btn-info" onclick="timhang()"> <span class="fa fa-search"></span> Tìm kiếm </button>
+      <!-- END: danhsach2 -->
+      <!-- BEGIN: them -->
       <button class="btn btn-success" onclick="themhang()"> <span class="fa fa-plus"></span> Thêm hàng </button>
+      <!-- END: them -->
     </div>
+    <!-- BEGIN: danhsach -->
     <div class="pw-card-content" id="content">
       {danhsachhang}
     </div>
+    <!-- END: danhsach -->
   </div>
 </div>
 

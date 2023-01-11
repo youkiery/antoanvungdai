@@ -217,8 +217,13 @@
 
   <div class="pw-card">
     <div class="pw-card-header">
+      <!-- BEGIN: them -->
       <button class="btn btn-success" onclick="themphieuthu()"> <span class="fa fa-plus"></span> Phiếu thu </button>
       <button class="btn btn-warning" onclick="themphieuchi()"> <span class="fa fa-plus"></span> Phiếu chi </button>
+      <!-- END: them -->
+      <!-- BEGIN: export -->
+      <button class="btn btn-info"> <span class="fa fa-file-o"></span> Export </button>
+      <!-- END: export -->
       <button class="btn btn-info" onclick="lochoadon()"> <span class="fa fa-search"></span> Tìm kiếm </button>
     </div>
     <div class="pw-card-content" id="content">

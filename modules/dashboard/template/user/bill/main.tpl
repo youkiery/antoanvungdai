@@ -116,6 +116,12 @@
   <div class="pw-card">
     <div class="pw-card-header">
       <button class="btn btn-info" onclick="lochoadon()"> <span class="fa fa-search"></span> Lọc hóa đơn </button>
+      <!-- BEGIN: import -->
+      <button class="btn btn-info"> <span class="fa fa-file"></span> Import </button>
+      <!-- END: import -->
+      <!-- BEGIN: export -->
+      <button class="btn btn-info"> <span class="fa fa-file"></span> Export </button>
+      <!-- END: export -->
     </div>
     <div class="pw-card-content" id="content">
       {danhsach}

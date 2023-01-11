@@ -66,7 +66,17 @@
 <!-- END: hangban -->
 
 <div style="float: right;">
+  <!-- BEGIN: saochep -->
+  <button class="btn btn-info"> Sửa </button>
+  <!-- END: saochep -->
+  <!-- BEGIN: saochep -->
+  <button class="btn btn-info"> Sao chép </button>
+  <!-- END: saochep -->
+  <!-- BEGIN: inhoadon -->
   <button class="btn btn-info" onclick="inhoadon({id})"> In hóa đơn </button>
+  <!-- END: inhoadon -->
+  <!-- BEGIN: xoahoadon -->
   <button class="btn btn-danger" onclick="xoahoadon({id})"> Xóa hóa đơn </button>
+  <!-- END: xoahoadon -->
 </div>
 <!-- END: main -->
