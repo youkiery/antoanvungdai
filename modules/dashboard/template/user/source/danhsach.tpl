@@ -17,12 +17,16 @@
       <td> {diachi} </td>
       <td> {dienthoai} </td>
       <td> 
+        <!-- BEGIN: sua -->
         <button class="btn btn-info btn-xs" onclick="suanguon({id}, '{manguon}', '{ten}', '{diachi}', '{dienthoai}')">
           sửa
         </button>
+        <!-- END: sua -->
+        <!-- BEGIN: xoa -->
         <button class="btn btn-danger btn-xs" onclick="xoanguon({id})">
           xóa
         </button>
+        <!-- END: xoa -->
       </td>
     </tr>
   </tbody>

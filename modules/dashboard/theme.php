@@ -201,8 +201,10 @@ function danhsachnguoncung() {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('ten', $row['ten']);
     $xtpl->assign('manguon', $row['manguoncung']);
-    $xtpl->assign('dienthoai', $row['dienthoai']);
+    $xtpl->assign('dienthoai', rutgondienthoai($row['dienthoai'], 455));
     $xtpl->assign('diachi', $row['diachi']);
+    if (quyennhanvien(453)) $xtpl->parse('main.row.sua');
+    if (quyennhanvien(454)) $xtpl->parse('main.row.xoa');
     $xtpl->parse('main.row');
   }
   $xtpl->assign('navbar', navbar($filter['page'], $count, $gioihan, 'onclick="timkiem({p})"'));
@@ -270,7 +272,7 @@ function danhsachkhach() {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('makhach', $row['makhach']);
     $xtpl->assign('ten', $row['tenkhach']);
-    $xtpl->assign('dienthoai', rutgondienthoai($row['dienthoai']));
+    $xtpl->assign('dienthoai', rutgondienthoai($row['dienthoai'], 415));
     $xtpl->assign('muahang', number_format($row['tongtien']));
     $xtpl->assign('tienno', number_format($row['tienno']));
     if ($quyensua) $xtpl->parse('main.row.sua');
@@ -283,9 +285,9 @@ function danhsachkhach() {
   return $xtpl->text();
 }
 
-function rutgondienthoai($dienthoai) {
+function rutgondienthoai($dienthoai, $quyen) {
   // nếu không có quyền điền thoại thì rút gọn
-  if (!quyennhanvien(415)) {
+  if (!quyennhanvien($quyen)) {
     // nếu < 6 rút được 1 số đầu cuối
     // còn lại rút được 2 số đầu cuối
     $chieudai = strlen($dienthoai);
@@ -414,7 +416,7 @@ function thongke() {
   // }
 
   // lợi nhuận nhập hàng
-  $sql = "select * from pos_nhaphang where (thoigian between $batdau and $ketthuc) and trangthai = 1";
+  $sql = "select * from pos_nhaphang where (thoigian between $batdau and $ketthuc) and thanhtoan = 1";
   $danhsach = $db->all($sql);
 
   foreach ($danhsach as $nhaphang) {

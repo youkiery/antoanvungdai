@@ -78,7 +78,6 @@
     }, (e) => { })
   }
 
-  
   function chonngay(loai) {
     var batdau = $('#batdau')
     var ketthuc = $('#ketthuc')

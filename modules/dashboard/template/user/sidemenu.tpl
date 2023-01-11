@@ -20,6 +20,11 @@
       <a href="/dashboard/" class="pw-menu-item {overview}">
         Tổng quan
       </a>
+      <!-- BEGIN: bill -->
+      <a href="/dashboard/bill" class="pw-menu-item {bill}">
+        Hóa đơn
+      </a>
+      <!-- END: bill -->
       <!-- BEGIN: item -->
       <a href="/dashboard/item" class="pw-menu-item {item}">
         Hàng hóa
@@ -30,21 +35,16 @@
         Nhập hàng
       </a>
       <!-- END: purchase -->
-      <!-- BEGIN: source -->
-      <a href="/dashboard/source" class="pw-menu-item {source}">
-        Nhà cung cấp
-      </a>
-      <!-- END: source -->
       <!-- BEGIN: customer -->
       <a href="/dashboard/customer" class="pw-menu-item {customer}">
         Khách hàng
       </a>
       <!-- END: customer -->
-      <!-- BEGIN: bill -->
-      <a href="/dashboard/bill" class="pw-menu-item {bill}">
-        Hóa đơn
+      <!-- BEGIN: source -->
+      <a href="/dashboard/source" class="pw-menu-item {source}">
+        Nhà cung cấp
       </a>
-      <!-- END: bill -->
+      <!-- END: source -->
       <!-- BEGIN: cash -->
       <a href="/dashboard/cash" class="pw-menu-item {cash}">
         Sổ quỹ
