@@ -241,8 +241,14 @@ function timkhach() {
   global $db, $resp, $nv_Request, $crypt;
 
   $tukhoa = $nv_Request->get_string('tukhoa', 'post');
-  $sql = "select * from pos_khachhang where tenkhach like '%$tukhoa%' or makhach like '%$tukhoa%' order by id desc limit 20";
+  $sql = "select * from pos_khachhang where tenkhach like '%$tukhoa%' or makhach like '%$tukhoa%' or dienthoai like '%$tukhoa%' order by id desc limit 20";
   $danhsach = $db->all($sql);
+
+  if (!$quyendienthoai = quyennhanvien(415)) {
+    foreach ($danhsach as $vitri => $khachhang) {
+      $danhsach[$vitri]['dienthoai'] = rutgondienthoai($khachhang['dienthoai'], $quyendienthoai);
+    }
+  }
 
   $resp['danhsach'] = $danhsach;
   $resp['status'] = 1;
@@ -252,7 +258,7 @@ function timkhachthuno() {
   global $db, $resp, $nv_Request, $crypt;
 
   $tukhoa = $nv_Request->get_string('tukhoa', 'post');
-  $sql = "select * from pos_khachhang where tenkhach like '%$tukhoa%' or makhach like '%$tukhoa%' and tienno > 0 order by id desc limit 20";
+  $sql = "select * from pos_khachhang where (tenkhach like '%$tukhoa%' or makhach like '%$tukhoa%' or dienthoai like '%$tukhoa%') and tienno > 0 order by id desc limit 20";
   $danhsach = $db->all($sql);
 
   $resp['danhsach'] = $danhsach;

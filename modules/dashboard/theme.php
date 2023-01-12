@@ -195,13 +195,14 @@ function danhsachnguoncung() {
 
   $sql = "select * from pos_nguoncung where  kichhoat = 1 and (manguoncung like '%$filter[tukhoa]%' or ten like '%$filter[tukhoa]%' or diachi like '%$filter[tukhoa]%' or dienthoai like '%$filter[tukhoa]%') order by id desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $danhsach = $db->all($sql);
+  $quyendienthoai = quyennhanvien(415);
 
   $xtpl = new XTemplate('danhsach.tpl', UPATH . '/source/');
   foreach ($danhsach as $i => $row) {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('ten', $row['ten']);
     $xtpl->assign('manguon', $row['manguoncung']);
-    $xtpl->assign('dienthoai', rutgondienthoai($row['dienthoai'], 455));
+    $xtpl->assign('dienthoai', rutgondienthoai($row['dienthoai'], $quyendienthoai));
     $xtpl->assign('diachi', $row['diachi']);
     if (quyennhanvien(453)) $xtpl->parse('main.row.sua');
     if (quyennhanvien(454)) $xtpl->parse('main.row.xoa');
@@ -272,7 +273,7 @@ function danhsachkhach() {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('makhach', $row['makhach']);
     $xtpl->assign('ten', $row['tenkhach']);
-    $xtpl->assign('dienthoai', rutgondienthoai($row['dienthoai'], 415));
+    $xtpl->assign('dienthoai', rutgondienthoai($row['dienthoai'], $quyendienthoai));
     $xtpl->assign('muahang', number_format($row['tongtien']));
     $xtpl->assign('tienno', number_format($row['tienno']));
     if ($quyensua) $xtpl->parse('main.row.sua');

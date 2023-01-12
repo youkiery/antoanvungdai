@@ -938,6 +938,7 @@ function themnguon() {
     $resp['messenger'] = 'Đã thêm nguồn cung';
   }
   else {
+    if (strpos($data['dienthoai'], '[..]') == false) $xtra = ", dienthoai = '$data[dienthoai]'";
     $sql = "update pos_nguoncung set ten = '$data[ten]', dienthoai = '$data[dienthoai]', diachi = '$data[diachi]' where id = $id";
     $resp['messenger'] = 'Đã cập nhật nguồn cung';
     $db->query($sql);
@@ -1000,7 +1001,8 @@ function themkhach() {
     }
   }
   else {
-    $sql = "update pos_khachhang set makhach = '$data[ma]', tenkhach = '$data[tenkhach]', dienthoai = '$data[dienthoai]', diachi = '$data[diachi]' where id = $id";
+    if (strpos($data['dienthoai'], '[..]') == false) $xtra = ", dienthoai = '$data[dienthoai]'";
+    $sql = "update pos_khachhang set makhach = '$data[ma]', tenkhach = '$data[tenkhach]' $xtra, diachi = '$data[diachi]' where id = $id";
     $db->query($sql);
     $resp['messenger'] = 'Đã cập nhật khách hàng';
   }

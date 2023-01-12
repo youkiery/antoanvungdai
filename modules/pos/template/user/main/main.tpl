@@ -1,11 +1,5 @@
 <!-- BEGIN: main -->
 <style>
-  /* .pw-col > .col-xs-1, .pw-col > .col-xs-3, .pw-col > .col-xs-4, .pw-col > .col-xs-8 {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  } */
-
   .popover-content {
     padding: 0px;
   }
@@ -74,12 +68,16 @@
           </div>
         </div>
 
+        <!-- BEGIN: themkhach2 -->
         <button class="insert btn btn-success btn-block" onclick="xacnhanthemkhach()">
           Thêm khách
         </button>
+        <!-- END: themkhach2 -->
+        <!-- BEGIN: suakhach -->
         <button class="update btn btn-info btn-block" onclick="xacnhanthemkhach()">
           Cập nhật
         </button>
+        <!-- END: suakhach -->
       </div>
     </div>
   </div>
@@ -134,9 +132,11 @@
           <div class="col-xs-6 pw-text-right" id="thuno-tienthua"> 0 </div>
         </div>
 
+        <!-- BEGIN: thanhtoan2 -->
         <button class="insert btn btn-success btn-block" onclick="xacnhanthuno()">
           Thu nợ
         </button>
+        <!-- END: thanhtoan2 -->
       </div>
     </div>
   </div>
@@ -184,7 +184,7 @@
     <div class="pw-right-panel">
       <div class="row form-group">
         <div class="col-xs-14 pw-subtext">
-          <select class="form-control" id="nguoiban" onchange="thaydoinguoiban()">
+          <select class="form-control" id="nguoiban" onchange="thaydoinguoiban()" {suanguoiban}>
             {danhsachnhanvien}
           </select>
         </div>
@@ -201,9 +201,11 @@
         </div>
 
         <div class="input-group-btn">
+          <!-- BEGIN: themkhach -->
           <button class="btn btn-success" id="them-khach" onclick="themkhach()">
             +
           </button>
+          <!-- END: themkhach -->
           <button class="btn btn-danger" style="display: none;" id="xoa-khach" onclick="xoakhach()">
             x
           </button>
@@ -230,6 +232,7 @@
         <div class="col-xs-12"> Tổng đơn Hàng </div>
         <div class="col-xs-12 pw-text-right" id="tongtien"> 0 </div>
       </div>
+      <!-- BEGIN: giamgia -->
       <div class="row">
         <div class="col-xs-12 form-group"> Giảm giá </div>
         <div class="col-xs-12 pw-text-right">
@@ -245,6 +248,7 @@
           </div>
         </div>
       </div>
+      <!-- END: giamgia -->
 
       <div class="row form-group">
         <div class="col-xs-12"> Thành tiền </div>
@@ -309,7 +313,12 @@
     idnhanvien: '{idnhanvien}',
     thanhtoan: ['thanhtoantien', 'thanhtoanchuyenkhoan', 'thanhtoandiem'],
     thanhtoanthuno: ['thuno-thanhtoantien', 'thuno-thanhtoanchuyenkhoan', 'thuno-thanhtoandiem'],
-    thututhanhtoan: [[1, 2], [0, 2], [0, 1]]
+    thututhanhtoan: [[1, 2], [0, 2], [0, 1]],
+    cauhinh: {
+      '{cauhinhdongia}': {giatricauhinhdongia},
+      '{cauhinhgiaban}': {giatricauhinhgiaban},
+      '{cauhinhgiamgia}': {giatricauhinhgiamgia},
+    }
   }
 
   $(document).ready(() => {
@@ -966,7 +975,7 @@
                   <div class="form-group">Đơn giá</div>
                 </div>
                 <div class="col-xs-18">
-                  <div class="form-group"> <input autocomplete="off" class="form-control" id="suadongia-`+ vitrichay + `" onkeyup="suadongia(` + vitrichay + `)"> </div>
+                  <div class="form-group"> <input autocomplete="off" class="form-control" id="suadongia-`+ vitrichay + `" onkeyup="suadongia(` + vitrichay + `)" `+ (global.cauhinh.dongia ? '' : 'disabled') +`> </div>
                 </div>
               </div>
               <div class="row">
@@ -975,11 +984,11 @@
                 </div>
                 <div class="col-xs-18">
                   <div class="form-group input-group">
-                    <input autocomplete="off" class="form-control" id="suagiamgiaphantram-`+ vitrichay + `" onkeyup="suagiamgia(` + vitrichay + `)"> 
+                    <input autocomplete="off" class="form-control" id="suagiamgiaphantram-`+ vitrichay + `" onkeyup="suagiamgia(` + vitrichay + `)" `+ (global.cauhinh.giamgia ? '' : 'disabled') +`> 
                     <div class="input-group-addon"> % </div>
                     </div>
                   <div class="form-group input-group">
-                    <input autocomplete="off" class="form-control" id="suagiamgiatien-`+ vitrichay + `" onkeyup="suagiamgia(` + vitrichay + `)"> 
+                    <input autocomplete="off" class="form-control" id="suagiamgiatien-`+ vitrichay + `" onkeyup="suagiamgia(` + vitrichay + `)" `+ (global.cauhinh.giamgia ? '' : 'disabled') +`> 
                     <div class="input-group-addon">
                       VND
                     </div>
@@ -992,7 +1001,7 @@
                   <div class="form-group">Giá bán</div>
                 </div>
                 <div class="col-xs-18">
-                  <div class="form-group"> <input autocomplete="off" class="form-control" id="suagiaban-`+ vitrichay + `" onkeyup="suagiaban(` + vitrichay + `)"> </div>
+                  <div class="form-group"> <input autocomplete="off" class="form-control" id="suagiaban-`+ vitrichay + `" onkeyup="suagiaban(` + vitrichay + `)" `+ (global.cauhinh.giaban ? '' : 'disabled') +`> </div>
                 </div>
               </div>
             </div>
@@ -1049,7 +1058,7 @@
                     <div class="form-group">Đơn giá</div>
                   </div>
                   <div class="col-xs-18">
-                    <div class="form-group"> <input autocomplete="off" class="form-control" id="suadongia-`+ loaihang + `-` + vitrichay + `" onkeyup="suadongiatrahang('` + loaihang + `',` + vitrichay + `)"> </div>
+                    <div class="form-group"> <input autocomplete="off" class="form-control" id="suadongia-`+ loaihang + `-` + vitrichay + `" onkeyup="suadongiatrahang('` + loaihang + `',` + vitrichay + `)" `+ (global.cauhinh.dongia ? '' : 'disabled') +`> </div>
                   </div>
                 </div>
                 <div class="row">
@@ -1058,11 +1067,11 @@
                   </div>
                   <div class="col-xs-18">
                     <div class="form-group input-group">
-                      <input autocomplete="off" class="form-control" id="suagiamgiaphantram-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiamgiatrahang('` + loaihang + `', ` + vitrichay + `)"> 
+                      <input autocomplete="off" class="form-control" id="suagiamgiaphantram-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiamgiatrahang('` + loaihang + `', ` + vitrichay + `)" `+ (global.cauhinh.giamgia ? '' : 'disabled') +`> 
                       <div class="input-group-addon"> % </div>
                       </div>
                     <div class="form-group input-group">
-                      <input autocomplete="off" class="form-control" id="suagiamgiatien-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiamgiatrahang('` + loaihang + `', ` + vitrichay + `)"> 
+                      <input autocomplete="off" class="form-control" id="suagiamgiatien-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiamgiatrahang('` + loaihang + `', ` + vitrichay + `)" `+ (global.cauhinh.giamgia ? '' : 'disabled') +`> 
                       <div class="input-group-addon">
                         VND
                       </div>
@@ -1075,7 +1084,7 @@
                     <div class="form-group">Giá bán</div>
                   </div>
                   <div class="col-xs-18">
-                    <div class="form-group"> <input autocomplete="off" class="form-control" id="suagiaban-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiabantrahang('` + loaihang + `', ` + vitrichay + `)"> </div>
+                    <div class="form-group"> <input autocomplete="off" class="form-control" id="suagiaban-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiabantrahang('` + loaihang + `', ` + vitrichay + `)" `+ (global.cauhinh.giaban ? '' : 'disabled') +`> </div>
                   </div>
                 </div>
               </div>
@@ -1146,31 +1155,31 @@
     tailaigia(vitri)
   }
 
-  function suagiaban(loaihang, vitri) {
+  function suagiaban(vitri) {
     // kiểm tra giới hạn
     // tính giảm giá
     // cập nhật đơn giá, giảm giá
-    var giaban = vnumber.clear($('#suagiaban-' + loaihang + '-' + vitri).val())
-    var dongia = vnumber.clear($('#suadongia-' + loaihang + '-' + vitri).val())
-    var giamgiatien = vnumber.clear($('#suagiamgiatien-' + loaihang + '-' + vitri).val())
-    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-' + loaihang + '-' + vitri).val())
+    var giaban = vnumber.clear($('#suagiaban-' + vitri).val())
+    var dongia = vnumber.clear($('#suadongia-' + vitri).val())
+    var giamgiatien = vnumber.clear($('#suagiamgiatien-' + vitri).val())
+    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-' + vitri).val())
 
     if (giaban > dongia) {
-      global.hoadon[global.chonhoadon][loaihang][vitri].dongia = giaban
-      $('#dongia-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
+      global.hoadon[global.chonhoadon].hanghoa[vitri].dongia = giaban
+      $('#dongia-' + vitri).val(vnumber.format(giaban))
     }
     else if (giaban < 0) giaban = 0
     else {
       // tính giảm giá, bỏ qua phần trăm, còn lại dồn vào giảm tiền
       var dongia = ((100 - giamgiaphantram) / 100 * dongia).toFixed(2)
       giamgia = dongia - giaban
-      global.hoadon[global.chonhoadon][loaihang][vitri].giamgiatien = giamgia
-      $('#suagiamgiatien-' + loaihang + '-' + vitri).val(vnumber.format(giamgia))
+      global.hoadon[global.chonhoadon].hanghoa[vitri].giamgiatien = giamgia
+      $('#suagiamgiatien-' + vitri).val(vnumber.format(giamgia))
     }
 
-    global.hoadon[global.chonhoadon][loaihang][vitri].giaban = giaban
-    $('#suagiaban-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
-    $('#giaban-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
+    global.hoadon[global.chonhoadon].hanghoa[vitri].giaban = giaban
+    $('#suagiaban-' + vitri).val(vnumber.format(giaban))
+    $('#giaban-' + vitri).val(vnumber.format(giaban))
     tailaigia(vitri)
   }
 

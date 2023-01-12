@@ -17,7 +17,29 @@ else {
   $xtpl->assign('thoigian', date('d/m/Y H:i'));
   $xtpl->assign('idnhanvien', $session['userid']);
   $xtpl->assign('danhsachnhanvien', option($danhsachnhanvien, 'first_name', 'userid'));
-  if (quyennhanvien(311)) $xtpl->parse('main.thanhtoan');
+  if (quyennhanvien(311)) {
+    $xtpl->parse('main.thanhtoan');
+    $xtpl->parse('main.thanhtoan2');
+  }
+  if (quyennhanvien(412)) {
+    $xtpl->parse('main.themkhach');
+    $xtpl->parse('main.themkhach2');
+  }
+  if (quyennhanvien(413)) $xtpl->parse('main.suakhach');
+  if (quyennhanvien(315)) $xtpl->parse('main.giamgia');
+  if (!quyennhanvien(316)) $xtpl->assign('suanguoiban', 'disabled');
+
+  $cauhinh = [
+    'dongia' => quyennhanvien(313),
+    'giaban' => quyennhanvien(314),
+    'giamgia' => quyennhanvien(315),
+  ];
+
+  foreach ($cauhinh as $ten => $giatri) {
+    $xtpl->assign('cauhinh'. $ten, $ten);
+    $xtpl->assign('giatricauhinh'. $ten, intval($giatri));
+  }
+
   $xtpl->parse('main');
   $contents = $xtpl->text();
 }

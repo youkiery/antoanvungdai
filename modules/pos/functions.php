@@ -16,11 +16,12 @@ function quyennhanvien($quyen) {
   return true;
 }
 
-function rutgondienthoai($dienthoai, $quyen) {
+function rutgondienthoai($dienthoai, $quyen = true) {
   // nếu không có quyền điền thoại thì rút gọn
-  if (!quyennhanvien($quyen)) {
+  if (!$quyen) {
     $chieudai = strlen($dienthoai);
-    $dienthoai = substr($dienthoai, 0, 1) . '[..]' . substr($dienthoai, $chieudai - 3);
+    if ($chieudai <= 3) $dienthoai = '[..]';
+    else $dienthoai = substr($dienthoai, 0, 1) . '[..]' . substr($dienthoai, $chieudai - 3);
   }
   return $dienthoai;
 }
