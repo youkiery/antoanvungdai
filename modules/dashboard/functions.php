@@ -25,6 +25,15 @@ function quyennhanvien($quyen) {
   return true;
 }
 
+function rutgondienthoai($dienthoai, $quyen) {
+  // nếu không có quyền điền thoại thì rút gọn
+  if (!quyennhanvien($quyen)) {
+    $chieudai = strlen($dienthoai);
+    $dienthoai = substr($dienthoai, 0, 1) . '[..]' . substr($dienthoai, $chieudai - 3);
+  }
+  return $dienthoai;
+}
+
 function khoangsosanh($tenbien, $batdau, $ketthuc) {
   $thutu = 0;
   $trave = '';

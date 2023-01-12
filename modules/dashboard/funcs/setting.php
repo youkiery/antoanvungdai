@@ -5,7 +5,7 @@ if (!defined('NV_IS_MOD_NEWS')) {
 }
 $page_title = $lang_module['title'];
 
-if (!quyennhanvien(1))  $contents = 'Tài khoản không có quyền xem mục này';
+if (!(quyennhanvien(1) || quyennhanvien(11) || quyennhanvien(12) || quyennhanvien(126)))  $contents = 'Tài khoản không có quyền xem mục này';
 else {
   $xtpl = new XTemplate('main.tpl', PATH);
   if (quyennhanvien(111) || quyennhanvien(11)) {

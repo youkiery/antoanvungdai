@@ -22,7 +22,7 @@ if (!nv_function_exists('sidemenu')) {
     if (quyennhanvien(6) || quyennhanvien(61)) $menu['cash'] = 'cash';
     if (quyennhanvien(5) || quyennhanvien(51)) $menu['statistic'] = 'statistic';
     if (quyennhanvien(121) || quyennhanvien(12)) $menu['setting'] = 'overview';
-    if (quyennhanvien(1) || quyennhanvien(11) || quyennhanvien(12)) $xtpl->parse('main.caidat');
+    if (quyennhanvien(1) || quyennhanvien(11) || quyennhanvien(12) || quyennhanvien(126)) $xtpl->parse('main.caidat');
     if (quyennhanvien(31) || quyennhanvien(311)) $xtpl->parse('main.banhang');
 
     if (!empty($menu[$op])) $m = $menu[$op];

@@ -286,9 +286,11 @@
       </div>
 
       <div class="pw-footer-panel">
+        <!-- BEGIN: thanhtoan -->
         <button class="btn btn-success btn-block btn-lg" style="margin-bottom: 20px;" onclick="thanhtoan()">
           Thanh toán
         </button>
+        <!-- END: thanhtoan -->
         Power by Petcoffee.work 2022 <br>
       </div>
     </div>

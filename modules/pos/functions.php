@@ -7,8 +7,33 @@ define('PATH', NV_ROOTDIR . '/modules/'. $module_file . '/template/user/'. $op);
 define('UPATH', NV_ROOTDIR . '/modules/'. $module_file . '/template/user/');
 require_once NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+function quyennhanvien($quyen) {
+  global $db;
+
+  $userid = checkuserid();
+  $sql = "select * from pos_phanquyen where userid = $userid and quyen = '$quyen'";
+  if (empty($db->fetch($sql))) return false;
+  return true;
+}
+
+function rutgondienthoai($dienthoai, $quyen) {
+  // nếu không có quyền điền thoại thì rút gọn
+  if (!quyennhanvien($quyen)) {
+    $chieudai = strlen($dienthoai);
+    $dienthoai = substr($dienthoai, 0, 1) . '[..]' . substr($dienthoai, $chieudai - 3);
+  }
+  return $dienthoai;
+}
+
+function checkuserid() {
+  global $_SESSION, $db;
+
+  $session = $_SESSION['session'];
+  $sql = "select * from pet_users_session where session = '$session'";
+  $dulieuphien = $db->fetch($sql);
+  if (empty($dulieuphien)) return '0';
+  return $dulieuphien['userid'];
+}
 
 function fillzero($number) {
   $number = strval($number);

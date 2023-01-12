@@ -285,19 +285,6 @@ function danhsachkhach() {
   return $xtpl->text();
 }
 
-function rutgondienthoai($dienthoai, $quyen) {
-  // nếu không có quyền điền thoại thì rút gọn
-  if (!quyennhanvien($quyen)) {
-    // nếu < 6 rút được 1 số đầu cuối
-    // còn lại rút được 2 số đầu cuối
-    $chieudai = strlen($dienthoai);
-    $dienthoai = substr($dienthoai, 0, 1) . '[..]' . substr($dienthoai, $chieudai - 3);
-    // if ($chieudai <= 6) 
-    // else $dienthoai = substr($dienthoai, 0, 2) . '[..]' . substr($dienthoai, $chieudai - 2);
-  }
-  return $dienthoai;
-}
-
 function danhsachhoadon() {
   global $db, $nv_Request;
 
