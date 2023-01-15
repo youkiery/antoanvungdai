@@ -3,8 +3,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Thêm phiếu thu
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Thêm phiếu thu </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
@@ -49,8 +49,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Thêm phiếu chi
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Thêm phiếu chi </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
@@ -95,8 +95,8 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
+        Xóa hóa đơn
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Xóa hóa đơn </h4>
       </div>
       <div class="modal-body">
         <div class="text-center">
@@ -115,8 +115,8 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
+        Xóa hóa đơn
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Xóa hóa đơn </h4>
       </div>
       <div class="modal-body">
         <div class="text-center">
@@ -136,8 +136,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Lọc thu chi
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Lọc thu chi </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
@@ -190,8 +190,8 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
+        Thêm loại thu chi
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Thêm loại thu chi </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">

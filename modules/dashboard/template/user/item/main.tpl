@@ -3,7 +3,9 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
         <div class="text-center">
           Tệp mẫu <button class="btn btn-info" onclick="download('item')"> <span class="fa fa-download"></span>
           </button>
@@ -23,7 +25,7 @@
     <div class="modal-content">
       <div class="modal-header">
         Xóa danh mục
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body text-center">
         <div class="form-group">
@@ -45,7 +47,7 @@
     <div class="modal-content">
       <div class="modal-header">
         Thêm danh mục
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body text-center">
         <div class="form-group row">
@@ -69,7 +71,7 @@
     <div class="modal-content">
       <div class="modal-header">
         Danh sách danh mục
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
         <div class="form-group">
@@ -88,7 +90,9 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
         <div class="text-center">
           Các hàng hóa đang chọn sẽ bị xóa
           <button class="btn btn-danger btn-block" onclick="xacnhanxoahangloat()">
@@ -104,7 +108,9 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
         <div class="text-center">
           Xác nhận xóa hàng hóa
           <button class="btn btn-danger btn-block" onclick="xacnhanxoa()"> Xóa </button>
@@ -118,8 +124,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Tìm kiếm hàng hóa
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Tìm kiếm hàng hóa </h4>
       </div>
       <div class="modal-body">
 
@@ -152,8 +158,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Thêm loại hàng
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Thêm loại hàng </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
@@ -175,8 +181,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Thêm hàng hóa
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Thêm hàng hóa </h4>
       </div>
       <div class="modal-body">
 

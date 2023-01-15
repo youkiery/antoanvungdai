@@ -3,7 +3,9 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
         <div class="text-center">
           Tệp mẫu <button class="btn btn-info" onclick="download('customer')"> <span class="fa fa-download"></span>
           </button>
@@ -22,7 +24,9 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button> 
+      </div>
+      <div class="modal-body">
         <div class="text-center">
           Xác nhận xóa khách hàng
           <button class="btn btn-danger btn-block" onclick="xacnhanxoakhach()"> Xóa </button>
@@ -36,8 +40,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Tìm kiếm khách hàng
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Tìm kiếm khách hàng </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
@@ -90,8 +94,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Khách hàng
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Khách hàng </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">

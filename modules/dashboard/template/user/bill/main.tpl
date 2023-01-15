@@ -3,8 +3,8 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
+        Xóa hóa đơn
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Xóa hóa đơn </h4>
       </div>
       <div class="modal-body">
         <div class="text-center">
@@ -24,11 +24,10 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Tìm hóa đơn
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Tìm hóa đơn </h4>
       </div>
       <div class="modal-body">
-
         <div class="form-group row">
           <div class="col-xs-8"> Mã hóa đơn </div>
           <div class="col-xs-16">

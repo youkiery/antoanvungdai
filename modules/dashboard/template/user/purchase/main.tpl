@@ -9,7 +9,9 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
         <div class="text-center">
           Xác nhận xóa phiếu nhập
           <button class="btn btn-danger btn-block" onclick="xacnhanxoanhap()"> Xóa </button>
@@ -23,7 +25,9 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
         <div class="text-center">
           Xác nhận thanh toán phiếu nhập
           <button class="btn btn-success btn-block" onclick="xacnhanthanhtoan()"> Xác nhận </button>
@@ -37,8 +41,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        In tem mã
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> In tem mã </h4>
       </div>
       <div class="modal-body">
         <div id="inma-danhsach" class="form-group" style="max-height: 500px; overflow-y: scroll;"></div>
@@ -54,8 +58,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Tìm kiếm hàng hóa
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Tìm kiếm hàng hóa </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
@@ -105,8 +109,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Thêm hàng hóa
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Thêm hàng hóa </h4>
       </div>
       <div class="modal-body">
 
@@ -169,8 +173,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Nguồn cung
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Nguồn cung </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
@@ -204,8 +208,8 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
+        Nhập hàng hóa
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Nhập hàng hóa </h4>
       </div>
 
       <div class="modal-body">

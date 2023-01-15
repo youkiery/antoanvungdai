@@ -18,8 +18,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Trả hàng
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Trả hàng </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
@@ -39,8 +39,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Khách hàng
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Khách hàng </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
@@ -87,8 +87,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Thu nợ khách
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Thu nợ khách </h4>
       </div>
       <div class="modal-body">
         <div class="form-group">

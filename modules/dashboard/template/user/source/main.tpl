@@ -3,7 +3,9 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
         <div class="text-center">
           Xác nhận xóa nguồn cung
           <button class="btn btn-danger btn-block" onclick="xacnhanxoanguon()"> Xóa </button>
@@ -17,8 +19,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Tìm kiếm nguồn cung
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Tìm kiếm nguồn cung </h4>
       </div>
       <div class="modal-body">
 
@@ -42,8 +44,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Nguồn cung
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Nguồn cung </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
