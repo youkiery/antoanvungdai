@@ -18,7 +18,7 @@ if (!nv_function_exists('sidemenu')) {
     if (quyennhanvien(33) || quyennhanvien(331)) $menu['purchase'] = 'purchase';
     if (quyennhanvien(45) || quyennhanvien(451)) $menu['source'] = 'source';
     if (quyennhanvien(41) || quyennhanvien(411)) $menu['customer'] = 'customer';
-    if (quyennhanvien(32) || quyennhanvien(321)) $menu['bill'] = 'bill';
+    if (quyennhanvien(321)) $menu['bill'] = 'bill';
     if (quyennhanvien(6) || quyennhanvien(61)) $menu['cash'] = 'cash';
     if (quyennhanvien(5) || quyennhanvien(51)) $menu['statistic'] = 'statistic';
     if (quyennhanvien(121) || quyennhanvien(12)) $menu['setting'] = 'overview';

@@ -73,10 +73,13 @@
   <button class="btn btn-info"> Sao chép </button>
   <!-- END: saochep -->
   <!-- BEGIN: inhoadon -->
-  <button class="btn btn-info" onclick="inhoadon({id})"> In hóa đơn </button>
+  <button class="btn btn-info" onclick="inhoadon({id})"> <span class="fa fa-print"></span> In hóa đơn </button>
   <!-- END: inhoadon -->
+  <!-- BEGIN: suahoadon -->
+  <button class="btn btn-info"> <span class="fa fa-pencil"></span> Sửa hóa đơn </button>
+  <!-- END: suahoadon -->
   <!-- BEGIN: xoahoadon -->
-  <button class="btn btn-danger" onclick="xoahoadon({id})"> Xóa hóa đơn </button>
+  <button class="btn btn-danger" onclick="xoahoadon({id})"> <span class="fa fa-close"></span> Xóa hóa đơn </button>
   <!-- END: xoahoadon -->
 </div>
 <!-- END: main -->

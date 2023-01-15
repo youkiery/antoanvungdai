@@ -17,8 +17,10 @@ else {
   $xtpl->parse('main.danhsach2');
 
   if (quyennhanvien(212)) $xtpl->parse('main.them');
+  if (quyennhanvien(214)) $xtpl->parse('main.xoa');
   if (quyennhanvien(216)) $xtpl->parse('main.import');
   if (quyennhanvien(217)) $xtpl->parse('main.export');
+  if (quyennhanvien(221)) $xtpl->parse('main.danhmuc');
 
   $xtpl->parse('main');
   $contents = $xtpl->text();

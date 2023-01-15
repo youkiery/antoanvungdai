@@ -18,6 +18,88 @@
   </div>
 </div>
 
+<div class="modal fade" id="modal-xoa-danh-muc" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        Xóa danh mục
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+      </div>
+      <div class="modal-body text-center">
+        <div class="form-group">
+          Chuyển hàng hóa sang danh mục
+
+          <select type="text" class="form-control" id="danh-muc-den"></select>
+        </div>
+
+        <button class="btn btn-danger btn-block" onclick="xacnhanxoadanhmuc()">
+          Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-them-danh-muc" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        Thêm danh mục
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+      </div>
+      <div class="modal-body text-center">
+        <div class="form-group row">
+          <div class="col-xs-6">
+            Tên danh mục
+          </div>
+          <div class="col-xs-18">
+            <input type="text" class="form-control" id="ten-danh-muc">
+          </div>
+        </div>
+        <button class="btn btn-success btn-block" onclick="xacnhanthemdanhmuc()">
+          Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-danh-muc" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        Danh sách danh mục
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <button class="btn btn-success" onclick="themdanhmuc()">
+            <span class="fa fa-plus"></span> Thêm
+          </button>
+        </div>
+
+        <div id="danh-sach-danh-muc"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-xoa-hang-loat" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <div class="text-center">
+          Các hàng hóa đang chọn sẽ bị xóa
+          <button class="btn btn-danger btn-block" onclick="xacnhanxoahangloat()">
+            Xác nhận
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="modal-xoa-hang" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -101,7 +183,7 @@
         <div class="form-group row">
           <div class="col-xs-8"> Mã Hàng </div>
           <div class="col-xs-16">
-            <input autocomplete="off" type="text" class="modal-them form-control" id="them-ma-hang" placeholder="Mã hàng tự động" disabled>
+            <input autocomplete="off" type="text" class="form-control" id="them-ma-hang" placeholder="Mã hàng tự động" disabled>
           </div>
         </div>
         <div class="form-group row">
@@ -166,6 +248,9 @@
   </div>
 
   <div class="pw-card">
+      <!-- BEGIN: danhmuc -->
+      <button class="btn btn-info" onclick="danhmuc()"> <span class="fa fa-folder-open"></span> Danh mục </button>
+      <!-- END: danhmuc -->
     <div class="pw-card-header">
       <!-- BEGIN: import -->
       <button class="btn btn-info" onclick="importhang()"> <span class="fa fa-file"></span> Import </button>
@@ -179,6 +264,9 @@
       <!-- BEGIN: them -->
       <button class="btn btn-success" onclick="themhang()"> <span class="fa fa-plus"></span> Thêm hàng </button>
       <!-- END: them -->
+      <!-- BEGIN: xoa -->
+      <button class="btn btn-danger" id="congcu" onclick="xoahangloat()" style="display: none;"> <span class="fa fa-close"></span> Xóa đã chọn </button>
+      <!-- END: xoa -->
     </div>
     <!-- BEGIN: danhsach -->
     <div class="pw-card-content" id="content">
@@ -204,7 +292,8 @@
       page: 1,
       tukhoa: '',
       loaihang: '',
-    }
+    },
+    khoitaodanhmuc: false
   }
 
   $(document).ready(() => {
@@ -284,6 +373,113 @@
       $('#them-loai-hang').val(resp.id)
       $('#modal-them-loai-hang').modal('hide')
     }, (e) => { })
+  }
+
+  function themdanhmuc() {
+    global.id = 0
+    $('#ten-danh-muc').val('')
+    $('#modal-them-danh-muc').modal('show')
+  }
+
+  function suadanhmuc(id, ten) {
+    global.id = id
+    $('#ten-danh-muc').val(ten)
+    $('#modal-them-danh-muc').modal('show')
+  }
+
+  function xoadanhmuc(id) {
+    global.id = id
+    $('#modal-xoa-danh-muc').modal('show')
+  }
+
+  function xacnhanthemdanhmuc() {
+    tendanhmuc = $('#ten-danh-muc').val()
+    if (!tendanhmuc.length) vhttp.notify('Hãy điền tên danh mục')
+    else {
+      vhttp.post('/dashboard/api/', {
+        action: 'themdanhmuc',
+        tendanhmuc: tendanhmuc,
+        id: global.id
+      }).then((resp) => {
+        $('#danh-sach-danh-muc').html(resp.html)
+        $('#danh-muc-den').html(resp.option)
+        $('#modal-them-danh-muc').modal('hide')
+      }, (e) => { })
+    }
+  }
+
+  function xacnhanxoadanhmuc() {
+    danhmucden = $('#danh-muc-den').val()
+    if (global.id == danhmucden) vhttp.notify('Xin hãy chọn danh mục khác')
+    else {
+      vhttp.post('/dashboard/api/', {
+        action: 'xoadanhmuc',
+        id: global.id,
+        danhmucden: danhmucden
+      }).then((resp) => {
+        $('#danh-sach-danh-muc').html(resp.html)
+        $('#danh-muc-den').html(resp.option)
+        $('#modal-xoa-danh-muc').modal('hide')
+      }, (e) => { })
+    }
+  }
+
+  function danhmuc() {
+    if (global.khoitaodanhmuc) $('#modal-danh-muc').modal('show')
+    else { 
+      vhttp.post('/dashboard/api/', {
+        action: 'khoitaodanhmuc',
+      }).then((resp) => {
+        global.khoitaodanhmuc = true
+        $('#danh-sach-danh-muc').html(resp.html)
+        $('#danh-muc-den').html(resp.option)
+        $('#modal-danh-muc').modal('show')
+      }, (e) => { })
+    }
+  }
+
+  function xoahangloat() {
+    $('#modal-xoa-hang-loat').modal('show')
+  }
+
+  function xacnhanxoahangloat() {
+    danhsach = []
+    $('.checkbox:checked').each((index, item) => {
+      danhsach.push(item.getAttribute('ref'))
+    })
+    vhttp.post('/dashboard/api/', {
+      action: 'xoahangloat',
+      danhsach: danhsach
+    }).then((resp) => {
+      $('#content').html(resp.html)
+      $('#congcu').hide()
+      $('#modal-xoa-hang-loat').modal('hide')
+    }, (e) => { })
+  }
+
+  function kiemtra(e) {
+    if (e.currentTarget.getAttribute('id') == 'all') $('.checkbox').prop('checked', $('#all').prop('checked'))
+    else $('#all').prop('checked', false)
+    if ($('.checkbox:checked').length) $('#congcu').show()
+    else $('#congcu').hide()
+  }
+
+  function chitiet(id) {
+    var load = $('#tr-' + id)
+    if (load.attr('load') == '0') {
+      vhttp.post('/dashboard/api/', {
+        action: 'chitiethang',
+        id: id
+      }).then((resp) => {
+        load.attr('load', '1')
+        $('#td-' + id).html(resp.html)
+      }, (e) => { })
+    }
+    if (load.css('display') == 'none') {
+      $('.chitiet:visible').hide().delay(200)
+      load.fadeToggle()
+    }
+    else load.fadeToggle()
   }
 
   function themhang() {

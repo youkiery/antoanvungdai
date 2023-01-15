@@ -177,17 +177,21 @@
   }
 
   function chitiet(id) {
-    if ($('#tr-' + id).attr('load') == '0') {
+    var load = $('#tr-' + id)
+    if (load.attr('load') == '0') {
       vhttp.post('/dashboard/api/', {
         action: 'chitiethoadon',
         id: id
       }).then((resp) => {
-        $('#tr-' + id).attr('load', '1')
+        load.attr('load', '1')
         $('#td-' + id).html(resp.html)
       }, (e) => { })
     }
-    $('.chitiet').hide()
-    $('#tr-' + id).show()
+    if (load.css('display') == 'none') {
+      $('.chitiet:visible').hide().delay(200)
+      load.fadeToggle()
+    }
+    else load.fadeToggle()
   }
 
   function inhoadon(id) {

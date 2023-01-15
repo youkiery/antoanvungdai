@@ -355,6 +355,65 @@ function download() {
 }
 
 // item, hanghoa
+
+function khoitaodanhmuc() {
+  global $db, $resp, $nv_Request;
+
+  $resp['status'] = 1;
+  $resp['html'] = danhsachdanhmuchanghoa();
+  $resp['option'] = danhmucden();
+}
+
+function xoadanhmuc() {
+  global $db, $resp, $nv_Request;
+
+  $id = $nv_Request->get_string('id', 'post');
+  $danhmucden = $nv_Request->get_string('danhmucden', 'post');
+  $sql = "update pos_hanghoa set loaihang = $danhmucden where loaihang = $id";
+  $db->query($sql);
+  $sql = "delete from pos_phanloai where id = $id";
+  $db->query($sql);
+
+  $resp['status'] = 1;
+  $resp['html'] = danhsachdanhmuchanghoa();
+  $resp['option'] = danhmucden();
+  $resp['messenger'] = 'Đã xóa danh mục';
+}
+
+function themdanhmuc() {
+  global $db, $resp, $nv_Request;
+
+  $id = $nv_Request->get_string('id', 'post');
+  $tendanhmuc = $nv_Request->get_string('tendanhmuc', 'post');
+
+  if (!empty($id)) {
+    $sql = "select * from pos_phanloai where module = 'hanghoa' and kichhoat = 1 and ten = '$tendanhmuc' and id <> $id";
+    if (empty($db->fetch($sql))) {
+      $sql = "update pos_phanloai set ten = '$tendanhmuc' where id = $id";
+      $db->query($sql);
+  
+      $resp['status'] = 1;
+      $resp['html'] = danhsachdanhmuchanghoa();
+      $resp['option'] = danhmucden();
+      $resp['messenger'] = 'Đã sửa tên danh mục';
+    }
+    else $resp['messenger'] = 'Tên danh mục đã tồn tại';
+  }
+  else {
+    $sql = "select * from pos_phanloai where module = 'hanghoa' and kichhoat = 1 and ten = '$tendanhmuc'";
+    if (empty($db->fetch($sql))) {
+      $sql = "insert into pos_phanloai (ten, module, kichhoat, thutu) values('$tendanhmuc', 'hanghoa', 1, 0)";
+      $db->query($sql);
+  
+      $resp['status'] = 1;
+      $resp['html'] = danhsachdanhmuchanghoa();
+      $resp['option'] = danhmucden();
+      $resp['messenger'] = 'Đã thêm danh mục';
+    }
+    else $resp['messenger'] = 'Phân loại hàng đã tồn tại';
+  }
+}
+
 function xoahoadon() {
   global $db, $nv_Request, $resp;
 
@@ -374,10 +433,10 @@ function xoahoadon() {
   $sql = "delete from pos_chitiethoadon where idhoadon = $id";
   $db->query($sql);
   // xóa chi tiết hóa đơn
-  $sql = "select * from pos_machitietthuchi where mahoadon = $hoadon[mahoadon]";
+  $sql = "select * from pos_machitietthuchi where mahoadon = '$hoadon[mahoadon]'";
   $chitietthuchi = $db->fetch($sql);
 
-  $sql = "delete from pos_machitietthuchi where mahoadon = $hoadon[mahoadon]";
+  $sql = "delete from pos_machitietthuchi where mahoadon = '$hoadon[mahoadon]'";
   $db->query($sql);
 
   // $sql = "delete from pos_thuchi where id = $chitietthuchi[idthuchi]";
@@ -574,8 +633,9 @@ function chitiethoadon() {
   $xtpl->assign('datra', number_format($hoadon['thanhtoan']));
   $xtpl->assign('ghichu', '');
 
-  if (quyennhanvien(323)) $xtpl->parse('main.xoahoadon');
-  if (quyennhanvien(326)) $xtpl->parse('main.inhoadon');
+  if (quyennhanvien(323)) $xtpl->parse('main.suahoadon');
+  if (quyennhanvien(324)) $xtpl->parse('main.xoahoadon');
+  if (quyennhanvien(327)) $xtpl->parse('main.inhoadon');
 
   $xtpl->parse('main');
 
@@ -634,6 +694,47 @@ function chitietnhaphang() {
 
   $resp['status'] = 1;
   $resp['html'] = $xtpl->text();
+}
+
+function chitiethang() {
+  global $db, $resp, $nv_Request;
+
+  $id = $nv_Request->get_int('id', 'post');
+  $xtpl = new XTemplate('chitiet.tpl', UPATH . '/item/');
+
+  $sql = "select * from pos_hanghoa where id = $id";
+  $hanghoa = $db->fetch($sql);
+
+  $xtpl->assign('id', $id);
+  $hinhanh = explode(',', $row['hinhanh']);
+  if (count($hinhanh) && !empty($hinhanh[0])) $hinhanh = $hinhanh[0];
+  else $hinhanh = '/assets/images/noimage.png';
+  $xtpl->assign('hinhanh', $hinhanh);
+
+  $xtpl->assign('mahang', $hanghoa['mahang']);
+  $xtpl->assign('tenhang', $hanghoa['tenhang'] . (!empty($hanghoa['donvi']) ? " ($hanghoa[donvi])" : ''));
+  $xtpl->assign('soluong', number_format($hanghoa['soluong']));
+  $xtpl->assign('gianhap', number_format($chitiet['gianhap']));
+  if (quyennhanvien(215)) $xtpl->parse('main.gianhap');
+  if (quyennhanvien(213)) $xtpl->parse('main.sua');
+  if (quyennhanvien(214)) $xtpl->parse('main.xoa');
+  $xtpl->parse('main.row');
+  $xtpl->parse('main');
+
+  $resp['status'] = 1;
+  $resp['html'] = $xtpl->text();
+}
+
+function xoahangloat() {
+  global $db, $resp, $nv_Request;
+
+  $danhsach = $nv_Request->get_array('danhsach', 'post');
+
+  $sql = "update pos_hanghoa set kichhoat = 0 where id in (". implode(', ', $danhsach) .")";
+  $db->query($sql);
+
+  $resp['status'] = 1;
+  $resp['html'] = danhsachhang();
 }
 
 function thongtinhang() {
@@ -1161,6 +1262,12 @@ function chitietnhanvien() {
         'Giá Nhập',
         'Import',
         'Export',
+      ],
+      'Danh mục' => [
+        'Xem',
+        'Thêm',
+        'Sửa',
+        'Xóa',
       ]
     ],
     'Giao Dịch' => [
@@ -1177,6 +1284,7 @@ function chitietnhanvien() {
       'Hóa Đơn' => [
         'Xem',
         'Thêm',
+        'Sửa',
         'Xóa',
         'Import',
         'Export',
@@ -1185,7 +1293,7 @@ function chitietnhanvien() {
       'Nhập Hàng' => [
         'Xem',
         'Thêm',
-        'Cập Nhật',
+        'Sửa',
         'Xóa',
         'Xác nhận Hoàn Thành',
         'Export',
@@ -1206,16 +1314,16 @@ function chitietnhanvien() {
         'Xem',
         'Thêm',
         'Xóa',
-        'Cập Nhật',
+        'Sửa',
       ],
       'Thanh Toán Khách' => [
         'Thêm',
         'Xóa',
-        'Cập Nhật',
+        'Sửa',
       ],
       'Tích Điểm' => [
         'Xem',
-        'Cập Nhật',
+        'Sửa',
       ],
       'Nhà Cung Cấp' => [
         'Xem',
@@ -1235,7 +1343,7 @@ function chitietnhanvien() {
       'Thanh Toán Nhà Cung Cấp' => [
         'Thêm',
         'Xóa',
-        'Cập Nhật',
+        'Sửa',
       ]
     ],
     'Báo Cáo' => [

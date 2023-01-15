@@ -1,4 +1,12 @@
 /* Các tùy chỉnh CSS của giao diện nên để vào đây */
+@media screen and (max-width: 768px) {
+  .table-bordered {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
   #printable {
     display: none;
   }
@@ -130,7 +138,7 @@
     text-align: right;
   }
 
-  pw-giamgia {
+  .pw-giamgia {
     color: red;
     font-weight: bold;
   }
@@ -142,7 +150,6 @@
     padding: 5px;
     background: #fff;
     line-height: 18px;
-    width: calc(100% - 20px);
     display: inline-block;
     position: relative;
     box-shadow: 3px 3px 5px #d3d3d3;
@@ -150,6 +157,14 @@
     border-style: solid;
     border-width: 1px;
     margin-bottom: 10px;
+  }
+
+  .pw-card {
+    width: 100%;
+  }
+
+  .pw-discount-panel {
+    width: calc(100% - 20px);
   }
 
   .pw-card div {

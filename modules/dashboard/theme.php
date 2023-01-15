@@ -34,16 +34,10 @@ function danhsachhang() {
   $sql = "select * from pos_hanghoa where kichhoat = 1 $query order by id desc limit $gioihan offset ". ($filter['page'] - 1) * $gioihan;
   $list = $db->all($sql);
 
-  $quyensua = quyennhanvien(213);
-  $quyenxoa = quyennhanvien(214);
   $quyengia = quyennhanvien(215);
   if ($quyengia) $xtpl->parse('main.gianhap');
 
   foreach ($list as $row) {
-    $hinhanh = explode(',', $row['hinhanh']);
-    if (count($hinhanh) && !empty($hinhanh[0])) $hinhanh = $hinhanh[0];
-    else $hinhanh = '/assets/images/noimage.png';
-    $xtpl->assign('hinhanh', $hinhanh);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('mahang', $row['mahang']);
     $xtpl->assign('tenhang', $row['tenhang'] . (strlen($row['donvi']) ? " ($row[donvi])" : ''));
@@ -51,8 +45,6 @@ function danhsachhang() {
     $xtpl->assign('gianhap', number_format($row['gianhap']));
     $xtpl->assign('giaban', number_format($row['giaban']));
     $xtpl->assign('soluong', number_format($row['soluong']));
-    if ($quyensua) $xtpl->parse('main.row.sua');
-    if ($quyenxoa) $xtpl->parse('main.row.xoa');
     if ($quyengia) $xtpl->parse('main.row.gianhap2');
     $xtpl->parse('main.row');
   }
@@ -453,6 +445,39 @@ function danhsachnhanvien() {
   }
   if (empty($thutu)) $xtpl->parse('main.khongco');
   $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function danhsachdanhmuchanghoa() {
+  global $db, $nv_Request;
+
+  $xtpl = new XTemplate('danhsachdanhmuc.tpl', UPATH . '/item/');
+  $sql = "select * from pos_phanloai where module = 'hanghoa' and kichhoat = 1 order by ten";
+  $danhsach = $db->all($sql);
+  $thutu = 0;
+
+  foreach ($danhsach as $phanloai) {
+    $xtpl->assign('thutu', ++$thutu);
+    $xtpl->assign('id', $phanloai['id']);
+    $xtpl->assign('danhmuc', $phanloai['ten']);
+    $xtpl->parse('main.row');
+  }
+  if (empty($thutu)) $xtpl->parse('main.khongco');
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function danhmucden() {
+  global $db, $nv_Request;
+  $xtpl = new XTemplate('option.tpl', UPATH);
+  $sql = "select * from pos_phanloai where module = 'hanghoa' and kichhoat = 1 order by ten";
+  $danhsach = $db->all($sql);
+
+  foreach ($danhsach as $phanloai) {
+    $xtpl->assign('name', $phanloai['ten']);
+    $xtpl->assign('value', $phanloai['id']);
+    $xtpl->parse('main');
+  }
   return $xtpl->text();
 }
 

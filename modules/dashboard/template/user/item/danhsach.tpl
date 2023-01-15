@@ -2,7 +2,7 @@
 <table class="table table-bordered"> 
   <thead>
     <tr>
-      <th style="width: 64px;"> Hình ảnh </th>
+      <th> <input type="checkbox" id="all" onchange="kiemtra(event)"> </th>
       <th> Mã hàng </th>
       <th> Tên hàng </th>
       <!-- BEGIN: gianhap -->
@@ -10,32 +10,22 @@
       <!-- END: gianhap -->
       <th> Giá bán </th>
       <th> Số lượng </th>
-      <th>  </th>
     </tr>
   </thead>
   <!-- BEGIN: row -->
   <tbody>
     <tr>
-      <td> <div class="pw-thumb-box"> <img class="pw-thumb" src="{hinhanh}"> </div> </th>
-      <td> {mahang} </td>
-      <td> {tenhang} </td>
+      <td> <input type="checkbox" class="checkbox" ref="{id}" onchange="kiemtra(event)"> </td>
+      <td onclick="chitiet({id})"> {mahang} </td>
+      <td onclick="chitiet({id})"> {tenhang} </td>
       <!-- BEGIN: gianhap2 -->
-      <td> {gianhap} </td>
+      <td onclick="chitiet({id})"> {gianhap} </td>
       <!-- END: gianhap2 -->
-      <td> {giaban} </td>
-      <td> {soluong} </td>
-      <td> 
-        <!-- BEGIN: sua -->
-        <button class="btn btn-info btn-xs" onclick="suahang({id})">
-          sửa
-        </button>
-        <!-- END: sua -->
-        <!-- BEGIN: xoa -->
-        <button class="btn btn-danger btn-xs" onclick="xoahang({id})">
-          xóa
-        </button>
-        <!-- END: xoa -->
-      </td>
+      <td onclick="chitiet({id})"> {giaban} </td>
+      <td onclick="chitiet({id})"> {soluong} </td>
+    </tr>
+    <tr class="chitiet" id="tr-{id}" style="display: none;" load="0">
+      <td colspan="7" id="td-{id}"></td>
     </tr>
   </tbody>
   <!-- END: row -->
