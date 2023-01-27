@@ -13,12 +13,16 @@
       <td> {thutu} </td>
       <td> {danhmuc} </td>
       <td> 
+        <!-- BEGIN: sua -->
         <button class="btn btn-info btn-xs" onclick="suadanhmuc({id}, '{danhmuc}')">
           <span class="fa fa-pencil"></span> Sửa
         </button>
+        <!-- END: sua -->
+        <!-- BEGIN: xoa -->
         <button class="btn btn-danger btn-xs" onclick="xoadanhmuc({id})">
           <span class="fa fa-close"></span> Xóa
         </button>
+        <!-- END: xoa -->
       </td>
     </tr>
   </tbody>

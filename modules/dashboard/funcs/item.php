@@ -21,6 +21,7 @@ else {
   if (quyennhanvien(216)) $xtpl->parse('main.import');
   if (quyennhanvien(217)) $xtpl->parse('main.export');
   if (quyennhanvien(221)) $xtpl->parse('main.danhmuc');
+  if (quyennhanvien(222)) $xtpl->parse('main.themdanhmuc');
 
   $xtpl->parse('main');
   $contents = $xtpl->text();

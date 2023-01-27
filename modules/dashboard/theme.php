@@ -456,10 +456,14 @@ function danhsachdanhmuchanghoa() {
   $danhsach = $db->all($sql);
   $thutu = 0;
 
+  $quyensua = quyennhanvien(223);
+  $quyenxoa = quyennhanvien(224);
   foreach ($danhsach as $phanloai) {
     $xtpl->assign('thutu', ++$thutu);
     $xtpl->assign('id', $phanloai['id']);
     $xtpl->assign('danhmuc', $phanloai['ten']);
+    if ($quyensua) $xtpl->parse('main.row.sua');
+    if ($quyenxoa) $xtpl->parse('main.row.xoa');
     $xtpl->parse('main.row');
   }
   if (empty($thutu)) $xtpl->parse('main.khongco');

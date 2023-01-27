@@ -74,11 +74,13 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
+        <!-- BEGIN: themdanhmuc -->
         <div class="form-group">
           <button class="btn btn-success" onclick="themdanhmuc()">
             <span class="fa fa-plus"></span> Thêm
           </button>
         </div>
+        <!-- END: themdanhmuc -->
 
         <div id="danh-sach-danh-muc"> </div>
       </div>

@@ -686,7 +686,7 @@ function chitietnhaphang() {
   $arr = [0 => 'Lưu tạm', 'Đã hoàn thành'];
   $xtpl->assign('trangthai', $arr[$nhaphang['trangthai']]);
   
-  if (quyennhanvien(333) && !$nhaphang['trangthai']) $xtpl->parse('main.update');
+  if (quyennhanvien(333)) $xtpl->parse('main.update');
   if (quyennhanvien(337) && !$nhaphang['thanhtoan']) $xtpl->parse('main.thanhtoan');
   if (quyennhanvien(334)) $xtpl->parse('main.xoa');
   if (quyennhanvien(336)) $xtpl->parse('main.export');

@@ -280,11 +280,11 @@ function nv_site_theme($contents, $full = true)
     ];
     $html_js[] = [
         'ext' => 1,
-        'content' => 'https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js'
+        'content' => NV_STATIC_URL . 'themes/' . $global_config['module_theme'] . '/js/firebase-app.js'
     ];
     $html_js[] = [
         'ext' => 1,
-        'content' => 'https://www.gstatic.com/firebasejs/5.7.0/firebase-storage.js'
+        'content' => NV_STATIC_URL . 'themes/' . $global_config['module_theme'] . '/js/firebase-storage.js'
     ];
 
     foreach ($html_js as $js) {
