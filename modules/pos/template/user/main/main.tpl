@@ -12,6 +12,52 @@
   .input-group {
     width: 100%;
   }
+
+  .pw-menu-panel {
+    position: absolute;
+    width: 200px;
+    display: none;
+    background: #fff;
+    z-index: 10;
+    right: 0px;
+  }
+
+  .pw-menu-panel-item {
+    border-bottom: 1px solid gray;
+    text-align: left;
+    display: block;
+    padding: 5px;
+  }
+
+  .pw-menu-panel-item:last-child {
+    border-bottom: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    .pw-left-panel, .pw-right-panel {
+      float: none;
+      padding: 5px;
+      margin-bottom: 5px;
+      width: calc(100%);
+      height: calc(80vh - 70px);
+    }
+
+    .pw-left-panel.half {
+      height: calc(40vh - 35px);
+    }
+
+    .pw-footer-panel {
+      position: unset;
+    }
+  }
+
+  @media screen and (max-width: 992px) {
+    .pw-discount-panel {
+      top: 35px;
+      left: 5px;
+    }
+  }
+
 </style>
 
 <div class="modal fade" id="modal-tra-hang" role="dialog">
@@ -46,7 +92,8 @@
         <div class="form-group row">
           <div class="col-xs-8"> Mã khách </div>
           <div class="col-xs-16">
-            <input autocomplete="off" type="text" class="form-control" id="khach-ma" placeholder="Mã khách hàng tự động" disabled>
+            <input autocomplete="off" type="text" class="form-control" id="khach-ma" placeholder="Mã khách hàng tự động"
+              disabled>
           </div>
         </div>
         <div class="form-group row">
@@ -148,36 +195,50 @@
 <div class="nonprintable">
   <div class="pw-navbar">
     <div class="row">
-      <div class="col-xs-8">
+      <div class="col-xs-24 col-sm-8 form-group">
         <div class="input-group">
-          <div class="input-group-addon"> <span class="fa fa-search"></span> </div>
           <div class="pw-suggest-group">
             <input autocomplete="off" type="text" class="form-control" id="tim-hang" placeholder="Tìm kiếm mặt hàng"
               onfocus="global.loaihang = (global.hoadon[global.chonhoadon].trangthaitrahang ? 'hangtra' : 'hanghoa')">
             <div class="pw-suggest-list" id="goi-y-tim-hang"> </div>
           </div>
+          <div class="input-group-addon"> <span class="fa fa-search"></span> </div>
         </div>
       </div>
-      <div class="col-xs-12" id="danhsachhoadon"></div>
-      <div class="col-xs-4 pw-head-menu">
-        <button class="btn btn-info" onclick="thuno()"> <span class="fa fa-money"></span> </button>
-        <button class="btn btn-info" onclick="tranhanh()"> <span class="fa fa-share"></span> </button>
-        <!-- <a href="#" data-toggle="popover" role="button"  data-placement="left" data-trigger="focus" data-html="true" data-content="<div style='border-bottom: 1px solid lightgray; cursor: pointer; padding: 10px;' onclick='tranhanh()'> Trả nhanh </div><div style='padding: 10px; cursor: pointer;' onclick='chonhoadon()'> Chọn hóa đơn </div>"> <span class="fa fa-share btn btn-info"></span> </a> -->
-        <a href="/dashboard" role="button" class="btn btn-info"> <span class="fa fa-desktop"></span></a>
+      <div class="col-xs-20 col-sm-12" id="danhsachhoadon" style="margin-top: 1px;"></div>
+      <div class="col-xs-4 col-sm-4 pw-head-menu">
+        <div style="position: relative;">
+          <button class="btn btn-info" onclick="menu()" style="padding: 5px 15px;"> <span class="fa fa-ellipsis-v"></span> </button>
+          <div class="pw-menu-panel" id="menu" style="display: none;"> 
+            <div class="pw-menu-panel-item" onclick="thuno()">
+              <span class="fa fa-money"></span>
+              Thu toa nợ 
+            </div>
+            <div class="pw-menu-panel-item" onclick="tranhanh()">
+              <span class="fa fa-share"></span>
+              Trả hàng
+            </div>
+            <a href="/dashboard" role="button" class="pw-menu-panel-item">
+              <span class="fa fa-desktop"></span>
+              Trang quản lý
+            </a>
+          </div>
+        </div>
+        
       </div>
     </div>
   </div>
   <div class="pw-content">
-    <div class="pw-left-panel" id="danh-sach-hoa-don"></div>
+    <div class="pw-left-panel half" id="danh-sach-hoa-don"></div>
     <div class="pw-left-panel" id="danh-sach-tra-hang">
       <div class="pw-half-height" id="danh-sach-hang-tra"> </div>
       <div class="input-group pw-navbar">
-        <div class="input-group-addon"> <span class="fa fa-search"></span> </div>
         <div class="pw-suggest-group">
           <input autocomplete="off" type="text" class="form-control" id="tim-tra-hang" placeholder="Tìm kiếm mặt hàng"
             onfocus="global.loaihang = 'hanghoa'">
           <div class="pw-suggest-list" id="goi-y-tim-tra-hang"> </div>
         </div>
+        <div class="input-group-addon"> <span class="fa fa-search"></span> </div>
       </div>
       <div class="pw-half-height" id="danh-sach-hang-lay"> </div>
     </div>
@@ -323,6 +384,7 @@
 
   $(document).ready(() => {
     $('[data-toggle="popover"]').popover();
+
     // gợi ý tìm hàng hóa
     vremind.install('#tim-hang', '#goi-y-tim-hang', (key) => {
       return new Promise(resolve => {
@@ -431,6 +493,8 @@
   })
 
   function tranhanh() {
+    $('.pw-menu-panel').hide()
+    $('#pw-dismiss').hide()
     global.hoadon.push({
       nguoiban: global.idnhanvien,
       soluong: 0,
@@ -475,7 +539,7 @@
         // thanh toán xong xóa hóa đơn hiện tại        
         global.hoadon[global.chonhoadon].hanghoa = []
         global.hoadon[global.chonhoadon].dathanhtoan = true
-        
+
         vhttp.post('/pos/api/', {
           action: 'timkhach',
           tukhoa: ''
@@ -489,7 +553,7 @@
                 `+ khachhang.makhach + `
               </div>`
           })
-        }, (e) => {})
+        }, (e) => { })
 
         xoahoadon(global.chonhoadon)
         setTimeout(() => {
@@ -550,6 +614,8 @@
   }
 
   function thuno() {
+    $('.pw-menu-panel').hide()
+    $('#pw-dismiss').hide()
     $('#thuno-noidung').hide()
     $('#thuno-thongtinkhachhang').hide()
     $('#thuno-tienthua').text(0)
@@ -837,13 +903,13 @@
     var html = ``
     global.hoadon.forEach((hd, vitrichay) => {
       html += `
-      <button class="pw-bill-tab btn `+ (global.chonhoadon == vitrichay ? 'btn-info' : (hd.trangthaitrahang ? 'btn-warning': 'btn-default')) + `" onclick="chonhoadon(` + vitrichay + `)">
+      <button class="pw-bill-tab btn `+ (global.chonhoadon == vitrichay ? 'btn-info' : (hd.trangthaitrahang ? 'btn-warning' : 'btn-default')) + `" onclick="chonhoadon(` + vitrichay + `)">
         <span class="pw-bill-close" onclick="xoahoadon(`+ vitrichay + `)"> x </span>
         `+ (vitrichay + 1) + `
       </button>`
     })
     html += `
-    <button class="btn btn-info" onclick="themhoadon()">
+    <button class="btn btn-default" onclick="themhoadon()" style="margin-bottom: 3px;">
       +
     </button>`
     $('#danhsachhoadon').html(html)
@@ -853,7 +919,7 @@
 
   function xoahoadon(vitri) {
     setTimeout(() => {
-    // if (!((!global.hoadon[global.chonhoadon].trangthaitrahang && global.hoadon[global.chonhoadon].hanghoa.length) || (global.hoadon[global.chonhoadon].trangthaitrahang && global.hoadon[global.chonhoadon].hangtra.length))) 
+      // if (!((!global.hoadon[global.chonhoadon].trangthaitrahang && global.hoadon[global.chonhoadon].hanghoa.length) || (global.hoadon[global.chonhoadon].trangthaitrahang && global.hoadon[global.chonhoadon].hangtra.length))) 
       var hoadon = global.hoadon[vitri]
       var trangthaitrahang = hoadon.trangthaitrahang
       var kiemtra = false
@@ -957,10 +1023,10 @@
       html += `
       <div class="pw-card pw-item">
         <div class="row pw-col">
-          <div class="col-xs-1" id="#xoa-`+ vitrichay + `" onclick="xoahang(` + vitrichay + `)"> <span class="fa fa-remove"> </span> </div>
-          <div class="col-xs-4" id="#ma-`+ vitrichay + `">` + hd.ma + `</div>
-          <div class="col-xs-8" id="#tem-`+ vitrichay + `">` + hd.ten + `</div>
-          <div class="col-xs-5"> 
+          <div class="col-xs-2 col-md-1" id="#xoa-`+ vitrichay + `" onclick="xoahang(` + vitrichay + `)"> <span class="fa fa-remove"> </span> </div>
+          <div class="col-xs-8 col-md-4" id="#ma-`+ vitrichay + `">` + hd.ma + `</div>
+          <div class="col-xs-14 col-md-8" id="#tem-`+ vitrichay + `">` + hd.ten + `</div>
+          <div class="col-xs-10 col-md-5"> 
             <div class="input-group">
               <div class="input-group-btn">
                 <button class="btn btn-info" onclick="bangsuagia(`+ vitrichay + `)">
@@ -975,7 +1041,7 @@
                   <div class="form-group">Đơn giá</div>
                 </div>
                 <div class="col-xs-18">
-                  <div class="form-group"> <input autocomplete="off" class="form-control" id="suadongia-`+ vitrichay + `" onkeyup="suadongia(` + vitrichay + `)" `+ (global.cauhinh.dongia ? '' : 'disabled') +`> </div>
+                  <div class="form-group"> <input autocomplete="off" class="form-control" id="suadongia-`+ vitrichay + `" onkeyup="suadongia(` + vitrichay + `)" ` + (global.cauhinh.dongia ? '' : 'disabled') + `> </div>
                 </div>
               </div>
               <div class="row">
@@ -984,11 +1050,11 @@
                 </div>
                 <div class="col-xs-18">
                   <div class="form-group input-group">
-                    <input autocomplete="off" class="form-control" id="suagiamgiaphantram-`+ vitrichay + `" onkeyup="suagiamgia(` + vitrichay + `)" `+ (global.cauhinh.giamgia ? '' : 'disabled') +`> 
+                    <input autocomplete="off" class="form-control" id="suagiamgiaphantram-`+ vitrichay + `" onkeyup="suagiamgia(` + vitrichay + `)" ` + (global.cauhinh.giamgia ? '' : 'disabled') + `> 
                     <div class="input-group-addon"> % </div>
                     </div>
                   <div class="form-group input-group">
-                    <input autocomplete="off" class="form-control" id="suagiamgiatien-`+ vitrichay + `" onkeyup="suagiamgia(` + vitrichay + `)" `+ (global.cauhinh.giamgia ? '' : 'disabled') +`> 
+                    <input autocomplete="off" class="form-control" id="suagiamgiatien-`+ vitrichay + `" onkeyup="suagiamgia(` + vitrichay + `)" ` + (global.cauhinh.giamgia ? '' : 'disabled') + `> 
                     <div class="input-group-addon">
                       VND
                     </div>
@@ -1001,15 +1067,15 @@
                   <div class="form-group">Giá bán</div>
                 </div>
                 <div class="col-xs-18">
-                  <div class="form-group"> <input autocomplete="off" class="form-control" id="suagiaban-`+ vitrichay + `" onkeyup="suagiaban(` + vitrichay + `)" `+ (global.cauhinh.giaban ? '' : 'disabled') +`> </div>
+                  <div class="form-group"> <input autocomplete="off" class="form-control" id="suagiaban-`+ vitrichay + `" onkeyup="suagiaban(` + vitrichay + `)" ` + (global.cauhinh.giaban ? '' : 'disabled') + `> </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-xs-2"> 
+          <div class="col-xs-4 col-md-2"> 
             <input autocomplete="off" class="form-control pw-text-right" id="soluong-`+ vitrichay + `" value="` + vnumber.format(hd.soluong) + `" onkeyup="tailaigia(` + vitrichay + `)" onchange="tailaigia(` + vitrichay + `)">  
           </div>
-          <div class="col-xs-4 pw-text-right" id="thanhtien-`+ vitrichay + `"> ` + vnumber.format(hd.soluong * hd.giaban) + ` </div>
+          <div class="col-xs-10 col-md-4 pw-text-right" id="thanhtien-`+ vitrichay + `"> ` + vnumber.format(hd.soluong * hd.giaban) + ` </div>
         </div>
       </div>`
     })
@@ -1040,13 +1106,13 @@
         html += `
         <div class="pw-card pw-item">
           <div class="row pw-col">
-            <div class="col-xs-1" id="#xoa-`+ loaihang + `-` + vitrichay + `" onclick="xoatrahang('` + loaihang + `', ` + vitrichay + `)"> <span class="fa fa-remove"> </span> </div>
-            <div class="col-xs-4" id="#ma-`+ loaihang + `-` + vitrichay + `">` + hd.ma + `</div>
-            <div class="col-xs-8" id="#tem-`+ loaihang + `-` + vitrichay + `">` + hd.ten + `</div>
-            <div class="col-xs-5"> 
+            <div class="col-xs-2 col-md-1" id="#xoa-`+ loaihang + `-` + vitrichay + `" onclick="xoatrahang('` + loaihang + `', ` + vitrichay + `)"> <span class="fa fa-remove"> </span> </div>
+            <div class="col-xs-8 col-md-4" id="#ma-`+ loaihang + `-` + vitrichay + `">` + hd.ma + `</div>
+            <div class="col-xs-14 col-md-8" id="#tem-`+ loaihang + `-` + vitrichay + `">` + hd.ten + `</div>
+            <div class="col-xs-10 col-md-5"> 
               <div class="input-group">
                 <div class="input-group-btn">
-                  <button class="btn btn-info" onclick="bangsuagiatrahang(`+ loaihang + `, ` + vitrichay + `)">
+                  <button class="btn btn-info" onclick="bangsuagiatrahang('`+ loaihang + `', ` + vitrichay + `)">
                     <span class="fa fa-credit-card">
                   </button>
                 </div>
@@ -1058,7 +1124,7 @@
                     <div class="form-group">Đơn giá</div>
                   </div>
                   <div class="col-xs-18">
-                    <div class="form-group"> <input autocomplete="off" class="form-control" id="suadongia-`+ loaihang + `-` + vitrichay + `" onkeyup="suadongiatrahang('` + loaihang + `',` + vitrichay + `)" `+ (global.cauhinh.dongia ? '' : 'disabled') +`> </div>
+                    <div class="form-group"> <input autocomplete="off" class="form-control" id="suadongia-`+ loaihang + `-` + vitrichay + `" onkeyup="suadongiatrahang('` + loaihang + `',` + vitrichay + `)" ` + (global.cauhinh.dongia ? '' : 'disabled') + `> </div>
                   </div>
                 </div>
                 <div class="row">
@@ -1067,11 +1133,11 @@
                   </div>
                   <div class="col-xs-18">
                     <div class="form-group input-group">
-                      <input autocomplete="off" class="form-control" id="suagiamgiaphantram-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiamgiatrahang('` + loaihang + `', ` + vitrichay + `)" `+ (global.cauhinh.giamgia ? '' : 'disabled') +`> 
+                      <input autocomplete="off" class="form-control" id="suagiamgiaphantram-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiamgiatrahang('` + loaihang + `', ` + vitrichay + `)" ` + (global.cauhinh.giamgia ? '' : 'disabled') + `> 
                       <div class="input-group-addon"> % </div>
                       </div>
                     <div class="form-group input-group">
-                      <input autocomplete="off" class="form-control" id="suagiamgiatien-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiamgiatrahang('` + loaihang + `', ` + vitrichay + `)" `+ (global.cauhinh.giamgia ? '' : 'disabled') +`> 
+                      <input autocomplete="off" class="form-control" id="suagiamgiatien-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiamgiatrahang('` + loaihang + `', ` + vitrichay + `)" ` + (global.cauhinh.giamgia ? '' : 'disabled') + `> 
                       <div class="input-group-addon">
                         VND
                       </div>
@@ -1084,15 +1150,15 @@
                     <div class="form-group">Giá bán</div>
                   </div>
                   <div class="col-xs-18">
-                    <div class="form-group"> <input autocomplete="off" class="form-control" id="suagiaban-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiabantrahang('` + loaihang + `', ` + vitrichay + `)" `+ (global.cauhinh.giaban ? '' : 'disabled') +`> </div>
+                    <div class="form-group"> <input autocomplete="off" class="form-control" id="suagiaban-`+ loaihang + `-` + vitrichay + `" onkeyup="suagiabantrahang('` + loaihang + `', ` + vitrichay + `)" ` + (global.cauhinh.giaban ? '' : 'disabled') + `> </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-xs-2"> 
+            <div class="col-xs-4 col-md-2"> 
               <input autocomplete="off" class="form-control pw-text-right" id="soluong-`+ loaihang + `-` + vitrichay + `" value="` + vnumber.format(hd.soluong) + `" onkeyup="tailaigiatrahang('` + loaihang + `', ` + vitrichay + `)" onchange="tailaigiatrahang('` + loaihang + `', ` + vitrichay + `)">  
             </div>
-            <div class="col-xs-4 pw-text-right" id="thanhtien-`+ loaihang + `-` + vitrichay + `"> ` + vnumber.format(hd.soluong * hd.giaban) + ` </div>
+            <div class="col-xs-10 col-md-4 pw-text-right" id="thanhtien-`+ loaihang + `-` + vitrichay + `"> ` + vnumber.format(hd.soluong * hd.giaban) + ` </div>
           </div>
         </div>`
       })
@@ -1279,6 +1345,17 @@
     }
   }
 
+  function menu() {
+    if ($('#menu').css('display') == 'block') {
+      $('#menu').hide()
+      $('#pw-dismiss').hide()
+    }
+    else {
+      $('#menu').show()
+      $('#pw-dismiss').show()
+    }
+  }
+
   function bangsuagia(vitri) {
     if ($('#banggia-' + vitri).css('display') == 'block') {
       $('#banggia-' + vitri).hide()
@@ -1294,7 +1371,7 @@
       $('#pw-dismiss').show()
     }
   }
-  
+
   function tailaitienthuatrahang() {
     $('#blocktienthua').hide()
     $('#blocktienno').hide()
@@ -1344,33 +1421,33 @@
   }
 
   function bangsuagiatrahang(loaihang, vitri) {
-    if ($('#banggia-'+ loaihang +'-' + vitri).css('display') == 'block') {
-      $('#banggia-'+ loaihang +'-' + vitri).hide()
+    if ($('#banggia-' + loaihang + '-' + vitri).css('display') == 'block') {
+      $('#banggia-' + loaihang + '-' + vitri).hide()
       $('#pw-dismiss').hide()
     }
     else {
       let hanghoa = global.hoadon[global.chonhoadon][loaihang][vitri]
-      $('#suadongia-'+ loaihang +'-' + vitri).val(vnumber.format(hanghoa.dongia))
-      $('#suagiamgiatien-'+ loaihang +'-' + vitri).val(vnumber.format(hanghoa.giamgiatien))
-      $('#suagiamgiaphantram-'+ loaihang +'-' + vitri).val(vnumber.format(hanghoa.giamgiaphantram))
-      $('#suagiaban-'+ loaihang +'-' + vitri).val(vnumber.format(hanghoa.giaban))
-      $('#banggia-'+ loaihang +'-' + vitri).show()
+      $('#suadongia-' + loaihang + '-' + vitri).val(vnumber.format(hanghoa.dongia))
+      $('#suagiamgiatien-' + loaihang + '-' + vitri).val(vnumber.format(hanghoa.giamgiatien))
+      $('#suagiamgiaphantram-' + loaihang + '-' + vitri).val(vnumber.format(hanghoa.giamgiaphantram))
+      $('#suagiaban-' + loaihang + '-' + vitri).val(vnumber.format(hanghoa.giaban))
+      $('#banggia-' + loaihang + '-' + vitri).show()
       $('#pw-dismiss').show()
     }
   }
 
   function tailaigiatrahang(loaihang, vitri = -1) {
     // tính tổng tiền theo hàng trả, trả hàng
-    
+
     if (vitri >= 0) {
-      var soluong = vnumber.clear($('#soluong-'+ loaihang +'-' + vitri).val())
-      var giaban = vnumber.clear($('#giaban-'+ loaihang +'-' + vitri).val())
+      var soluong = vnumber.clear($('#soluong-' + loaihang + '-' + vitri).val())
+      var giaban = vnumber.clear($('#giaban-' + loaihang + '-' + vitri).val())
       var thanhtien = soluong * giaban
       global.hoadon[global.chonhoadon][loaihang][vitri].soluong = soluong
       global.hoadon[global.chonhoadon][loaihang][vitri].giaban = giaban
-      $('#thanhtien-'+ loaihang +'-' + vitri).text(vnumber.format(thanhtien))
-      $('#giaban-'+ loaihang +'-' + vitri).val(vnumber.format(giaban))
-      $('#soluong-'+ loaihang +'-' + vitri).val(vnumber.format(soluong))
+      $('#thanhtien-' + loaihang + '-' + vitri).text(vnumber.format(thanhtien))
+      $('#giaban-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
+      $('#soluong-' + loaihang + '-' + vitri).val(vnumber.format(soluong))
     }
     var tonghang = 0
     var tongtien = 0
@@ -1406,9 +1483,9 @@
   function suagiamgia(vitri) {
     // kiểm tra giới hạn giảm gia
     // cập nhật giá bán, giảm giá
-    var dongia = vnumber.clear($('#suadongia-'+ loaihang +'-' + vitri).val())
-    var giamgiatien = vnumber.clear($('#suagiamgiatien-'+ loaihang +'-' + vitri).val())
-    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-'+ loaihang +'-' + vitri).val())
+    var dongia = vnumber.clear($('#suadongia-' + loaihang + '-' + vitri).val())
+    var giamgiatien = vnumber.clear($('#suagiamgiatien-' + loaihang + '-' + vitri).val())
+    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-' + loaihang + '-' + vitri).val())
 
     if (giamgiaphantram < 0) giamgiaphantram = 0
     else if (giamgiaphantram > 100) giamgiaphantram = 100
@@ -1422,10 +1499,10 @@
     global.hoadon[global.chonhoadon][loaihang][vitri].giaban = giaban
     global.hoadon[global.chonhoadon][loaihang][vitri].giamgiatien = giamgiatien
     global.hoadon[global.chonhoadon][loaihang][vitri].giamgiaphantram = giamgiaphantram
-    $('#suagiaban-'+ loaihang +'-' + vitri).val(vnumber.format(giaban))
-    $('#suagiamgiatien-'+ loaihang +'-' + vitri).val(vnumber.format(giamgiatien))
-    $('#suagiamgiaphantram-'+ loaihang +'-' + vitri).val(vnumber.format(giamgiaphantram))
-    $('#giaban-'+ loaihang +'-' + vitri).val(vnumber.format(giaban))
+    $('#suagiaban-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
+    $('#suagiamgiatien-' + loaihang + '-' + vitri).val(vnumber.format(giamgiatien))
+    $('#suagiamgiaphantram-' + loaihang + '-' + vitri).val(vnumber.format(giamgiaphantram))
+    $('#giaban-' + loaihang + '-' + vitri).val(vnumber.format(giaban))
     tailaigiatrahang(loaihang, vitri)
   }
 
@@ -1433,9 +1510,9 @@
     // thay đổi đơn giá
     // kiểm tra giảm giá khác 0 thì cập nhật giảm giá
     // cập nhật giá bán
-    var dongia = vnumber.clear($('#suadongia-'+ loaihang +'-' + vitri).val())
-    var giamgiatien = vnumber.clear($('#suagiamgiatien-'+ loaihang +'-' + vitri).val())
-    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-'+ loaihang +'-' + vitri).val())
+    var dongia = vnumber.clear($('#suadongia-' + loaihang + '-' + vitri).val())
+    var giamgiatien = vnumber.clear($('#suagiamgiatien-' + loaihang + '-' + vitri).val())
+    var giamgiaphantram = vnumber.clear($('#suagiamgiaphantram-' + loaihang + '-' + vitri).val())
 
     var giaban = dongia * (100 - giamgiaphantram) / 100
     giaban -= giamgiatien
@@ -1478,6 +1555,7 @@
 
   function antoanbo() {
     $('.pw-discount-panel').hide()
+    $('.pw-menu-panel').hide()
     $('#pw-dismiss').hide()
   }
 

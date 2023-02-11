@@ -29,7 +29,7 @@
   }
 
   .pw-half-height {
-    height: calc(50vh - 45px);
+    height: calc(40vh - 35px);
     width: 100%;
     overflow-y: scroll;
   }
@@ -144,7 +144,7 @@
   }
 
   .pw-card,
-  .pw-discount-panel {
+  .pw-discount-panel, .pw-menu-panel {
     color: #000;
     border-radius: 10px;
     padding: 5px;
@@ -163,7 +163,7 @@
     width: 100%;
   }
 
-  .pw-discount-panel {
+  .pw-discount-panel, .pw-menu-panel {
     width: calc(100% - 20px);
   }
 
@@ -193,7 +193,14 @@
     overflow-y: scroll;
     display: none;
     z-index: 10;
-    top: 30px;
+    top: 31px;
+    box-shadow: 3px 3px 5px #d3d3d3;
+    border-color: #d3d3d3 gray gray #d3d3d3;
+    border-style: solid;
+    border-width: 1px;
+    margin-bottom: 10px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
   }
 
   .pw-discount-panel {
