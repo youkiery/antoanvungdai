@@ -15,8 +15,8 @@ if (!defined('NV_MAINFILE')) {
 
 $db_config['dbhost'] = '127.0.0.1';
 $db_config['dbport'] = '';
-$db_config['dbname'] = 'txppos';
-$db_config['dbsystem'] = 'txppos';
+$db_config['dbname'] = 'antoanbenhdai';
+$db_config['dbsystem'] = 'antoanbenhdai';
 $db_config['dbuname'] = 'root';
 $db_config['dbpass'] = '';
 $db_config['dbtype'] = 'mysql';
