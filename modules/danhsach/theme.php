@@ -13,6 +13,55 @@ if (!defined('PREFIX')) {
 
 $buy_sex = array('Sao cũng được', 'Đực', 'Cái');
 
+function noidungtrangchinh() {
+  global $db;
+
+
+
+  return '';
+}
+
+function danhsachthucung() {
+  global $db, $nv_Request, $module_file;
+
+  $truongmoitrang = 12;
+  $xtpl = new XTemplate("danhsachthucung.tpl", PATHER);
+  $xtpl->assign('module_file', $module_file);
+
+  $tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
+  $trang = $nv_Request->get_string('trang', 'post', '1');
+  if (empty($tukhoa)) $xtra = "";
+  else $xtra = " and thucung like '%$tukhoa%' or micro like '%$tukhoa%'";
+
+  $sql = "select * from ". PREFIX ."_thucung where active = 1 $xtra order by id desc limit $truongmoitrang offset ". ($trang - 1) * $truongmoitrang;
+  $danhsach = $db->all($sql);
+  $sql = "select count(id) as tongtruong from ". PREFIX ."_thucung where active = 1 $xtra";
+  $tongquan = $db->fetch($sql);
+
+  foreach ($danhsach as $thucung) {
+    $xtpl->assign('id', $thucung['id']);
+    $xtpl->assign('image', $thucung['image']);
+    $xtpl->assign('name', $thucung['name']);
+    $xtpl->assign('age', tinhtuoi($thucung['birthday']));
+    $xtpl->assign('species', kiemtragiong($thucung['species']));
+    $xtpl->parse("main.thucung");
+  }
+  
+  $xtpl->assign('danhsachtrang', danhsachtrang($trang, $tongquan['tongtruong'], $truongmoitrang));
+  $xtpl->parse("main");
+  return $xtpl->text("main");
+}
+
+function danhsachtrang($trang, $tongtruong, $truongmoitrang) {
+  $tongtrang = ceil($tongtruong / $truongmoitrang);
+  $phantrang = "";
+  for ($i = 1; $i <= $tongtrang; $i++) { 
+    if ($i == $trang) $phantrang .= "<button class='btn btn-info'> $i </button>";
+    else $phantrang .= "<button class='btn btn-default' onclick='dentrang($i)'> $i </button>";
+  }
+  return $phantrang;
+}
+
 function cetiList() {
   global $db, $module_name, $op, $nv_Request;
 

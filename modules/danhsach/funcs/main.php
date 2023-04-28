@@ -11,16 +11,18 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$tieude = laytieude();
+$page_title = laytieude();
 
 $xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('module_file', $module_file);
+$xtpl->assign('logo', laylogo());
+$xtpl->assign('banner', laybanner());
 
-$xtpl->assign('content', noidungtrangchinh());
+$xtpl->assign('content', danhsachthucung());
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 
 include NV_ROOTDIR . '/includes/header.php';
-echo $contents;
+echo nv_site_theme($contents);
 include NV_ROOTDIR . '/includes/footer.php';
 

@@ -1,56 +1,36 @@
 <!-- BEGIN: main -->
 <div class="container">
-  <div id="msgshow"></div>
-  <div style="text-align: right;">
-    {FILE "../../heading.tpl"}
-  </div>
-
-  <div class="text-center start-content">
-    <div class="form-group">
-      <img style="display: inline-block; max-height: 150px; width: auto;" class="img-responsive"
-        src="/themes/default/images/banner.png">
-      <!-- <a href="https://chopet.vn">
-          <img style="display: inline-block; max-height: 150px; width: auto;" class="img-responsive" src="/assets/images/chotot.jpg">
-        </a>-->
-    </div>
-    <!-- <p> Nâng niu tình yêu động vật </p> -->
-    <form action="/{module_file}/list">
-      <div class="main-search">
-        <label class="input-group">
-          <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Nhập tên hoặc mã số"
-            autocomplete="off">
-          <div class="input-group-btn">
-            <button class="btn btn-info"> Tìm kiếm </button>
-          </div>
-        </label>
-        <!-- <div style="font-size: 0.9em;">
-            <a href="/contest"> Đăng ký phần thi Lễ hội thú cưng Đăk Lăk 2019 </a>
-          </div> -->
-        <!-- <a href="/{module_file}/signup"> Đăng ký </a> -->
-
-        <!-- BEGIN: log -->
-        <!-- <a href="/{module_file}/login"> Quản lý giống </a> -->
-        <!-- END: log -->
-        <!-- BEGIN: log_center -->
-        <!-- <a href="/{module_file}/login"> Quản lý trại </a> -->
-        <!-- END: log_center -->
+  <div class="banner"> <img class="img-responsive" src="{banner}"> </div>
+  <div class="main-search">
+    <a href="/danhsach/dangnhap" style="float: right;"> Đăng nhập </a>
+    <label style="clear: both" class="input-group">
+      <input type="text" class="form-control" id="tukhoa" placeholder="Nhập tên hoặc mã số" autocomplete="off">
+      <div class="input-group-btn">
+        <button class="btn btn-info" onclick="dentrang(1)"> Tìm kiếm </button>
       </div>
-    </form>
+    </label>
   </div>
+  <div style="clear: both;"></div>
   <div id="content" style="margin-top: 20px;">
     {content}
   </div>
 </div>
 <script>
-  var content = $("#content")
-  var keyword = $("#keyword")
-  var thisUrl = '/main'
+  var global = {
+    trang: 1
+  }
 
-  // function search() {
-  //   request(thisUrl,
-  //     {action: 'search', keyword: keyword.val()}).then(data => {
-  //       content.data['html']
-  //     })
-  // }
+  function dentrang(trang) {
+    vhttp.post('/danhsach/api/', {
+      action: 'timkiem',
+      trang: trang,
+      tukhoa: $('#tukhoa').val()
+    }).then((resp) => {
+      $('#content').html(resp.danhsach)
+      global.trang = trang
+    }, () => {
+
+    })
+  }
 </script>
 <!-- END: main -->

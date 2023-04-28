@@ -123,10 +123,10 @@ try {
                 $module_captcha = 'captcha';
             }
             // pcw: chuyển hướng đến trang login nếu chưa đăng nhập
-            if (empty($user_info)) {
-                if ($module_file !== 'login') header('location: /');
-            }
 
+            // if (empty($user_info)) {
+            //     if ($module_file !== 'login') header('location: /');
+            // }
 
             $include_file = NV_ROOTDIR . '/modules/' . $module_file . '/funcs/main.php';
 

@@ -13,24 +13,101 @@ if (!defined('NV_SYSTEM')) {
 
 define('NV_IS_FORM', true); 
 define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/' . $op);
+define("PATHER", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/');
 
-require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 $buy_sex = array('Sao cũng được', 'Đực', 'Cái');
 $sex_data = array(0 => 'Đực', 'Cái');
-$fc = array('sendinfo');
-$fa = array('login', 'signup', 'recover', 'checking-key', 'change-pass', 'send-contact', 'filter', 'send-review', 'insert', 'print');
-$action = $nv_Request->get_string('action', 'post', '');
 
-// kiểm tra các post ajax
-if (!empty($action)) {
-  // nếu thuộc mảng fc thì tiếp tục
-  // nếu không, kiểm tra các post có phải là các action trong fa hoặc là thành viên
-  if (in_array($op, $fc)) {
-    // bỏ qua
+function xencrypt($str) {
+  global $aes;
+
+  include_once(NV_ROOTDIR . "/includes/Aes.php");
+  use PhpAes\Aes;
+  $aes = new Aes('abcdefgh01234567', 'CBC', '1234567890abcdef');
+  
+  return base64_encode($aes->encrypt($str));
+}
+
+function xdecrypt($code) {
+  global $aes;
+
+  include_once(NV_ROOTDIR . "/includes/Aes.php");
+  use PhpAes\Aes;
+  $aes = new Aes('abcdefgh01234567', 'CBC', '1234567890abcdef');
+  
+  return $aes->decrypt(base64_decode($code));
+}
+
+function datetotime($time) {
+  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
+    $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
+    if (!$time) $time = time();
   }
-  else if ( !in_array($action, $fa) && empty($userinfo = getUserInfo())) {
-    die('{"status": -1}');
-  }
+  else $time = time();
+  return $time;
+}
+
+function alias($str) {
+  $str = mb_strtolower($str);
+  $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", "a", $str);
+  $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", "e", $str);
+  $str = preg_replace("/(ì|í|ị|ỉ|ĩ)/", "i", $str);
+  $str = preg_replace("/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/", "o", $str);
+  $str = preg_replace("/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/", "u", $str);
+  $str = preg_replace("/(ỳ|ý|ỵ|ỷ|ỹ)/", "y", $str);
+  $str = preg_replace("/(đ)/", "d", $str);
+  $str = mb_strtolower($str);
+  return $str;
+}
+
+function tinhtuoi($ngaysinh) {
+  $homnay = time();
+  $khoangcach = $homnay * $ngaysinh;
+  $tongngay = $khoangcach / 60 / 60 / 24;
+  $nam = floor($khoangcach / 365);
+  $thang = floor(($khoangcach - $nam * 365) / 30);
+  $ngay = floor($khoangcach - $nam * 365 - $thang * 30);
+  if (empty($ngay)) $ngay = 1;
+  $tuoi = [];
+
+  if (!empty($nam)) $tuoi []= "$nam năm";
+  if (!empty($thang)) $tuoi []= "$thang tháng";
+  if (count($tuoi) != 2) $tuoi []= "$ngay ngày";
+  return implode(' ', $tuoi);
+}
+
+function kiemtragiong($idgiong) {
+  global $db;
+
+  $sql = "select * from ". PREFIX ."_giongloai where id = $idgiong";
+  if (empty($giong = $db->fetch($sql))) return '';
+  return $giong['name'];
+}
+
+function laytieude() {
+  global $db;
+
+  $sql = "select * from pet_config where module = 'global' and config_name = 'site_description'";
+  $tieude = $db->fetch($sql);
+  return $tieude['config_value'];
+}
+
+function laylogo() {
+  global $db;
+
+  $sql = "select * from pet_config where module = 'global' and config_name = 'site_logo'";
+  $hinhanh = $db->fetch($sql);
+  if (empty($hinhanh)) return NV_ROOTDIR . '/assets/images/noimage.png';
+  return $_SERVER['HTTP_REFERER'] .'/'. $hinhanh['config_value'];
+}
+
+function laybanner() {
+  global $db;
+
+  $sql = "select * from pet_config where module = 'global' and config_name = 'site_banner'";
+  $hinhanh = $db->fetch($sql);
+  if (empty($hinhanh)) return NV_ROOTDIR . '/assets/images/noimage.png';
+  return $_SERVER['HTTP_REFERER'] .'/'. $hinhanh['config_value'];
 }
 
 function mainContent() {
