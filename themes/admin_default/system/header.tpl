@@ -11,6 +11,7 @@
         <link rel="shortcut icon" href="{SITE_FAVICON}">
         <link rel="stylesheet" href="{NV_BASE_SITEURL}themes/default/css/bootstrap.min.css">
         <link rel="stylesheet" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/css/custom.css">
         <link rel="stylesheet" href="{NV_BASE_SITEURL}themes/{NV_ADMIN_THEME}/css/style.css">
         <!-- BEGIN: css_module -->
         <link rel="stylesheet" href="{NV_CSS_MODULE_THEME}" type="text/css">
@@ -35,6 +36,7 @@
         <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/{NV_LANG_INTERFACE}.js"></script>
         <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/global.js"></script>
         <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/admin.js"></script>
+        <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/vhttp.js"></script>
 
         <!-- BEGIN: module_js -->
         <script type="text/javascript" src="{NV_JS_MODULE}"></script>

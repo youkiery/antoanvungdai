@@ -11,7 +11,11 @@ if (!defined('NV_IS_ADMIN_FORM')) {
 	die('Stop!!!');
 }
 
-$contents = '';
+$xtpl = new XTemplate("noidung.tpl", PATH);
+
+$xtpl->assign('noidung', danhsachphuong());
+$xtpl->parse("main");
+$contents = $xtpl->text("main");
 
 include (NV_ROOTDIR . "/includes/header.php");
 echo nv_admin_theme($contents);

@@ -11,7 +11,6 @@ if (!defined('NV_MAINFILE')) {
 	die('Stop!!!');
 }
 
-define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define("LAYOUT", NV_ROOTDIR . "/modules/" . $module_file . "/layout");
 define('PERMISSION_MODULE', 1);
 

@@ -12,8 +12,10 @@ if (! defined('NV_ADMIN') or ! defined('NV_MAINFILE') or ! defined('NV_IS_MODADM
 }
 
 define('NV_IS_ADMIN_FORM', true);
-define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/' . $op);
-define("PATHER", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/');
+define("PREFIX", $db_config['prefix'] . "_" . $module_name);
+define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/admin/' . $op);
+define("PATHER", NV_ROOTDIR . '/modules/' . $module_file . '/template/admin/');
+require_once(NV_ROOTDIR . '/modules/'. $module_file . '/theme.php');
 
 $select_array = array('breed' => 'Loài', 'disease' => 'Bệnh', 'origin' => 'Nguồn gốc', 'request' => 'Yêu cầu', 'species' => 'Giống', 'species2' => 'Giống loài', 'color' => 'Màu lông', 'type' => 'Kiểu lông');
 $trade_array = array('1' => 'Cần bán', '2' => 'Cần phối');

@@ -12,31 +12,32 @@ if (!defined('NV_SYSTEM')) {
 }
 
 define('NV_IS_FORM', true); 
+define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/' . $op);
 define("PATHER", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/');
 
 $buy_sex = array('Sao cũng được', 'Đực', 'Cái');
 $sex_data = array(0 => 'Đực', 'Cái');
 
-function xencrypt($str) {
-  global $aes;
+// function xencrypt($str) {
+//   global $aes;
 
-  include_once(NV_ROOTDIR . "/includes/Aes.php");
-  use PhpAes\Aes;
-  $aes = new Aes('abcdefgh01234567', 'CBC', '1234567890abcdef');
+//   include_once(NV_ROOTDIR . "/includes/Aes.php");
+//   use PhpAes\Aes;
+//   $aes = new Aes('abcdefgh01234567', 'CBC', '1234567890abcdef');
   
-  return base64_encode($aes->encrypt($str));
-}
+//   return base64_encode($aes->encrypt($str));
+// }
 
-function xdecrypt($code) {
-  global $aes;
+// function xdecrypt($code) {
+//   global $aes;
 
-  include_once(NV_ROOTDIR . "/includes/Aes.php");
-  use PhpAes\Aes;
-  $aes = new Aes('abcdefgh01234567', 'CBC', '1234567890abcdef');
+//   include_once(NV_ROOTDIR . "/includes/Aes.php");
+//   use PhpAes\Aes;
+//   $aes = new Aes('abcdefgh01234567', 'CBC', '1234567890abcdef');
   
-  return $aes->decrypt(base64_decode($code));
-}
+//   return $aes->decrypt(base64_decode($code));
+// }
 
 function datetotime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {

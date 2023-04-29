@@ -13,13 +13,7 @@ if (!defined('PREFIX')) {
 
 $buy_sex = array('Sao cũng được', 'Đực', 'Cái');
 
-function noidungtrangchinh() {
-  global $db;
-
-
-
-  return '';
-}
+// user
 
 function danhsachthucung() {
   global $db, $nv_Request, $module_file;
@@ -60,6 +54,27 @@ function danhsachtrang($trang, $tongtruong, $truongmoitrang) {
     else $phantrang .= "<button class='btn btn-default' onclick='dentrang($i)'> $i </button>";
   }
   return $phantrang;
+}
+
+// admin
+
+function danhsachphuong() {
+  global $db;
+
+  $xtpl = new XTemplate("danhsachphuong.tpl", PATHER);
+  
+  $sql = "select * from ". PREFIX ."_phuong order by ten asc";
+  $danhsach = $db->all($sql);
+  $thutu = 1;
+  foreach ($danhsach as $phuong) {
+    $xtpl->assign('thutu', $thutu ++);
+    $xtpl->assign('id', $phuong['id']);
+    $xtpl->assign('ten', $phuong['ten']);
+    $xtpl->parse('main.dulieu');
+  }
+  
+  $xtpl->parse('main');
+  return $xtpl->text();
 }
 
 function cetiList() {
