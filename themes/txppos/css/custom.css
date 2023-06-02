@@ -14,14 +14,12 @@
 
 .banner {
   max-width: 300px;
-  max-height: 150px;
-  display: inline-block;
+  margin: auto;
 }
 
 .main-search {
-  max-width: calc(100% - 310px);
-  display: inline-block;
-  margin-bottom: 10px;
+  max-width: 90%;
+  margin: auto;
 }
 
 #alert-vhttp {
@@ -33,7 +31,6 @@ body {
   overflow-y: scroll;
   height: 100%;
 }
-
 
 .pw-card,
 .pw-discount-panel, .pw-menu-panel {

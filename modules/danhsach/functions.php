@@ -99,7 +99,8 @@ function laylogo() {
   $sql = "select * from pet_config where module = 'global' and config_name = 'site_logo'";
   $hinhanh = $db->fetch($sql);
   if (empty($hinhanh)) return NV_ROOTDIR . '/assets/images/noimage.png';
-  return $_SERVER['HTTP_REFERER'] .'/'. $hinhanh['config_value'];
+  if (strpos('http', $hinhanh['config_value']) >= 0) return $hinhanh['config_value'];
+  return '/' . $hinhanh['config_value'];
 }
 
 function laybanner() {
@@ -108,7 +109,8 @@ function laybanner() {
   $sql = "select * from pet_config where module = 'global' and config_name = 'site_banner'";
   $hinhanh = $db->fetch($sql);
   if (empty($hinhanh)) return NV_ROOTDIR . '/assets/images/noimage.png';
-  return $_SERVER['HTTP_REFERER'] .'/'. $hinhanh['config_value'];
+  if (strpos('http', $hinhanh['config_value']) >= 0) return $hinhanh['config_value'];
+  return '/' . $hinhanh['config_value'];
 }
 
 function mainContent() {

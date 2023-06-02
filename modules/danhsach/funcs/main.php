@@ -17,6 +17,8 @@ $xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('module_file', $module_file);
 $xtpl->assign('logo', laylogo());
 $xtpl->assign('banner', laybanner());
+if (isset($user_info['userid'])) $xtpl->parse('main.nhanvien');
+else $xtpl->parse('main.khach');
 
 $xtpl->assign('content', danhsachthucung());
 $xtpl->parse("main");
