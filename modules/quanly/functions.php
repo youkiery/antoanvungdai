@@ -12,6 +12,5 @@ if (!defined('NV_SYSTEM')) {
 }
 
 define('NV_IS_FORM', true); 
-define("PREFIX", $db_config['prefix'] . "_" . $module_name);
-define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/' . $op);
-define("PATHER", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/');
+define("PREFIX", $db_config['prefix']);
+define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/');

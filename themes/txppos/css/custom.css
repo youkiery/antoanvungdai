@@ -32,32 +32,41 @@ body {
   height: 100%;
 }
 
-.pw-card,
-.pw-discount-panel, .pw-menu-panel {
-  color: #000;
+.box-content {
+  border: 1px solid lightgray;
   border-radius: 10px;
-  padding: 5px;
-  background: #fff;
-  line-height: 18px;
-  display: inline-block;
-  position: relative;
+  margin-bottom: 10px;
+  background-color: #3dc2ff;
   box-shadow: 3px 3px 5px #d3d3d3;
   border-color: #d3d3d3 gray gray #d3d3d3;
   border-style: solid;
   border-width: 1px;
-  margin-bottom: 10px;
 }
 
-.pw-card {
-  width: 100%;
+table {
+  background: white;
 }
 
-.pw-card div {
-  line-height: 2em;
+.box-image {
+  height: 200px;
+  line-height: 200px;
+  text-align: center;
 }
 
-.pw-card.pw-item:hover {
-  background: #eee;
+.box-image img {
+  width: -webkit-fill-available;
+  max-width: 200px;
+  max-height: 200px;
+}
+
+.box-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 50px;
+  overflow: hidden;
+  font-weight: bold;
 }
 
 .pw-suggest-group,
