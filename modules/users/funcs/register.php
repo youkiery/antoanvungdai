@@ -287,106 +287,106 @@ if ($checkss == $array_register['checkss']) {
         $array_register['first_name'] = $array_register['username'];
     }
 
-    if (!defined('ACCESS_ADDUS') and ($global_config['allowuserreg'] == 2 or $global_config['allowuserreg'] == 3)) {
-        $sql = 'INSERT INTO ' . NV_MOD_TABLE . '_reg (
-            username, md5username, password, email, first_name, last_name, gender, birthday, sig, regdate, question, answer, checknum, users_info, idsite
-        ) VALUES (
-            :username,
-            :md5username,
-            :password,
-            :email,
-            :first_name,
-            :last_name,
-            :gender,
-            :birthday,
-            :sig,
-            ' . NV_CURRENTTIME . ',
-            :question,
-            :answer,
-            :checknum,
-            :users_info,
-            :idsite
-        )';
+    // if (!defined('ACCESS_ADDUS') and ($global_config['allowuserreg'] == 2 or $global_config['allowuserreg'] == 3)) {
+    //     $sql = 'INSERT INTO ' . NV_MOD_TABLE . '_reg (
+    //         username, md5username, password, email, first_name, last_name, gender, birthday, sig, regdate, question, answer, checknum, users_info, idsite
+    //     ) VALUES (
+    //         :username,
+    //         :md5username,
+    //         :password,
+    //         :email,
+    //         :first_name,
+    //         :last_name,
+    //         :gender,
+    //         :birthday,
+    //         :sig,
+    //         ' . NV_CURRENTTIME . ',
+    //         :question,
+    //         :answer,
+    //         :checknum,
+    //         :users_info,
+    //         :idsite
+    //     )';
 
-        $data_insert = [];
-        $data_insert['username'] = $array_register['username'];
-        $data_insert['md5username'] = nv_md5safe($array_register['username']);
-        $data_insert['password'] = $password;
-        $data_insert['email'] = $array_register['email'];
-        $data_insert['first_name'] = $array_register['first_name'];
-        $data_insert['last_name'] = $array_register['last_name'];
-        $data_insert['gender'] = $array_register['gender'];
-        $data_insert['birthday'] = (int) ($array_register['birthday']);
-        $data_insert['sig'] = $array_register['sig'];
-        $data_insert['question'] = $array_register['question'];
-        $data_insert['answer'] = $array_register['answer'];
-        $data_insert['checknum'] = $checknum;
-        $data_insert['users_info'] = nv_base64_encode(serialize($query_field));
-        $data_insert['idsite'] = $global_config['idsite'];
-        $userid = $db->insert_id($sql, 'userid', $data_insert);
+    //     $data_insert = [];
+    //     $data_insert['username'] = $array_register['username'];
+    //     $data_insert['md5username'] = nv_md5safe($array_register['username']);
+    //     $data_insert['password'] = $password;
+    //     $data_insert['email'] = $array_register['email'];
+    //     $data_insert['first_name'] = $array_register['first_name'];
+    //     $data_insert['last_name'] = $array_register['last_name'];
+    //     $data_insert['gender'] = $array_register['gender'];
+    //     $data_insert['birthday'] = (int) ($array_register['birthday']);
+    //     $data_insert['sig'] = $array_register['sig'];
+    //     $data_insert['question'] = $array_register['question'];
+    //     $data_insert['answer'] = $array_register['answer'];
+    //     $data_insert['checknum'] = $checknum;
+    //     $data_insert['users_info'] = nv_base64_encode(serialize($query_field));
+    //     $data_insert['idsite'] = $global_config['idsite'];
+    //     $userid = $db->insert_id($sql, 'userid', $data_insert);
 
-        if (!$userid) {
-            reg_result([
-                'status' => 'error',
-                'input' => '',
-                'mess' => $lang_module['err_no_save_account']
-            ]);
-        } else {
-            if ($global_config['allowuserreg'] == 2) {
-                $register_active_time = isset($global_users_config['register_active_time']) ? $global_users_config['register_active_time'] : 86400;
-                $_full_name = nv_show_name_user($array_register['first_name'], $array_register['last_name'], $array_register['username']);
+    //     if (!$userid) {
+    //         reg_result([
+    //             'status' => 'error',
+    //             'input' => '',
+    //             'mess' => $lang_module['err_no_save_account']
+    //         ]);
+    //     } else {
+    //         if ($global_config['allowuserreg'] == 2) {
+    //             $register_active_time = isset($global_users_config['register_active_time']) ? $global_users_config['register_active_time'] : 86400;
+    //             $_full_name = nv_show_name_user($array_register['first_name'], $array_register['last_name'], $array_register['username']);
 
-                $subject = $lang_module['account_active'];
-                $_url = NV_MY_DOMAIN . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=active&userid=' . $userid . '&checknum=' . $checknum, true);
-                $message = sprintf($lang_module['account_active_info'], $_full_name, $global_config['site_name'], $_url, $array_register['username'], $array_register['email'], nv_date('H:i d/m/Y', NV_CURRENTTIME + $register_active_time));
-                $send = nv_sendmail([
-                    $global_config['site_name'],
-                    $global_config['site_email']
-                ], $array_register['email'], $subject, $message);
+    //             $subject = $lang_module['account_active'];
+    //             $_url = NV_MY_DOMAIN . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=active&userid=' . $userid . '&checknum=' . $checknum, true);
+    //             $message = sprintf($lang_module['account_active_info'], $_full_name, $global_config['site_name'], $_url, $array_register['username'], $array_register['email'], nv_date('H:i d/m/Y', NV_CURRENTTIME + $register_active_time));
+    //             $send = nv_sendmail([
+    //                 $global_config['site_name'],
+    //                 $global_config['site_email']
+    //             ], $array_register['email'], $subject, $message);
 
-                if ($send) {
-                    $info = $lang_module['account_active_mess'];
-                } else {
-                    $info = $lang_module['account_active_mess_error_mail'];
+    //             if ($send) {
+    //                 $info = $lang_module['account_active_mess'];
+    //             } else {
+    //                 $info = $lang_module['account_active_mess_error_mail'];
 
-                    // Thêm thông báo vào hệ thống
-                    $access_admin = unserialize($global_users_config['access_admin']);
-                    if (isset($access_admin['access_waiting'])) {
-                        for ($i = 1; $i <= 3; ++$i) {
-                            if (!empty($access_admin['access_waiting'][$i])) {
-                                $admin_view_allowed = $i == 3 ? 0 : $i;
-                                nv_insert_notification($module_name, 'send_active_link_fail', [
-                                    'title' => $array_register['username']
-                                ], $userid, 0, 0, 1, $admin_view_allowed, 1);
-                            }
-                        }
-                    }
-                }
-            } else {
-                $info = $lang_module['account_register_to_admin'];
-                nv_insert_notification($module_name, 'contact_new', [
-                    'title' => $array_register['username']
-                ], $userid, 0, 0, 1);
-            }
+    //                 // Thêm thông báo vào hệ thống
+    //                 $access_admin = unserialize($global_users_config['access_admin']);
+    //                 if (isset($access_admin['access_waiting'])) {
+    //                     for ($i = 1; $i <= 3; ++$i) {
+    //                         if (!empty($access_admin['access_waiting'][$i])) {
+    //                             $admin_view_allowed = $i == 3 ? 0 : $i;
+    //                             nv_insert_notification($module_name, 'send_active_link_fail', [
+    //                                 'title' => $array_register['username']
+    //                             ], $userid, 0, 0, 1, $admin_view_allowed, 1);
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         } else {
+    //             $info = $lang_module['account_register_to_admin'];
+    //             nv_insert_notification($module_name, 'contact_new', [
+    //                 'title' => $array_register['username']
+    //             ], $userid, 0, 0, 1);
+    //         }
 
-            $array = [
-                'status' => 'ok',
-                'input' => '',
-                'mess' => $info
-            ];
-            if (defined('SSO_REGISTER_SECRET')) {
-                $sso_redirect_users = $nv_Request->get_title('sso_redirect_' . $module_data, 'session', '');
-                $iv = substr(SSO_REGISTER_SECRET, 0, 16);
-                $sso_redirect_users = strtr($sso_redirect_users, '-_,', '+/=');
-                $sso_redirect_users = openssl_decrypt($sso_redirect_users, 'aes-256-cbc', SSO_REGISTER_SECRET, 0, $iv);
-                if (!empty($sso_redirect_users)) {
-                    $array['input'] = $sso_redirect_users;
-                }
-            }
-            nv_jsonOutput($array);
-        }
-    } else {
-        $sql = 'INSERT INTO ' . NV_MOD_TABLE . ' (
+    //         $array = [
+    //             'status' => 'ok',
+    //             'input' => '',
+    //             'mess' => $info
+    //         ];
+    //         if (defined('SSO_REGISTER_SECRET')) {
+    //             $sso_redirect_users = $nv_Request->get_title('sso_redirect_' . $module_data, 'session', '');
+    //             $iv = substr(SSO_REGISTER_SECRET, 0, 16);
+    //             $sso_redirect_users = strtr($sso_redirect_users, '-_,', '+/=');
+    //             $sso_redirect_users = openssl_decrypt($sso_redirect_users, 'aes-256-cbc', SSO_REGISTER_SECRET, 0, $iv);
+    //             if (!empty($sso_redirect_users)) {
+    //                 $array['input'] = $sso_redirect_users;
+    //             }
+    //         }
+    //         nv_jsonOutput($array);
+    //     }
+    // } else {
+        $sql = 'INSERT INTO ' . $db_config['prefix'] . '_users (
             group_id, username, md5username, password, email, first_name, last_name, gender, photo, birthday, sig, regdate,
             question, answer, passlostkey, view_mail, remember, in_groups,
             active, checknum, last_login, last_ip, last_agent, last_openid, idsite, email_verification_time, active_obj
@@ -407,7 +407,7 @@ if ($checkss == $array_register['checkss']) {
             :answer,
             '', 0, 1,
             '" . (defined('ACCESS_ADDUS') ? $group_id : ($global_users_config['active_group_newusers'] ? 7 : 4)) . "',
-            1, '', 0, '', '', '', " . $global_config['idsite'] . ", -1, 'SYSTEM'
+            0, '', 0, '', '', '', " . $global_config['idsite'] . ", -1, 'SYSTEM'
         )";
 
         $data_insert = [];
@@ -488,7 +488,7 @@ if ($checkss == $array_register['checkss']) {
                 'mess' => $lang_module['register_ok']
             ]);
         }
-    }
+    // }
 }
 
 if ($nv_Request->isset_request('get_usage_terms', 'post')) {

@@ -12,9 +12,9 @@
   padding-right: 50px;
 }
 
-.banner {
-  max-width: 300px;
-  margin: auto;
+.banner img {
+  margin: calc(50vh - 300px) auto 30px auto;
+  max-height: 300px;
 }
 
 .main-search {

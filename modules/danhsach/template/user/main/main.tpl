@@ -1,24 +1,55 @@
 <!-- BEGIN: main -->
+<style>
+  .inner-addon {
+    position: relative;
+  }
+
+  .inner-addon .fa {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+  }
+
+  .left-addon .fa {
+    left: 0px;
+  }
+
+  .right-addon .fa {
+    right: 0px;
+  }
+
+  .left-addon input {
+    padding-left: 30px;
+  }
+
+  .right-addon input {
+    padding-right: 30px;
+  }
+</style>
+
 <div class="container">
+  <div style="text-align: right;">
+    <!-- BEGIN: khach -->
+    <a href="/users/login/"> Đăng nhập </a> |
+    <a href="/users/register/"> Đăng ký </a>
+    <!-- END: khach -->
+    <!-- BEGIN: nhanvien -->
+    <a href="/quanly/"> Quản lý </a> |
+    <a href="/users/logout"> Đăng xuất </a>
+    <!-- END: khach -->
+  </div>
   <div class="banner"> <img class="img-responsive" src="{banner}"> </div>
   <div class="main-search">
-    <label style="clear: both" class="input-group">
-      <input type="text" class="form-control" id="tukhoa" placeholder="Nhập tên hoặc mã số" autocomplete="off">
-      <div class="input-group-btn">
-        <button class="btn btn-info" onclick="dentrang(1)"> Tìm kiếm </button>
+    <form onsubmit="return dentrang(event, 1)">
+      <div class="inner-addon right-addon">
+        <span class="fa fa-search"></span>
+        <input type="text" class="form-control" id="tukhoa" style="border-radius: 20px;"
+          placeholder="Nhập tên hoặc số microchip" autocomplete="off">
       </div>
-    </label>
-    <div class="text-center">
-      <!-- BEGIN: khach -->
-      <a href="/users/login/"> Đăng nhập </a> | 
-      <a href="/users/register/"> Đăng ký </a>
-      <!-- END: khach -->
-      <!-- BEGIN: nhanvien -->
-      <a href="/quanly/"> Quản lý </a>
-      <!-- END: khach -->
-    </div>
+    </form>
   </div>
   <div style="clear: both;"></div>
+  <div class="text-center"> Tra cứu danh sách thú cưng </div>
   <div id="content" style="margin-top: 20px;">
     {content}
   </div>
@@ -28,7 +59,8 @@
     trang: 1
   }
 
-  function dentrang(trang) {
+  function dentrang(event, trang) {
+    event.preventDefault()
     vhttp.post('/danhsach/api/', {
       action: 'timkiem',
       trang: trang,
@@ -36,9 +68,8 @@
     }).then((resp) => {
       $('#content').html(resp.danhsach)
       global.trang = trang
-    }, () => {
-
     })
+    return false;
   }
 </script>
 <!-- END: main -->

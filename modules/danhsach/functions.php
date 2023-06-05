@@ -80,7 +80,7 @@ function tinhtuoi($ngaysinh) {
 function kiemtragiong($idgiong) {
   global $db;
 
-  $sql = "select * from ". PREFIX ."_giongloai where id = $idgiong";
+  $sql = "select * from pet_danhmuc_giong where id = $idgiong";
   if (empty($giong = $db->fetch($sql))) return '';
   return $giong['name'];
 }

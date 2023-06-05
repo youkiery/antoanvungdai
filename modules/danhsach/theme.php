@@ -27,10 +27,10 @@ function danhsachthucung() {
   if (empty($tukhoa)) $xtra = "";
   else $xtra = " and thucung like '%$tukhoa%' or micro like '%$tukhoa%'";
 
-  $sql = "select * from ". PREFIX ."_thucung where active = 1 $xtra order by id desc limit $truongmoitrang offset ". ($trang - 1) * $truongmoitrang;
-  $danhsach = [];
-  $sql = "select count(id) as tongtruong from ". PREFIX ."_thucung where active = 1 $xtra";
-  $tongquan = 0;
+  $sql = "select * from pet_thucung where active = 1 $xtra order by id desc limit $truongmoitrang offset ". ($trang - 1) * $truongmoitrang;
+  $danhsach = $db->all($sql);
+  $sql = "select count(id) as tongtruong from pet_thucung where active = 1 $xtra";
+  $tongquan = $db->fetch($sql)['tongtruong'];
 
   foreach ($danhsach as $thucung) {
     $xtpl->assign('id', $thucung['id']);

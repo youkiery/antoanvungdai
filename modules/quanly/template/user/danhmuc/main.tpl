@@ -68,9 +68,18 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Thêm giống </h4>
+        <h4 class="modal-title"> Thêm giống loài </h4>
       </div>
       <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-xs-8">
+            Tên loài
+          </div>
+          <div class="col-xs-16">
+            <input type="text" class="form-control" id="tenloai" placeholder="Tên loài">
+          </div>
+        </div>
+
         <div class="form-group row">
           <div class="col-xs-8">
             Tên giống
@@ -126,6 +135,10 @@
   var global = {
     id: 0
   }
+
+  $(document).ready(() => {
+    vhttp.alert()
+  })
 
   function hienthinut() {
     if (global.id) {
@@ -183,41 +196,51 @@
   }
 
   function xacnhanthemphuong() {
-    vhttp.post('/quanly/api/', {
-      action: 'themphuong',
-      id: global.id,
-      tenphuong: $('#tenphuong').val()
-    }).then((phanhoi) => {
-      $('#phuong').html(phanhoi.danhsachphuong)
-      $('.nav-tabs a[href="#phuong"]').tab('show');
-      $('#modal-themphuong').modal('hide')
-    })
+    if (!$('#tenphuong').val().length) vhttp.notify('Không được để trống tên phường')
+    else {
+      vhttp.post('/quanly/api/', {
+        action: 'themphuong',
+        id: global.id,
+        tenphuong: $('#tenphuong').val()
+      }).then((phanhoi) => {
+        $('#phuong').html(phanhoi.danhsachphuong)
+        $('.nav-tabs a[href="#phuong"]').tab('show');
+        $('#modal-themphuong').modal('hide')
+      })
+    }
   }
 
   function themgiong() {
     global.id = 0
     hienthinut()
     $('#tengiong').val('')
+    $('#tenloai').val('')
     $('#modal-themgiong').modal('show')
   }
 
-  function capnhatgiong(id, tengiong) {
+  function capnhatgiong(id, tengiong, tenloai) {
     global.id = id
     hienthinut()
     $('#tengiong').val(tengiong)
+    $('#tenloai').val(tenloai)
     $('#modal-themgiong').modal('show')
   }
 
   function xacnhanthemgiong() {
-    vhttp.post('/quanly/api/', {
-      action: 'themgiong',
-      id: global.id,
-      tengiong: $('#tengiong').val()
-    }).then((phanhoi) => {
-      $('#giong').html(phanhoi.danhsachgiong)
-      $('.nav-tabs a[href="#giong"]').tab('show');
-      $('#modal-themgiong').modal('hide')
-    })
+    if (!$('#tenloai').val().length) vhttp.notify('Không được để trống tên loài')
+    else if (!$('#tengiong').val().length) vhttp.notify('Không được để trống tên giống')
+    else {
+      vhttp.post('/quanly/api/', {
+        action: 'themgiong',
+        id: global.id,
+        tengiong: $('#tengiong').val(),
+        tenloai: $('#tenloai').val(),
+      }).then((phanhoi) => {
+        $('#giong').html(phanhoi.danhsachgiong)
+        $('.nav-tabs a[href="#giong"]').tab('show');
+        $('#modal-themgiong').modal('hide')
+      })
+    }
   }
 </script>
 <!-- END: main -->
