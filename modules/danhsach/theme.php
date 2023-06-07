@@ -25,7 +25,7 @@ function danhsachthucung() {
   $tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
   $trang = $nv_Request->get_string('trang', 'post', '1');
   if (empty($tukhoa)) $xtra = "";
-  else $xtra = " and thucung like '%$tukhoa%' or micro like '%$tukhoa%'";
+  else $xtra = " and name like '%$tukhoa%' or micro like '%$tukhoa%'";
 
   $sql = "select * from pet_thucung where active = 1 $xtra order by id desc limit $truongmoitrang offset ". ($trang - 1) * $truongmoitrang;
   $danhsach = $db->all($sql);
@@ -41,7 +41,7 @@ function danhsachthucung() {
     $xtpl->parse("main.thucung");
   }
   
-  $xtpl->assign('danhsachtrang', danhsachtrang($trang, $tongquan['tongtruong'], $truongmoitrang));
+  $xtpl->assign('danhsachtrang', danhsachtrang($trang, $tongquan, $truongmoitrang));
   $xtpl->parse("main");
   return $xtpl->text("main");
 }

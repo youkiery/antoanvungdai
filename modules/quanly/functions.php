@@ -25,3 +25,10 @@ function kiemtraphanquyen($id) {
 	if (!empty($phanquyen = $db->fetch($sql))) return $phanquyen['quyen'];
   return 0;
 }
+
+function chuyendoithoigian($ngay) {
+  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $ngay, $m)) {
+    return mktime(0, 0, 0, $m[2], $m[1], $m[3]);
+  }
+  return false;
+}

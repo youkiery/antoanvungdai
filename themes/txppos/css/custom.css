@@ -69,6 +69,35 @@ table {
   font-weight: bold;
 }
 
+.goiy {
+  position: relative;
+}
+
+.danhsachgoiy {
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  max-height: 400px;
+  overflow-y: scroll;
+  display: none;
+  z-index: 10;
+  box-shadow: 3px 3px 5px #d3d3d3;
+  border-color: #d3d3d3 gray gray #d3d3d3;
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: 10px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.danhsachgoiy div:not(:last-child) {
+  border-bottom: 1px solid lightgray;
+}
+
+.danhsachgoiy div:hover {
+  background-color: lightgreen;
+}
+
 .pw-suggest-group,
 .pw-discount-group,
 .pw-bill-tab {

@@ -79,7 +79,7 @@ function themgiong() {
 	$tengiong = $nv_Request->get_string('tengiong', 'post', '');
 	$tenloai = $nv_Request->get_string('tenloai', 'post', '');
 	
-	$sql = "select * from ". PREFIX ."_danhmuc_giong where giong = '$tengiong', loai = '$tenloai'";
+	$sql = "select * from ". PREFIX ."_danhmuc_giong where giong = '$tengiong' and loai = '$tenloai'";
 	if (!empty($db->fetch($sql))) $resp['messenger'] = 'Giống loài đã tồn tại!!!';
 	else {
 		if (empty($id)) {
@@ -202,4 +202,79 @@ function themthanhvien() {
 		$resp['status'] = 1;
 		$resp['danhsachthanhvien'] = danhsachthanhvien();
 	}
+}
+
+function timkiemchuho() {
+	global $db, $nv_Request, $resp;
+
+	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
+	$sql = "select * from ". PREFIX ."_tiemphong_chuho where ten like '%$tukhoa%' or diachi like '%$tukhoa%' or dienthoai like '%$tukhoa%' order by id asc limit ". GIOIHAN;
+	$danhsach = $db->all($sql);
+  $xtpl = new XTemplate('goiychuho.tpl', PATH .'/tiemphong/');
+
+	foreach ($danhsach as $chuho) {
+		$sql = "select * from ". PREFIX ."_danhmuc_phuong where id = $chuho[idphuong]";
+		$phuong = $db->fetch($sql)['ten'];
+		$xtpl->assign('idchu', $chuho['id']);
+		$xtpl->assign('ten', $chuho['ten']);
+		$xtpl->assign('diachi', $chuho['diachi']);
+		$xtpl->assign('dienthoai', $chuho['dienthoai']);
+		$xtpl->assign('idphuong', $chuho['idphuong']);
+		$xtpl->assign('phuong', $phuong);
+		$xtpl->parse('main.row');
+	}
+
+	if (empty($danhsach)) $xtpl->parse('main.trong');
+	$xtpl->parse('main');
+
+	$resp['status']	= 1;
+	$resp['danhsach']	= $xtpl->text();
+}
+
+function timkiemthucung() {
+	global $db, $nv_Request, $resp;
+
+	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
+	$idchu = $nv_Request->get_string('idchu', 'post', '0');
+	$sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $idchu and (micro like '%$tukhoa%' or ten like '%$tukhoa%') order by id asc limit ". GIOIHAN;
+	$danhsach = $db->all($sql);
+  $xtpl = new XTemplate('goiythucung.tpl', PATH .'/tiemphong/');
+
+	foreach ($danhsach as $thucung) {
+		$sql = "select * from ". PREFIX ."_danhmuc_giong where id = $thucung[idgiong]";
+		$giongloai = $db->fetch($sql);
+		$xtpl->assign('idthucung', $thucung['id']);
+		$xtpl->assign('ten', $thucung['ten']);
+		$xtpl->assign('micro', $thucung['micro']);
+		$xtpl->assign('giong', $giongloai['giong']);
+		$xtpl->assign('loai', $giongloai['loai']);
+		$xtpl->parse('main.row');
+	}
+
+	if (empty($danhsach)) $xtpl->parse('main.trong');
+	$xtpl->parse('main');
+
+	$resp['status']	= 1;
+	$resp['danhsach']	= $xtpl->text();
+}
+
+function timkiemgiongloai() {
+	global $db, $nv_Request, $resp;
+
+	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
+	$sql = "select * from ". PREFIX ."_danhmuc_giong where giong like '%$tukhoa%' or loai like '%$tukhoa%' order by loai asc, giong asc limit ". GIOIHAN;
+	$danhsach = $db->all($sql);
+  $xtpl = new XTemplate('goiygiongloai.tpl', PATH .'/tiemphong/');
+
+	foreach ($danhsach as $giongloai) {
+		$xtpl->assign('giong', $giongloai['giong']);
+		$xtpl->assign('loai', $giongloai['loai']);
+		$xtpl->parse('main.row');
+	}
+
+	if (empty($danhsach)) $xtpl->parse('main.trong');
+	$xtpl->parse('main');
+
+	$resp['status']	= 1;
+	$resp['danhsach']	= $xtpl->text();
 }

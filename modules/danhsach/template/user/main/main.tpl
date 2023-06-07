@@ -40,7 +40,7 @@
   </div>
   <div class="banner"> <img class="img-responsive" src="{banner}"> </div>
   <div class="main-search">
-    <form onsubmit="return dentrang(event, 1)">
+    <form onsubmit="return timkiem(event)">
       <div class="inner-addon right-addon">
         <span class="fa fa-search"></span>
         <input type="text" class="form-control" id="tukhoa" style="border-radius: 20px;"
@@ -58,9 +58,21 @@
   var global = {
     trang: 1
   }
-
-  function dentrang(event, trang) {
+  
+  function timkiem(event) {
     event.preventDefault()
+    vhttp.post('/danhsach/api/', {
+      action: 'timkiem',
+      trang: 1,
+      tukhoa: $('#tukhoa').val()
+    }).then((resp) => {
+      $('#content').html(resp.danhsach)
+      global.trang = 1
+    })
+    return false;
+  }
+
+  function dentrang(trang) {
     vhttp.post('/danhsach/api/', {
       action: 'timkiem',
       trang: trang,
@@ -69,7 +81,6 @@
       $('#content').html(resp.danhsach)
       global.trang = trang
     })
-    return false;
   }
 </script>
 <!-- END: main -->
