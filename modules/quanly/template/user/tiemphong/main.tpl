@@ -1,14 +1,14 @@
 <!-- BEGIN: main -->
-<div id="modal-xoaphuong" class="modal fade" role="dialog">
+<div id="modal-xoatiemphong" class="modal fade" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Xóa phường </h4>
+        <h4 class="modal-title"> Xóa tiêm phòng </h4>
       </div>
       <div class="modal-body text-center">
-        Xác nhận xóa phường này
-        <button class="btn btn-danger btn-block" onclick="xacnhanxoaphuong()">
+        Xác nhận xóa mũi tiêm phòng này
+        <button class="btn btn-danger btn-block" onclick="xacnhanxoatiemphong()">
           Xóa
         </button>
       </div>
@@ -26,7 +26,8 @@
       <div class="modal-body">
         <div class="form-group"> <b>Chủ hộ</b> </div>
         <div class="form-group goiy">
-          <input type="text" class="form-control" id="chuho" placeholder="Tìm kiếm chủ hộ theo tên, địa chỉ, số điện thoại">
+          <input type="text" class="form-control" id="chuho"
+            placeholder="Tìm kiếm chủ hộ theo tên, địa chỉ, số điện thoại">
           <div class="danhsachgoiy" id="goiychuho"></div>
         </div>
 
@@ -107,10 +108,15 @@
           <input type="text" class="form-control date" id="thoigiantiem">
         </div>
 
-        <button class="btn btn-success btn-block them" onclick="xacnhanthemphuong()">
+        <div class="row">
+          <div class="col-sm-6"> Hình ảnh </div>
+          <div class="col-sm-18" id="hinhanh"> </div>
+        </div>
+
+        <button class="btn btn-success btn-block them" onclick="xacnhanthemtiemphong()">
           Thêm
         </button>
-        <button class="btn btn-info btn-block capnhat" onclick="xacnhanthemphuong()">
+        <button class="btn btn-info btn-block capnhat" onclick="xacnhanthemtiemphong()">
           Cập nhật
         </button>
       </div>
@@ -138,7 +144,17 @@
   var global = {
     id: 0,
     idchu: 0,
-    idthucung: 0
+    idthucung: 0,
+    homnay: '{homnay}'
+  }
+  var config = {
+    apiKey: "AIzaSyDWt6y4laxeTBq2RYDY6Jg4_pOkdxwsjUE",
+    authDomain: "directed-sonar-241507.firebaseapp.com",
+    databaseURL: "https://directed-sonar-241507.firebaseio.com",
+    projectId: "directed-sonar-241507",
+    storageBucket: "directed-sonar-241507.appspot.com",
+    messagingSenderId: "816396321770",
+    appId: "1:816396321770:web:193e84ee21b16d41"
   }
 
   $(document).ready(() => {
@@ -146,6 +162,10 @@
     $('.date').datepicker({
       dateFormat: 'dd/mm/yy'
     })
+
+    firebase.initializeApp(config);
+    vimage.path = '/vungdai/images'
+    vimage.install('hinhanh')
 
     vremind.install('#chuho', '#goiychuho', (key) => {
       return new Promise(resolve => {
@@ -198,7 +218,7 @@
     $('#tenchu').val(ten)
     $('#diachi').val(diachi)
     $('#dienthoai').val(dienthoai)
-    $('#phuong option[value='+ idphuong +']')[0].selected = true
+    $('#phuong option[value=' + idphuong + ']')[0].selected = true
   }
 
   function chonthucung(idthucung, ten, micro, giong, loai) {
@@ -214,90 +234,113 @@
     $('#loai').val(loai)
   }
 
-  // function xoaphuong(id) {
-  //   global.id = id
-  //   $('#modal-xoaphuong').modal('show')
-  // }
-
-  // function themphuong() {
-  //   global.id = 0
-  //   hienthinut()
-  //   $('#tenphuong').val('')
-  //   $('#modal-themphuong').modal('show')
-  // }
-
-  // function capnhatphuong(id, tenphuong) {
-  //   global.id = id
-  //   hienthinut()
-  //   $('#tenphuong').val(tenphuong)
-  //   $('#modal-themphuong').modal('show')
-  // }
-
-  // function xacnhanxoaphuong() {
-  //   vhttp.post('/quanly/api/', {
-  //     action: 'xoaphuong',
-  //     id: global.id,
-  //   }).then((phanhoi) => {
-  //     $('#phuong').html(phanhoi.danhsachphuong)
-  //     $('#modal-xoaphuong').modal('hide')
-  //   })
-  // }
-
-  // function xacnhanthemphuong() {
-  //   if (!$('#tenphuong').val().length) vhttp.notify('Không được để trống tên phường')
-  //   else {
-  //     vhttp.post('/quanly/api/', {
-  //       action: 'themphuong',
-  //       id: global.id,
-  //       tenphuong: $('#tenphuong').val()
-  //     }).then((phanhoi) => {
-  //       $('#phuong').html(phanhoi.danhsachphuong)
-  //       $('.nav-tabs a[href="#phuong"]').tab('show');
-  //       $('#modal-themphuong').modal('hide')
-  //     })
-  //   }
-  // }
-
-  function xoagiong(id) {
+  function xoatiemphong(id) {
     global.id = id
-    $('#modal-xoagiong').modal('show')
+    $('#modal-xoatiemphong').modal('show')
   }
 
-  function xacnhanxoagiong() {
+  function xacnhanxoatiemphong() {
     vhttp.post('/quanly/api/', {
-      action: 'xoagiong',
+      action: 'xoatiemphong',
       id: global.id,
     }).then((phanhoi) => {
-      $('#giong').html(phanhoi.danhsachgiong)
-      $('#modal-xoagiong').modal('hide')
+      $('#tiemphong').html(phanhoi.danhsachtiemphong)
+      $('#modal-xoatiemphong').modal('hide')
     })
   }
 
   function themtiemphong() {
     global.id = 0
     hienthinut()
+    $('#chuho').val('')
+    $('#tenchu').val('')
+    $('#dienthoai').val('')
+    $('#diachi').val('')
+    $('#thucung').val('')
+    $('#tenthucung').val('')
+    $('#micro').val('')
+    $('#giongloai').val('')
+    $('#loai').val('')
+    $('#giong').val('')
+    $('#thoigiantiem').val(global.homnay)
+    vimage.clear('hinhanh')
     $('#modal-themtiemphong').modal('show')
   }
 
   function capnhattiemphong(id) {
-    global.id = id
-    hienthinut()
-    $('#modal-themgiong').modal('show')
+    vhttp.post('/quanly/api/', {
+      action: 'laythongtintiemphong',
+      id: id,
+    }).then((phanhoi) => {
+      global.id = id
+      hienthinut()
+      $('#chuho').val('')
+      $('#tenchu').val(phanhoi.tenchu)
+      $('#dienthoai').val(phanhoi.dienthoai)
+      $('#diachi').val(phanhoi.diachi)
+      $('#thucung').val('')
+      $('#tenthucung').val(phanhoi.tenthucung)
+      $('#micro').val(phanhoi.micro)
+      $('#giongloai').val(phanhoi.giongloai)
+      $('#loai').val(phanhoi.loai)
+      $('#giong').val(phanhoi.giong)
+      $('#thoigiantiem').val(phanhoi.thoigiantiem)
+      phuong = $('#phuong option[value='+ phanhoi.idphuong +']').prop('selected', true)
+      vimage.data['hinhanh'] = [phanhoi.hinhanh]
+      vimage.reload('hinhanh')
+      $('#modal-themtiemphong').modal('show')
+    })
+  }
+
+  function kiemtrangaythang(ngay) {
+    if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ngay)) return false;
+    var parts = ngay.split("/");
+    var day = parseInt(parts[0], 10);
+    var month = parseInt(parts[1], 10);
+    var year = parseInt(parts[2], 10);
+
+    if (year < 1000 || year > 3000 || month == 0 || month > 12) return false;
+    var monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)) monthLength[1] = 29;
+    return day > 0 && day <= monthLength[month - 1];
   }
 
   function xacnhanthemtiemphong() {
-    if (!$('#tenloai').val().length) vhttp.notify('Không được để trống tên loài')
-    else if (!$('#tengiong').val().length) vhttp.notify('Không được để trống tên giống')
+    var phuong = $('#phuong option:selected')
+    if (!phuong.length) {
+      vhttp.notify('Chọn 1 phường trước khi thêm')
+      return 0
+    }
+    var dulieu = {
+      tenchu: $('#tenchu').val(),
+      dienthoai: $('#dienthoai').val(),
+      diachi: $('#diachi').val(),
+      idphuong: phuong[0].value,
+      tenthucung: $('#tenthucung').val(),
+      micro: $('#micro').val(),
+      loai: $('#loai').val(),
+      giong: $('#giong').val(),
+      thoigiantiem: $('#thoigiantiem').val(),
+    }
+    if (!dulieu.tenchu.length) vhttp.notify('Không được để trống tên chủ hộ')
+    else if (!dulieu.dienthoai.length) vhttp.notify('Không được để trống số điện thoại')
+    else if (!dulieu.diachi.length) vhttp.notify('Không được để trống địa chỉ')
+    else if (!dulieu.tenthucung.length) vhttp.notify('Không được để trống tên thú cưng')
+    else if (!dulieu.micro.length) vhttp.notify('Không được để trống số Microchip')
+    else if (!dulieu.giong.length) vhttp.notify('Không được để trống tên giống')
+    else if (!dulieu.loai.length) vhttp.notify('Không được để trống tên loài')
+    else if (!kiemtrangaythang(dulieu.thoigiantiem)) vhttp.notify('Ngày tháng không hợp lệ')
     else {
-      vhttp.post('/quanly/api/', {
-        action: 'themgiong',
-        id: global.id,
-        tengiong: $('#tengiong').val(),
-        tenloai: $('#tenloai').val(),
-      }).then((phanhoi) => {
-        $('#giong').html(phanhoi.danhsachgiong)
-        $('.nav-tabs a[href="#giong"]').tab('show');
-        $('#modal-themgiong').modal('hide')
+      vimage.uploadimage('hinhanh').then(() => {
+        dulieu.hinhanh = vimage.data['hinhanh']
+        vhttp.post('/quanly/api/', {
+          action: 'themtiemphong',
+          id: global.id,
+          dulieu: dulieu,
+        }).then((phanhoi) => {
+          $('#tiemphong').html(phanhoi.danhsachtiemphong)
+          $('#modal-themtiemphong').modal('hide')
+        })
       })
     }
   }

@@ -11,11 +11,11 @@
   <tr>
     <td> {chuho} </td>
     <td> {phuong} </td>
-    <td> {microchip} </td>
+    <td> {micro} </td>
     <td> {thoigian} </td>
     <td> 
-      <button class="btn btn-info btn-xs" onclick="capnhatgiong({id}, '{giong}', '{loai}')"> <span class="fa fa-pencil-square-o"></span> cập nhật </button>  
-      <button class="btn btn-danger btn-xs" onclick="xoagiong({id})"> <span class="fa fa-times"></span> xóa </button>  
+      <button class="btn btn-info btn-xs" onclick="capnhattiemphong({id})"> <span class="fa fa-pencil-square-o"></span> cập nhật </button>  
+      <button class="btn btn-danger btn-xs" onclick="xoatiemphong({id})"> <span class="fa fa-times"></span> xóa </button>  
     </td>
   </tr>
   <!-- END: tiemphong -->

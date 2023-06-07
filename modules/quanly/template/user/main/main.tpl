@@ -3,7 +3,7 @@
   <a href="/quanly/danhmuc">
     <div class="box-content">
       <div class="box-image">
-        <img src="/assets/images/logo-lg.png" alt="">
+        <img src="/assets/images/danhmuc.png" alt="">
       </div>
       <div class="box-title"> Danh mục </div>
     </div>
@@ -14,7 +14,7 @@
   <a href="/quanly/tiemphong">
     <div class="box-content">
       <div class="box-image">
-        <img src="/assets/images/logo-lg.png" alt="">
+        <img src="/assets/images/tiemphong.png" alt="">
       </div>
       <div class="box-title"> Tiêm phòng </div>
     </div>
@@ -25,7 +25,7 @@
   <a href="/quanly/thongke">
     <div class="box-content">
       <div class="box-image">
-        <img src="/assets/images/logo-lg.png" alt="">
+        <img src="/assets/images/thongke.png" alt="">
       </div>
       <div class="box-title"> Thống kê </div>
     </div>
@@ -36,7 +36,7 @@
   <a href="/quanly/thanhvien">
     <div class="box-content">
       <div class="box-image">
-        <img src="/assets/images/logo-lg.png" alt="">
+        <img src="/assets/images/taikhoan.png" alt="">
       </div>
       <div class="box-title"> Quản lý tài khoản </div>
     </div>
@@ -47,7 +47,7 @@
   <a href="/quanly/nguoidung">
     <div class="box-content">
       <div class="box-image">
-        <img src="/assets/images/logo-lg.png" alt="">
+        <img src="/assets/images/nguoidung.png" alt="">
       </div>
       <div class="box-title"> Thông tin người dùng </div>
     </div>

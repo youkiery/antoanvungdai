@@ -278,3 +278,50 @@ function timkiemgiongloai() {
 	$resp['status']	= 1;
 	$resp['danhsach']	= $xtpl->text();
 }
+
+function xoatiemphong() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$sql = "delete from ". PREFIX ."_tiemphong where id = $id";
+	$db->query($sql);
+
+	$resp['status'] = 1;
+	$resp['danhsachtiemphong'] = danhsachtiemphong();
+}
+
+
+function laythongtintiemphong() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	
+  $sql = "select a.id, c.ten as tenchu, c.dienthoai, c.diachi, b.ten as tenthucung, b.micro, d.giong, d.loai, b.hinhanh, c.idphuong, a.thoigiantiem from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_danhmuc_giong d on b.idgiong = d.id where a.id = $id";
+	$resp = $db->fetch($sql);
+	$resp['thoigiantiem'] = date('d/m/Y', $resp['thoigiantiem']);
+	$resp['status'] = 1;
+}
+
+function themtiemphong() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$dulieu = $nv_Request->get_array('dulieu', 'post', '');
+	$idchuho = kiemtrachuho($dulieu);
+	$idthucung = kiemtrathucung($idchuho, $dulieu);
+	$thoigiantiem = chuyendoithoigian($dulieu['thoigiantiem']);
+	$thoigiannhac = strtotime('-1 year', $thoigiantiem);
+
+	if ($id) {
+		// cập nhật
+		$sql = "update ". PREFIX ."_tiemphong set idthucung = $idthucung, thoigiantiem = $thoigiantiem, thoigiannhac = $thoigiannhac where id = $id";
+	}
+	else {
+		// thêm
+		$sql = "insert into ". PREFIX ."_tiemphong (idthucung, thoigiantiem, thoigiannhac) values ($idthucung, $thoigiantiem, $thoigiannhac)";
+	}
+	$db->query($sql);
+
+	$resp['danhsachtiemphong'] = danhsachtiemphong();
+	$resp['status'] = 1;
+}

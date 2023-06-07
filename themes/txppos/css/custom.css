@@ -145,6 +145,42 @@ table {
   position: fixed;
 }
 
+.pw-image {
+  width: 128px;
+  height: 128px;
+  border-radius: 10px;
+}
+
+.pw-image-box {
+  float: left;
+  position: relative;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  border: 1px solid lightgray;
+}
+
+.pw-image-click {
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  font-size: 1.5em;
+  right: -5px;
+  top: -5px;
+}
+
+.pw-image-click:hover {
+  color: red;
+}
+
+.pw-image-panel {
+  margin-bottom: 5px;
+}
+
+.pw-none {
+  display: none !important;
+}
+
 .pw-alert {
   position: fixed;
   bottom: 10px;

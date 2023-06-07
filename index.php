@@ -19,7 +19,14 @@ if (isset($_GET['response_headers_detect'])) {
 }
 
 define('NV_SYSTEM', true);
-
+register_shutdown_function("fatal_handler");
+function fatal_handler()
+{
+    $error = error_get_last();
+    if ($error !== NULL) {
+        echo('<pre><code>' . print_r($error, true) . '</code></pre>');
+    }
+}
 // Xac dinh thu muc goc cua site
 define('NV_ROOTDIR', pathinfo(str_replace(DIRECTORY_SEPARATOR, '/', __FILE__), PATHINFO_DIRNAME));
 

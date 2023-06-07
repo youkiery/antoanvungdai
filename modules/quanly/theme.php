@@ -147,9 +147,10 @@ function danhsachtiemphong() {
   else $tong = 0;
 
   foreach ($danhsach as $tiemphong) {
+    $xtpl->assign('id', $tiemphong['id']);
     $xtpl->assign('chuho', $tiemphong['chuho']);
     $xtpl->assign('phuong', $tiemphong['phuong']);
-    $xtpl->assign('microchip', $tiemphong['microchip']);
+    $xtpl->assign('micro', $tiemphong['micro']);
     $xtpl->assign('thoigian', date('d/m/Y', $tiemphong['thoigian']));
     $xtpl->parse("main.tiemphong");
   }

@@ -32,3 +32,54 @@ function chuyendoithoigian($ngay) {
   }
   return false;
 }
+
+function kiemtrachuho($dulieu) {
+	global $db;
+
+  $sql = "select * from ". PREFIX ."_tiemphong_chuho where dienthoai = '$dulieu[dienthoai]'";
+  if (empty($chuho = $db->fetch($sql))) {
+    $sql = "insert into ". PREFIX ."_tiemphong_chuho (idphuong, ten, dienthoai, diachi) values($dulieu[idphuong], '$dulieu[tenchu]', '$dulieu[dienthoai]', '$dulieu[diachi]')";
+    return $db->insertid($sql);
+  }
+  else {
+    $sql = "update ". PREFIX ."_tiemphong_chuho set idphuong = $dulieu[idphuong], ten = '$dulieu[tenchu]', dienthoai = '$dulieu[dienthoai]', diachi = '$dulieu[diachi]' where id = $chuho[id]";
+    $db->query($sql);
+  }
+  return $chuho['id'];
+}
+
+function kiemtragiongloai($dulieu) {
+	global $db;
+
+  $sql = "select * from ". PREFIX ."_danhmuc_giong where giong = '$dulieu[giong]' and loai = '$dulieu[loai]'";
+  if (empty($giongloai = $db->fetch($sql))) {
+    $sql = "insert into ". PREFIX ."_danhmuc_giong (giong, loai) values('$dulieu[giong]', '$dulieu[loai]')";
+    return $db->insertid($sql);
+  }
+  return $giongloai['id'];
+}
+
+function kiemtrahinhanh($hinhanh) {
+  $hinhanhtam = '';
+  foreach ($hinhanh as $diachianh) {
+    if (!empty($diachianh)) $hinhanhtam = $diachianh;
+  }
+  return $hinhanhtam;
+}
+
+function kiemtrathucung($idchuho, $dulieu) {
+	global $db;
+
+  $idgiong = kiemtragiongloai($dulieu);
+  $hinhanh = kiemtrahinhanh($dulieu['hinhanh']);
+  $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $idchuho and micro = '$dulieu[micro]'";
+  if (empty($thucung = $db->fetch($sql))) {
+    $sql = "insert into ". PREFIX ."_tiemphong_thucung (idchu, idgiong, ten, micro, hinhanh) values($idchuho, '$dulieu[tenthucung]', '$dulieu[micro]', '$hinhanh')";
+    return $db->insertid($sql);
+  }
+  else {
+    $sql = "update ". PREFIX ."_tiemphong_thucung set ten = '$dulieu[tenthucung]', micro = '$dulieu[micro]', hinhanh = '$hinhanh' where id = $thucung[id]";
+    $db->query($sql);
+  }
+  return $thucung['id'];
+}

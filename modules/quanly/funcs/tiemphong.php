@@ -14,6 +14,7 @@ if (!defined('NV_IS_FORM')) {
 $page_title = "Quản lý tài khoản";
 
 $xtpl = new XTemplate("main.tpl", PATH . '/tiemphong/');
+$xtpl->assign('homnay', date('d/m/Y'));
 $xtpl->assign('danhsachtiemphong', danhsachtiemphong());
 
 $sql = "select * from ". PREFIX ."_danhmuc_phuong where kichhoat = 1 order by ten asc";
