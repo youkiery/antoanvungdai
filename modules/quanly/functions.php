@@ -15,6 +15,16 @@ define('NV_IS_FORM', true);
 define("PREFIX", $db_config['prefix']);
 define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/');
 
+function laybanner() {
+  global $db;
+
+  $sql = "select * from ". PREFIX ."_config where module = 'global' and config_name = 'site_banner'";
+  $hinhanh = $db->fetch($sql);
+  if (empty($hinhanh)) return NV_ROOTDIR . '/assets/images/noimage.png';
+  if (strpos('http', $hinhanh['config_value']) !== false) return $hinhanh['config_value'];
+  return '/' . $hinhanh['config_value'];
+}
+
 function kiemtraphanquyen($id) {
   global $db;
   if ($id == 1) return 2;

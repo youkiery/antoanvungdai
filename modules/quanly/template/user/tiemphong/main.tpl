@@ -16,6 +16,78 @@
   </div>
 </div>
 
+
+<div id="modal-timkiem" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"> Tìm kiếm tiêm phòng </h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-xs-6"> Tên chủ hộ </div>
+          <div class="col-xs-18">
+            <input type="text" class="form-control" id="timkiem-tenchu" placeholder="Tên chủ hộ">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-xs-6"> Điện thoại </div>
+          <div class="col-xs-18">
+            <input type="text" class="form-control" id="timkiem-dienthoai" placeholder="Điện thoại">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-xs-6"> Tên thú cưng </div>
+          <div class="col-xs-18">
+            <input type="text" class="form-control" id="timkiem-tenthucung" placeholder="Tên thú cưng">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-xs-6"> Microchip </div>
+          <div class="col-xs-18">
+            <input type="text" class="form-control" id="timkiem-micro" placeholder="Microchip">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-xs-6"> Giống Loài </div>
+          <div class="col-xs-9">
+            <input type="text" class="form-control" id="timkiem-loai" placeholder="Loài">
+          </div>
+          <div class="col-xs-9">
+            <input type="text" class="form-control" id="timkiem-giong" placeholder="Giống">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-xs-6"> Phường </div>
+          <div class="col-xs-18">
+            <input type="text" class="form-control" id="timkiem-phuong" placeholder="Phường">
+          </div>
+        </div>
+        
+        <div class="form-group row">
+          <div class="col-xs-6"> Thời gian tiêm </div>
+          <div class="col-xs-9">
+            <input type="text" class="form-control date" id="timkiem-batdau" placeholder="Từ ngày">
+          </div>
+          <div class="col-xs-9">
+            <input type="text" class="form-control date" id="timkiem-ketthuc" placeholder="Đến ngày">
+          </div>
+        </div>
+
+        <button class="btn btn-info btn-block" onclick="dentrang(1)">
+          Tìm kiếm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="modal-themtiemphong" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -134,6 +206,9 @@
   <button class="btn btn-success" onclick="themtiemphong()">
     <span class="fa fa-plus-circle"></span> Thêm tiêm phòng
   </button>
+  <button class="btn btn-info" onclick="timkiem()">
+    <span class="fa fa-search"></span> Tìm kiếm
+  </button>
 </div>
 
 <div id="tiemphong" class="tab-pane fade in active">
@@ -145,7 +220,8 @@
     id: 0,
     idchu: 0,
     idthucung: 0,
-    homnay: '{homnay}'
+    homnay: '{homnay}',
+    trang: 1
   }
   var config = {
     apiKey: "AIzaSyDWt6y4laxeTBq2RYDY6Jg4_pOkdxwsjUE",
@@ -202,6 +278,36 @@
     }, 300, 300)
   })
 
+  function timkiem() {
+    $('#modal-timkiem').modal('show')
+  }
+
+  function dentrang(trang) {
+    vhttp.post('/quanly/api/', {
+      action: 'chuyentrangtiemphong',
+      truongloc: thongtintruongloc(trang),
+    }).then((resp) => {
+      $('#tiemphong').html(resp.danhsachtiemphong)
+      $('#modal-timkiem').modal('hide')
+      global.trang = trang
+    })
+  }
+  
+  function thongtintruongloc(trang) {
+    return {
+      'tenchu': $('#timkiem-tenchu').val(),
+      'dienthoai': $('#timkiem-dienthoai').val(),
+      'thucung': $('#timkiem-thucung').val(),
+      'micro': $('#timkiem-micro').val(),
+      'giong': $('#timkiem-giong').val(),
+      'loai': $('#timkiem-loai').val(),
+      'phuong': $('#timkiem-phuong').val(),
+      'batdau': $('#timkiem-batdau').val(),
+      'ketthuc': $('#timkiem-ketthuc').val(),
+      'trang': trang,
+    }
+  }
+
   function hienthinut() {
     if (global.id) {
       $('.them').hide()
@@ -243,6 +349,7 @@
     vhttp.post('/quanly/api/', {
       action: 'xoatiemphong',
       id: global.id,
+      truongloc: thongtintruongloc(trang),
     }).then((phanhoi) => {
       $('#tiemphong').html(phanhoi.danhsachtiemphong)
       $('#modal-xoatiemphong').modal('hide')
@@ -293,7 +400,8 @@
   }
 
   function kiemtrangaythang(ngay) {
-    if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ngay)) return false;
+    var kiemtra = /\d{1,2}\/\d{1,2}\/\d{4}/.test(ngay)
+    if (!kiemtra) return false;
     var parts = ngay.split("/");
     var day = parseInt(parts[0], 10);
     var month = parseInt(parts[1], 10);
@@ -337,6 +445,7 @@
           action: 'themtiemphong',
           id: global.id,
           dulieu: dulieu,
+          truongloc: thongtintruongloc(trang),
         }).then((phanhoi) => {
           $('#tiemphong').html(phanhoi.danhsachtiemphong)
           $('#modal-themtiemphong').modal('hide')

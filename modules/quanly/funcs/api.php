@@ -279,6 +279,13 @@ function timkiemgiongloai() {
 	$resp['danhsach']	= $xtpl->text();
 }
 
+function chuyentrangtiemphong() {
+	global $db, $nv_Request, $resp;
+
+	$resp['status'] = 1;
+	$resp['danhsachtiemphong'] = danhsachtiemphong();
+}
+
 function xoatiemphong() {
 	global $db, $nv_Request, $resp;
 
@@ -289,7 +296,6 @@ function xoatiemphong() {
 	$resp['status'] = 1;
 	$resp['danhsachtiemphong'] = danhsachtiemphong();
 }
-
 
 function laythongtintiemphong() {
 	global $db, $nv_Request, $resp;

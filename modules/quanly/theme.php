@@ -11,7 +11,7 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
-define('GIOIHAN', 20);
+define('GIOIHAN', 12);
 
 function danhsachphuong() {
   global $db;
@@ -155,7 +155,7 @@ function danhsachtiemphong() {
     $xtpl->parse("main.tiemphong");
   }
   if (!count($danhsach)) $xtpl->parse('main.trong');
-  $xtpl->assign('phantrang', phantrang($truongloc['trang'], $tong, GIOIHAN));
+  $xtpl->assign('phantrang', phantrang($truongloc['trang'], $tong, GIOIHAN, 'dentrang'));
   $xtpl->parse("main");
   return $xtpl->text();
 }
@@ -165,9 +165,9 @@ function phantrang($trang, $tong, $gioihan, $chucnang = '') {
   $tongtrang = floor($tong / $gioihan) + (fmod($tong, $gioihan) ? 1 : 0);
   if (!$tongtrang) $tongtrang = 1;
   for ($i = 1; $i <= $tongtrang; $i++) {
-    if ($trang == $i) $xtpl->assign('active', 'class="active"');
-    else $xtpl->assign('active', '');
-    if (!empty($chucnang)) $xtpl->assign('chucnang', 'onclick="'. $chucnang .'('. $id .')"');
+    if ($trang == $i) $xtpl->assign('active', 'btn-info');
+    else $xtpl->assign('active', 'btn-default');
+    if (!empty($chucnang)) $xtpl->assign('chucnang', 'onclick="'. $chucnang .'('. $i .')"');
     else $xtpl->assign('chucnang', '');
     $xtpl->assign('trang', $i);
     $xtpl->parse('main.row');

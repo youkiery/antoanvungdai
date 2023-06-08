@@ -13,8 +13,8 @@ if (!defined('NV_ADMIN') or !defined('NV_MAINFILE')) {
 
 $module_version = array(
     'name' => 'Quản lý chíp',
-    'modfuncs' => 'main,api',
-    'submenu' => 'main,api',
+    'modfuncs' => 'main,api,chitiet',
+    'submenu' => 'main,api,chitiet',
     'is_sysmod' => 1,
     'virtual' => 1,
     'version' => '4.3.04',

@@ -13,7 +13,7 @@ if (!defined('NV_IS_FORM')) {
 
 $page_title = laytieude();
 
-$xtpl = new XTemplate("main.tpl", PATH);
+$xtpl = new XTemplate("main.tpl", PATH .'/main/');
 $xtpl->assign('module_file', $module_file);
 $xtpl->assign('logo', laylogo());
 $xtpl->assign('banner', laybanner());

@@ -1,4 +1,7 @@
 <!-- BEGIN: main -->
+<div class="banner">
+  <a href="/"> <img class="img-responsive" src="{banner}" style="margin-top: 0px;"> </a>
+</div>
 <div class="box col-xs-12 col-sm-8 col-md-6">
   <a href="/quanly/danhmuc">
     <div class="box-content">

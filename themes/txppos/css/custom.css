@@ -43,6 +43,41 @@ body {
   border-width: 1px;
 }
 
+.pw-card {
+  padding: 5px 10px;
+}
+
+.pw-card-content {
+  color: #000;
+  border-radius: 10px;
+  padding: 5px;
+  background: white;
+  font-size: .8em;
+  line-height: 18px;
+  display: inline-block;
+  position: relative;
+  box-shadow: 3px 3px 5px #d3d3d3;
+  border-color: #d3d3d3 gray gray #d3d3d3;
+  border-style: solid;
+  border-width: 1px;
+  overflow: hidden;
+  height: 150px;
+  width: 100%;
+}
+
+.pw-card-left {
+  width: 140px;
+  float: left;
+}
+.pw-card-left img {
+  max-height: 140px;
+  max-width: 140px;
+}
+.pw-card-right {
+  width: calc(100% - 150px);
+  float: right;
+}
+
 table {
   background: white;
 }
@@ -96,45 +131,6 @@ table {
 
 .danhsachgoiy div:hover {
   background-color: lightgreen;
-}
-
-.pw-suggest-group,
-.pw-discount-group,
-.pw-bill-tab {
-  position: relative;
-}
-
-.pw-suggest-list {
-  position: absolute;
-  width: 100%;
-  background: #fff;
-  max-height: 400px;
-  overflow-y: scroll;
-  display: none;
-  z-index: 10;
-  top: 31px;
-  box-shadow: 3px 3px 5px #d3d3d3;
-  border-color: #d3d3d3 gray gray #d3d3d3;
-  border-style: solid;
-  border-width: 1px;
-  margin-bottom: 10px;
-  border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-}
-
-.pw-suggest-image {
-  float: left;
-}
-
-.pw-suggest-image img {
-  width: 64px;
-  height: 64px;
-}
-
-.pw-suggest-info {
-  float: right;
-  width: calc(100% - 74px);
-  height: 64px;
 }
 
 #pw-dismiss {
@@ -198,62 +194,4 @@ table {
   width: 64px !important;
   height: 64px !important;
   background: url('/themes/default/images/thumbnail-xxs.jpg') !important;
-}
-
-.pbody {
-  padding: 10px;
-  width: 25%;
-  float: left;
-  height: 140px;
-  border-bottom: 1px solid lightgray;
-  overflow: hidden;
-  position: relative;
-}
-
-.pbody:hover {
-  border-radius: 10px;
-  background: aliceblue;
-}
-
-.pleft {
-  font-size: 14px;
-  float: left;
-  width: 64px;
-  overflow: hidden;
-  margin-right: 10px
-}
-
-.pright {
-  font-size: 14px;
-  display: inline-block;
-  width: calc(100% - 74px)
-}
-
-@media screen and (max-width:980px) {
-  .pbody {
-    width: 33% !important;
-  }
-}
-
-@media screen and (max-width: 778px) {
-  .pbody {
-    width: 50% !important;
-  }
-}
-
-@media screen and (max-width:480px) {
-  .xright {
-    width: auto;
-    margin: 20px 0px;
-    clear: both;
-  }
-
-  .container {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-
-  .pbody {
-    width: 100% !important;
-  }
 }
