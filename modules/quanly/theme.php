@@ -22,8 +22,17 @@ function danhsachphuong() {
   $danhsach = $db->all($sql);
 
   foreach ($danhsach as $phuong) {
+    $sql = "select count(id) as tong from ". PREFIX ."_tiemphong_chuho where idphuong = $phuong[id]";
+    if (empty($sochuho = $db->fetch($sql))) $sochuho = 0;
+    else $sochuho = $sochuho['tong'];
+    $sql = "select count(a.id) as tong from ". PREFIX ."_tiemphong_chuho a inner join ". PREFIX ."_tiemphong_thucung b on a.id = b.idchu where a.idphuong = $phuong[id]";
+    if (empty($sothucung = $db->fetch($sql))) $sothucung = 0;
+    else $sothucung = $sothucung['tong'];
+
     $xtpl->assign('id', $phuong['id']);
     $xtpl->assign('ten', $phuong['ten']);
+    $xtpl->assign('sochuho', $sochuho);
+    $xtpl->assign('sothucung', $sothucung);
     $xtpl->parse("main.phuong");
   }
   if (!count($danhsach)) $xtpl->parse('main.trong');
@@ -40,9 +49,14 @@ function danhsachgiong() {
   $danhsach = $db->all($sql);
 
   foreach ($danhsach as $giong) {
+    $sql = "select count(id) as tong from ". PREFIX ."_tiemphong_thucung where idgiong = $giong[id]";
+    if (empty($sothucung = $db->fetch($sql))) $sothucung = 0;
+    else $sothucung = $sothucung['tong'];
+
     $xtpl->assign('id', $giong['id']);
     $xtpl->assign('giong', $giong['giong']);
     $xtpl->assign('loai', $giong['loai']);
+    $xtpl->assign('sothucung', $sothucung);
     $xtpl->parse("main.giong");
   }
   if (!count($danhsach)) $xtpl->parse('main.trong');

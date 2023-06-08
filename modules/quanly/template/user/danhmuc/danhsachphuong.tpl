@@ -9,8 +9,8 @@
   <!-- BEGIN: phuong -->
   <tr>
     <td> {ten} </td>
-    <td> 0 </td>
-    <td> 0 </td>
+    <td> {sochuho} </td>
+    <td> {sothucung} </td>
     <td> 
       <button class="btn btn-info btn-xs" onclick="capnhatphuong({id}, '{ten}')"> <span class="fa fa-pencil-square-o"></span> cập nhật </button>  
       <button class="btn btn-danger btn-xs" onclick="xoaphuong({id})"> <span class="fa fa-times"></span> xóa </button>  

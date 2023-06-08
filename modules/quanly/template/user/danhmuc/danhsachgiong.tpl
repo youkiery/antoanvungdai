@@ -10,7 +10,7 @@
   <tr>
     <td> {loai} </td>
     <td> {giong} </td>
-    <td> 0 </td>
+    <td> {sothucung} </td>
     <td> 
       <button class="btn btn-info btn-xs" onclick="capnhatgiong({id}, '{giong}', '{loai}')"> <span class="fa fa-pencil-square-o"></span> cập nhật </button>  
       <button class="btn btn-danger btn-xs" onclick="xoagiong({id})"> <span class="fa fa-times"></span> xóa </button>  
