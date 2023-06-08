@@ -331,3 +331,100 @@ function themtiemphong() {
 	$resp['danhsachtiemphong'] = danhsachtiemphong();
 	$resp['status'] = 1;
 }
+
+function importnhaphang() {
+  global $db, $nv_Request, $resp, $_FILES;
+
+	$x = array();
+	$xr = array(0 => 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', 'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'HI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO');
+	foreach ($xr as $key => $value) {
+		$x[$value] = $key;
+	}
+
+  $raw = $_FILES['file']['tmp_name'];
+  include(NV_ROOTDIR .'/includes/plugin/PHPExcel/IOFactory.php');
+  $inputFileType = PHPExcel_IOFactory::identify($raw);
+  $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+  $objReader->setReadDataOnly(true);
+  $objPHPExcel = $objReader->load($raw);
+  
+  $sheet = $objPHPExcel->getSheet(0); 
+  $tongdong = intval($sheet->getHighestRow()); 
+  $highestColumn = $sheet->getHighestColumn();
+  $array = ['Tên chủ hộ' => -1, 'Điện thoại' => -1, 'Địa chỉ' => -1, 'Phường' => -1, 'Tên thú cưng' => -1, 'Microchip' => -1, 'Loài' => -1, 'Giống' => -1, 'Ngày tiêm' => -1];
+  $rev = ['Tên chủ hộ' => 'tenchu', 'Điện thoại' => 'dienthoai', 'Địa chỉ' => 'diachi', 'Phường' => 'phuong', 'Tên thú cưng' => 'tenthucung', 'Microchip' => 'micro', 'Loài' => 'loai', 'Giống' => 'giong', 'Ngày tiêm' => 'thoigiantiem'];
+  $arr = [];
+  for ($j = 0; $j <= $x[$highestColumn]; $j ++) {
+    $arr [$j]= $sheet->getCell($xr[$j] . '1')->getValue();
+  }
+
+  foreach ($arr as $key => $val) {
+    if (isset($array[$val])) $array[$val] = $key;
+  }
+
+  $check = false;
+  foreach ($array as $val) {
+    if ($val < 0) $check = true;
+  }
+  if ($check) {
+    $resp['messenger'] = "File thiếu cột dữ liệu";
+    return 0;
+  }
+
+  $loi = [];
+  for ($i = 2; $i <= $tongdong; $i ++) {
+    $dulieu = [];
+    foreach ($array as $key => $value) {
+      $val = $sheet->getCell($xr[$value] . ($i))->getValue();
+      if ($val !== 0 && empty($val)) $val = '';
+      $dulieu[$rev[$key]] = trim($val);
+    }
+		
+    // kiểm tra chủ hộ, nếu chưa có sđt thì thêm
+		$sql = "select * from ". PREFIX ."_tiemphong_chuho where dienthoai = '$dulieu[dienthoai]'";
+		if (empty($chuho = $db->fetch($sql))) {
+			// kiểm tra phường
+			$sql = "select * from ". PREFIX ."_danhmuc_phuong where ten = '$dulieu[phuong]'";
+			if (empty($phuong = $db->fetch($sql))) {
+				$loi []= "Dòng $i tên phường $dulieu[phuong] không có trong danh mục";
+			}
+			else {
+				$sql = "insert into ". PREFIX ."_tiemphong_chuho (idphuong, ten, dienthoai, diachi) values($phuong[id], '$dulieu[tenchu]', '$dulieu[dienthoai]', '$dulieu[diachi]')";
+				$chuho = ['id' => $db->insertid($sql)];
+			}
+		}
+
+		if (isset($chuho['id']) && !empty($chuho['id'])) {
+			// kiểm tra thú cưng, nếu chưa có micro thì thêm
+			$dulieu['idgiong'] = kiemtragiongloai($dulieu);
+			$hinhanh = '';
+			$idthucung = kiemtrathucung($chuho['id'], $dulieu);
+			if (!kiemtrangaythang($dulieu['thoigiantiem'])) {
+				$loi []= "Dòng $i ngày $dulieu[thoigiantiem] không đúng định dạng";
+			}
+			else {
+				$thoigiantiem = chuyendoithoigian($dulieu['thoigiantiem']);
+				$thoigiannhac = strtotime('-1 year', $thoigiantiem);
+	
+				// kiểm tra cấu trúc ngày, nếu đúng thì thêm
+				$sql = "select * from ". PREFIX ."_tiemphong where idthucung = $idthucung and thoigiantiem = $thoigiantiem and thoigiannhac = $thoigiannhac";
+				if (!empty($db->fetch($sql))) {
+					$loi []= "Dòng $i chủ hộ $dulieu[tenchu] thú cưng $dulieu[tenthucung] đã có dữ liệu trước đó";
+					// continue;
+				}
+				else {
+					$sql = "insert into ". PREFIX ."_tiemphong (idthucung, thoigiantiem, thoigiannhac) values ($idthucung, $thoigiantiem, $thoigiannhac)";
+					$db->query($sql);
+				}
+			}
+		}
+  }
+  if (count($loi)) {
+    $resp['loi'] = implode('<br>', $loi);
+    return 0;
+  }
+	else {
+		$resp['messenger'] = "Đã import file";
+	}
+  $resp['status'] = 1;
+}

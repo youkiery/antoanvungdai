@@ -26,7 +26,7 @@ function danhsachthucung() {
   else $xtra = " where b.ten like '%$tukhoa%' or b.micro like '%$tukhoa%'";
 
   // gom tất cả idthucung lại, sort theo thời gian
-  $sql = "select a.id, b.ten, b.id as idthucung, b.idgiong, b.idchu, b.hinhanh from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id $xtra group by idthucung order by thoigiantiem desc limit ". GIOIHAN . " offset ". ($trang - 1) * GIOIHAN;
+  $sql = "select a.id, b.ten, b.id as idthucung, b.idgiong, b.idchu, b.hinhanh from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id $xtra group by idthucung order by thoigiantiem desc, a.id desc limit ". GIOIHAN . " offset ". ($trang - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
   $sql = "select count(a.id) as tongtruong from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id $xtra";
   if (empty($tong = $db->fetch($sql))) $tong = 0;

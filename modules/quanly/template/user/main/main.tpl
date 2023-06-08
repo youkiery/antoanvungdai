@@ -36,6 +36,17 @@
 </div>
 
 <div class="box col-xs-12 col-sm-8 col-md-6">
+  <a href="/dispatch">
+    <div class="box-content">
+      <div class="box-image">
+        <img src="/assets/images/vanban.png" alt="">
+      </div>
+      <div class="box-title"> Quản lý văn bản </div>
+    </div>
+  </a>
+</div>
+
+<div class="box col-xs-12 col-sm-8 col-md-6">
   <a href="/quanly/thanhvien">
     <div class="box-content">
       <div class="box-image">

@@ -43,6 +43,19 @@ function chuyendoithoigian($ngay) {
   return false;
 }
 
+function kiemtrangaythang($ngay) {
+  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $ngay, $m)) {
+    $day = intval($m[1]);
+    $month = intval($m[2]);
+    $year = intval($m[3]);
+    $monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if ($year < 1000 || $year > 3000 || $month == 0 || $month > 12) return false;
+    if ($year % 400 == 0 || ($year % 100 != 0 && $year % 4 == 0)) $monthLength[1] = 29;
+    return $day > 0 && $day <= $monthLength[$month - 1];
+  }
+  return false;
+}
+
 function kiemtrachuho($dulieu) {
 	global $db;
 

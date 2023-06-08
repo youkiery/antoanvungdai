@@ -11,14 +11,6 @@
 if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 
 include_once(NV_ROOTDIR . '/modules/manage/global/admin.global.php');
-$p = checkPer('document');
-
-if ($p == 0) {
-  // không có quyền
-  include NV_ROOTDIR . '/includes/header.php';
-  echo nv_site_theme('Người dùng chưa đăng nhập hoặc chưa cấp quyền');
-  include NV_ROOTDIR . '/includes/footer.php';
-}
 
 $action = $nv_Request->get_string('action', 'post', "");
 if (!empty($action)) {

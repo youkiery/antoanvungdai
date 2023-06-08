@@ -13,15 +13,6 @@ define('PREFIX', NV_PREFIXLANG . "_" . $module_data);
 include_once(NV_ROOTDIR . '/modules/manage/global/admin.global.php');
 $action = $nv_Request->get_string('action', 'post', '');
 
-$p = checkPer('document');
-
-if ($p < 2) {
-  // không có quyền
-  include NV_ROOTDIR . '/includes/header.php';
-  echo nv_site_theme('Người dùng chưa đăng nhập hoặc chưa cấp quyền');
-  include NV_ROOTDIR . '/includes/footer.php';
-}
-
 function parseTime($time) {
   if (count($time_part = explode('/', $time)) == 3 || count($time_part = explode('-', $time)) == 3) {
     if (($timer = strtotime("$time_part[0]/$time_part[1]/$time_part[2]")) || ($timer = strtotime("$time_part[1]/$time_part[0]/$time_part[2]"))) {

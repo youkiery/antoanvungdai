@@ -9,7 +9,6 @@
  */
 
 if (!defined('NV_SYSTEM')) die('Stop!!!');
-
 global $arr_type, $arr_status;
 
 $arr_status = array(

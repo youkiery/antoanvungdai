@@ -28,7 +28,7 @@
       <div class="modal-body">
         <div id="loi-import" style="color: red; font-weight: bold"></div>
         <div class="text-center" id="mau-import">
-          <button class="btn btn-info" onclick="download('purchase')"> <span class="fa fa-download"></span> 
+          <button class="btn btn-info" onclick="download('purchase')"> <span class="fa fa-download"></span>
             Tải về tệp mẫu
           </button>
           <input type="file" id="import-file" onchange="chonfile()"
@@ -94,7 +94,7 @@
             <input type="text" class="form-control" id="timkiem-phuong" placeholder="Phường">
           </div>
         </div>
-        
+
         <div class="form-group row">
           <div class="col-xs-6"> Thời gian tiêm </div>
           <div class="col-xs-9">
@@ -314,6 +314,43 @@
     $('#modal-import').modal('show')
   }
 
+  function download(filename) {
+    window.location = '/assets/excel/MauImportVaccine.xlsx';
+  }
+
+  function xacnhanimport() {
+    // kiểm tra nếu chưa có file thì thông báo
+    if (!$('#import-file')[0].files.length) vhttp.notify('Chọn file trước khi thêm')
+    else {
+      var form = new FormData()
+      form.append('file', $('#import-file')[0].files[0]);
+      form.append('action', 'importnhaphang');
+      $.ajax({
+        url: '/quanly/api/',
+        type: 'post',
+        data: form,
+        processData: false,
+        contentType: false
+      }).done((x) => {
+        try {
+          var json = JSON.parse(x)
+          if (json.messenger && json.messenger.length) vhttp.notify(json.messenger)
+          if (json.loi && json.loi.length) {
+            $('#loi-import').html(json.loi)
+            $('#loi-import').show()
+            return 0
+          }
+          if (json.status) {
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000);
+          }
+        }
+        catch (error) { }
+      }).fail(() => { });
+    }
+  }
+
   function chonfile() {
     var file = $('#import-file').val()
     $('#loi-import').hide()
@@ -331,7 +368,7 @@
       global.trang = trang
     })
   }
-  
+
   function thongtintruongloc(trang) {
     return {
       'tenchu': $('#timkiem-tenchu').val(),
@@ -431,7 +468,7 @@
       $('#loai').val(phanhoi.loai)
       $('#giong').val(phanhoi.giong)
       $('#thoigiantiem').val(phanhoi.thoigiantiem)
-      phuong = $('#phuong option[value='+ phanhoi.idphuong +']').prop('selected', true)
+      phuong = $('#phuong option[value=' + phanhoi.idphuong + ']').prop('selected', true)
       vimage.data['hinhanh'] = [phanhoi.hinhanh]
       vimage.reload('hinhanh')
       $('#modal-themtiemphong').modal('show')
