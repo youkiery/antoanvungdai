@@ -17,6 +17,31 @@
 </div>
 
 
+<div class="modal fade" id="modal-import" role="dialog">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header">
+        Import tiêm phòng
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="loi-import" style="color: red; font-weight: bold"></div>
+        <div class="text-center" id="mau-import">
+          <button class="btn btn-info" onclick="download('purchase')"> <span class="fa fa-download"></span> 
+            Tải về tệp mẫu
+          </button>
+          <input type="file" id="import-file" onchange="chonfile()"
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+          <button class="btn btn-info btn-block" id="import-btn" onclick="xacnhanimport()">
+            Import
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="modal-timkiem" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -209,6 +234,9 @@
   <button class="btn btn-info" onclick="timkiem()">
     <span class="fa fa-search"></span> Tìm kiếm
   </button>
+  <button class="btn btn-info" onclick="importtiemphong()">
+    <span class="fa fa-file"></span> Import
+  </button>
 </div>
 
 <div id="tiemphong" class="tab-pane fade in active">
@@ -282,6 +310,17 @@
     $('#modal-timkiem').modal('show')
   }
 
+  function importtiemphong() {
+    $('#modal-import').modal('show')
+  }
+
+  function chonfile() {
+    var file = $('#import-file').val()
+    $('#loi-import').hide()
+    if (file) $('#import-btn').show()
+    else $('#import-btn').hide()
+  }
+
   function dentrang(trang) {
     vhttp.post('/quanly/api/', {
       action: 'chuyentrangtiemphong',
@@ -349,7 +388,7 @@
     vhttp.post('/quanly/api/', {
       action: 'xoatiemphong',
       id: global.id,
-      truongloc: thongtintruongloc(trang),
+      truongloc: thongtintruongloc(global.trang),
     }).then((phanhoi) => {
       $('#tiemphong').html(phanhoi.danhsachtiemphong)
       $('#modal-xoatiemphong').modal('hide')
@@ -445,7 +484,7 @@
           action: 'themtiemphong',
           id: global.id,
           dulieu: dulieu,
-          truongloc: thongtintruongloc(trang),
+          truongloc: thongtintruongloc(global.trang),
         }).then((phanhoi) => {
           $('#tiemphong').html(phanhoi.danhsachtiemphong)
           $('#modal-themtiemphong').modal('hide')

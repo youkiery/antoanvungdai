@@ -84,11 +84,11 @@ function kiemtrathucung($idchuho, $dulieu) {
   $hinhanh = kiemtrahinhanh($dulieu['hinhanh']);
   $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $idchuho and micro = '$dulieu[micro]'";
   if (empty($thucung = $db->fetch($sql))) {
-    $sql = "insert into ". PREFIX ."_tiemphong_thucung (idchu, idgiong, ten, micro, hinhanh) values($idchuho, '$dulieu[tenthucung]', '$dulieu[micro]', '$hinhanh')";
+    $sql = "insert into ". PREFIX ."_tiemphong_thucung (idchu, idgiong, ten, micro, hinhanh) values($idchuho, $idgiong, '$dulieu[tenthucung]', '$dulieu[micro]', '$hinhanh')";
     return $db->insertid($sql);
   }
   else {
-    $sql = "update ". PREFIX ."_tiemphong_thucung set ten = '$dulieu[tenthucung]', micro = '$dulieu[micro]', hinhanh = '$hinhanh' where id = $thucung[id]";
+    $sql = "update ". PREFIX ."_tiemphong_thucung set idgiong = $idgiong, ten = '$dulieu[tenthucung]', micro = '$dulieu[micro]', hinhanh = '$hinhanh' where id = $thucung[id]";
     $db->query($sql);
   }
   return $thucung['id'];
