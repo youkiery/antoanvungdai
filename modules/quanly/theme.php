@@ -72,10 +72,16 @@ function danhsachthanhvien() {
   $sql = "select * from ". PREFIX ."_users where active = 1 order by userid desc";
   $danhsach = $db->all($sql);
 
+  $quyen = [0 => 'Thành viên', 'Nhân viên', 'Quản lý'];
+
   foreach ($danhsach as $user) {
+    $sql = "select * from ". PREFIX ."_phanquyen where userid = $user[userid]";
+    if (empty($quyennhanvien = $db->fetch($sql))) $quyennhanvien = 0;
+    else $quyennhanvien = $quyennhanvien['quyen'];
     $xtpl->assign('userid', $user['userid']);
     $xtpl->assign('username', $user['username']);
     $xtpl->assign('first_name', $user['first_name']);
+    $xtpl->assign('quyen', $quyen[$quyennhanvien]);
     $xtpl->parse("main.user");
   }
   if (!count($danhsach)) $xtpl->parse('main.trong');
@@ -103,7 +109,7 @@ function danhsachxetduyet() {
 }
 
 function danhsachtiemphong() {
-  global $db, $nv_Request;
+  global $db, $nv_Request, $user_info;
 
 	$truongloc = $nv_Request->get_array('truongloc', 'post', '');
   if (empty($truongloc['trang'])) {
@@ -122,7 +128,15 @@ function danhsachtiemphong() {
   }
   $xtpl = new XTemplate("danhsachtiemphong.tpl", PATH ."/tiemphong/");
   // bộ lọc: tên chủ, điện thoại, tên thú cưng, micro, giống, loài, phường, thời gian tiêm
+  // kiểm tra quyền, nếu là quyền nhân viên thì lọc theo danh sách
+  $phanquyen = kiemtraphanquyen($user_info['userid']);
   $xtra = [];
+  if ($phanquyen == 1) {
+    $sql = "select * from ". PREFIX ."_phanquyen_chitiet where userid = $user_info[userid]";
+    $danhsachphuong = $db->arr($sql, 'idphuong');
+    if (!count($danhsachphuong)) $xtra []= " 0 ";
+    else $xtra []= " e.id in (". (implode(', ', $danhsachphuong)) .") ";
+  }
   if (!empty($truongloc['tenchu'])) $xtra []= " c.ten like '%$truongloc[tenchu]%' ";
   if (!empty($truongloc['dienthoai'])) $xtra []= " c.dienthoai like '%$truongloc[dienthoai]%' ";
   if (!empty($truongloc['thucung'])) $xtra []= " b.ten like '%$truongloc[thucung]%' ";

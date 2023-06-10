@@ -19,16 +19,22 @@ $xtpl->assign('banner', laybanner());
 
 $id = $nv_Request->get_string('id', 'get', '0');
 
-$sql = "select b.ten, b.id as idthucung, b.idgiong, b.idchu, b.hinhanh, c.ten as tenchu, c.diachi, c.dienthoai, d.ten as tenphuong from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_danhmuc_phuong d on c.idphuong = d.id where b.id = $id";
+$sql = "select b.ten, b.id as idthucung, b.micro, b.idgiong, b.idchu, b.hinhanh, c.ten as tenchu, c.diachi, c.dienthoai, d.ten as tenphuong from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_danhmuc_phuong d on c.idphuong = d.id where b.id = $id";
 $thucung = $db->fetch($sql);
+$phanquyen = kiemtraphanquyen($user_info['userid']);
 
 $hinhanh = kiemtrahinhanh($thucung['hinhanh']);
 $xtpl->assign('hinhanh', $hinhanh);
 $xtpl->assign('tenthucung', $thucung['ten']);
+$xtpl->assign('micro', $thucung['micro']);
 $xtpl->assign('giongloai', laytengiongloai($thucung['idgiong']));
 $xtpl->assign('tenchu', $thucung['tenchu']);
-$xtpl->assign('diachi', $thucung['diachi']);
-$xtpl->assign('tenphuong', $thucung['tenphuong']);
+if ($phanquyen == 2) {
+	$xtpl->assign('diachi', $thucung['diachi']);
+	$xtpl->assign('dienthoai', $thucung['dienthoai']);
+	$xtpl->assign('tenphuong', $thucung['tenphuong']);
+	$xtpl->parse("main.thongtin");
+}
 
 $sql = "select * from ". PREFIX ."_tiemphong where idthucung = $thucung[idthucung] order by thoigiantiem desc";
 $danhsach = $db->all($sql);

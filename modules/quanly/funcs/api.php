@@ -16,7 +16,9 @@ $resp = array(
   'status' => 0
 );
 
-if (!empty($action) && function_exists($action)) {
+$phanquyen = kiemtraphanquyen($user_info['userid']);
+if ($phanquyen == 0) $resp = ['status' => 0, 'messenger' => 'Thành viên không có quyền'];
+else if (!empty($action) && function_exists($action)) {
   $action();
 }
 
@@ -102,7 +104,8 @@ function laythongtinthanhvien() {
 	$nhanvien = $db->fetch($sql);
 
 	$sql = "select * from ". PREFIX ."_phanquyen where userid = $id";
-	$phanquyen = $db->fetch($sql)['quyen'];
+	if (empty($phanquyen = $db->fetch($sql))) $phanquyen = 0;
+	else $phanquyen = $phanquyen['quyen'];
 
 	$sql = "select b.* from ". PREFIX ."_phanquyen_chitiet a inner join ". PREFIX ."_danhmuc_phuong b on a.idphuong = b.id where a.userid = $id";
 	$quyen = $db->all($sql);

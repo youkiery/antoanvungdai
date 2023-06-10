@@ -1,15 +1,19 @@
 <!-- BEGIN: main -->
 <table class="table table-bordered">
-  <tr>
-    <td> Tài khoản </td>
-    <td> Họ tên </td>
-    <td> Hoạt động </td>
-    <td> Chức năng </td>
-  </tr>
+  <thead>
+    <tr>
+      <th> Tài khoản </th>
+      <th> Họ tên </th>
+      <th> Quyền </th>
+      <th> Hoạt động </th>
+      <th> Chức năng </th>
+    </tr>
+  </thead>
   <!-- BEGIN: user -->
   <tr>
     <td> {username} </td>
     <td> {first_name} </td>
+    <td> {quyen} </td>
     <td> Đã kích hoạt </td>
     <td> 
       <button class="btn btn-info btn-xs" onclick="capnhatthanhvien({userid})"> <span class="fa fa-pencil-square-o"></span> cập nhật </button>  

@@ -2,17 +2,8 @@
 <div class="banner">
   <a href="/"> <img class="img-responsive" src="{banner}" style="margin-top: 0px;"> </a>
 </div>
-<div class="box col-xs-12 col-sm-8 col-md-6">
-  <a href="/quanly/danhmuc">
-    <div class="box-content">
-      <div class="box-image">
-        <img src="/assets/images/danhmuc.png" alt="">
-      </div>
-      <div class="box-title"> Danh mục </div>
-    </div>
-  </a>
-</div>
 
+<!-- BEGIN: nhanvien -->
 <div class="box col-xs-12 col-sm-8 col-md-6">
   <a href="/quanly/tiemphong">
     <div class="box-content">
@@ -20,6 +11,30 @@
         <img src="/assets/images/tiemphong.png" alt="">
       </div>
       <div class="box-title"> Tiêm phòng </div>
+    </div>
+  </a>
+</div>
+
+<div class="box col-xs-12 col-sm-8 col-md-6">
+  <a href="/dispatch">
+    <div class="box-content">
+      <div class="box-image">
+        <img src="/assets/images/vanban.png" alt="">
+      </div>
+      <div class="box-title"> Quản lý văn bản </div>
+    </div>
+  </a>
+</div>
+<!-- END: nhanvien -->
+
+<!-- BEGIN: quanly -->
+<div class="box col-xs-12 col-sm-8 col-md-6">
+  <a href="/quanly/danhmuc">
+    <div class="box-content">
+      <div class="box-image">
+        <img src="/assets/images/danhmuc.png" alt="">
+      </div>
+      <div class="box-title"> Danh mục </div>
     </div>
   </a>
 </div>
@@ -36,17 +51,6 @@
 </div>
 
 <div class="box col-xs-12 col-sm-8 col-md-6">
-  <a href="/dispatch">
-    <div class="box-content">
-      <div class="box-image">
-        <img src="/assets/images/vanban.png" alt="">
-      </div>
-      <div class="box-title"> Quản lý văn bản </div>
-    </div>
-  </a>
-</div>
-
-<div class="box col-xs-12 col-sm-8 col-md-6">
   <a href="/quanly/thanhvien">
     <div class="box-content">
       <div class="box-image">
@@ -56,7 +60,9 @@
     </div>
   </a>
 </div>
+<!-- END: quanly -->
 
+<!-- BEGIN: thanhvien -->
 <div class="box col-xs-12 col-sm-8 col-md-6">
   <a href="/quanly/nguoidung">
     <div class="box-content">
@@ -67,6 +73,7 @@
     </div>
   </a>
 </div>
+<!-- END: thanhvien -->
 
 <!-- <a href="/quanly/danhmuc">
     <div class="box col-xs-8 col-sm-6 col-md-4 col-lg-3">

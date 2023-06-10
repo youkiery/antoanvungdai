@@ -27,6 +27,7 @@ function laybanner() {
 
 function kiemtraphanquyen($id) {
   global $db;
+  if (empty($id)) return 0;
   if ($id == 1) return 2;
   $sql = "select active from ". PREFIX ."_users where userid = $id";
   $nhanvien = $db->fetch($sql);

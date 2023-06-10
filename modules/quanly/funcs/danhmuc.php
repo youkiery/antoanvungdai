@@ -13,12 +13,18 @@ if (!defined('NV_IS_FORM')) {
 
 $page_title = "Quản lý tài khoản";
 
-$xtpl = new XTemplate("main.tpl", PATH . "/danhmuc/");
+$phanquyen = kiemtraphanquyen($user_info['userid']);
+if ($phanquyen == 0) {
+	$contents = "Thành viên không có quyền";
+} 
+else {
+	$xtpl = new XTemplate("main.tpl", PATH . "/danhmuc/");
 
-$xtpl->assign('danhsachphuong', danhsachphuong());
-$xtpl->assign('danhsachgiong', danhsachgiong());
-$xtpl->parse("main");
-$contents = $xtpl->text("main");
+	$xtpl->assign('danhsachphuong', danhsachphuong());
+	$xtpl->assign('danhsachgiong', danhsachgiong());
+	$xtpl->parse("main");
+	$contents = $xtpl->text("main");
+}
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);

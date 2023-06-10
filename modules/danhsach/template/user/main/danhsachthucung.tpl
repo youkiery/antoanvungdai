@@ -5,8 +5,9 @@
       <div class="pw-card-left"> <img class="img-responsive" src="{image}"> </div>
       <div class="pw-card-right">
         Tên: {name} <br>
+        Microchip: {micro} <br>
         Giống loài: {species} <br>
-        Chủ nuôi: {chunuoi}
+        Chủ hộ: {chuho} <br>
       </div>
     </div>
   </a>

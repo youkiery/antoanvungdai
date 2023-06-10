@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Tìm kiếm tiêm phòng </h4>
+        <h4 class="modal-title"> Lọc dữ liệu thống kê </h4>
       </div>
       <div class="modal-body">
         <div class="form-group row">
@@ -76,7 +76,7 @@
         </div> -->
 
         <button class="btn btn-info btn-block" onclick="dentrang(1)">
-          Tìm kiếm
+          Lọc dữ liệu
         </button>
       </div>
     </div>
@@ -95,7 +95,7 @@
 
 <div class="form-group">
   <button class="btn btn-info" onclick="timkiem()">
-    <span class="fa fa-search"></span> Tìm kiếm
+    <span class="fa fa-search"></span> Lọc dữ liệu
   </button>
 </div>
 

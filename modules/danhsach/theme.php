@@ -34,10 +34,11 @@ function danhsachthucung() {
 
   foreach ($danhsach as $thucung) {
     $hinhanh = kiemtrahinhanh($thucung['hinhanh']);
-    $xtpl->assign('id', $thucung['id']);
+    $xtpl->assign('id', $thucung['idthucung']);
     $xtpl->assign('image', $hinhanh);
     $xtpl->assign('name', $thucung['ten']);
-    $xtpl->assign('chunuoi', laythongtinchu($thucung['idchu']));
+    $xtpl->assign('micro', $thucung['micro']);
+    $xtpl->assign('chuho', laythongtinchu($thucung['idchu']));
     $xtpl->assign('species', laytengiongloai($thucung['idgiong']));
     $xtpl->parse("main.thucung");
   }
