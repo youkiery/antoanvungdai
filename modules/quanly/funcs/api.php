@@ -302,9 +302,10 @@ function laythongtintiemphong() {
 
 	$id = $nv_Request->get_string('id', 'post', '0');
 	
-  $sql = "select a.id, c.ten as tenchu, c.dienthoai, c.diachi, b.ten as tenthucung, b.micro, d.giong, d.loai, b.hinhanh, c.idphuong, a.thoigiantiem from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_danhmuc_giong d on b.idgiong = d.id where a.id = $id";
+  $sql = "select a.id, c.ten as tenchu, c.dienthoai, c.diachi, b.ten as tenthucung, b.micro, d.giong, d.loai, b.hinhanh, c.idphuong, a.thoigiantiem, b.ngaysinh from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_danhmuc_giong d on b.idgiong = d.id where a.id = $id";
 	$resp = $db->fetch($sql);
 	$resp['thoigiantiem'] = date('d/m/Y', $resp['thoigiantiem']);
+	$resp['ngaysinh'] = date('d/m/Y', $resp['ngaysinh']);
 	$resp['status'] = 1;
 }
 
@@ -332,7 +333,7 @@ function themtiemphong() {
 	$resp['status'] = 1;
 }
 
-function importnhaphang() {
+function importtiemphong() {
   global $db, $nv_Request, $resp, $_FILES;
 
 	$x = array();
@@ -351,8 +352,8 @@ function importnhaphang() {
   $sheet = $objPHPExcel->getSheet(0); 
   $tongdong = intval($sheet->getHighestRow()); 
   $highestColumn = $sheet->getHighestColumn();
-  $array = ['Tên chủ hộ' => -1, 'Điện thoại' => -1, 'Địa chỉ' => -1, 'Phường' => -1, 'Tên thú cưng' => -1, 'Microchip' => -1, 'Loài' => -1, 'Giống' => -1, 'Ngày tiêm' => -1];
-  $rev = ['Tên chủ hộ' => 'tenchu', 'Điện thoại' => 'dienthoai', 'Địa chỉ' => 'diachi', 'Phường' => 'phuong', 'Tên thú cưng' => 'tenthucung', 'Microchip' => 'micro', 'Loài' => 'loai', 'Giống' => 'giong', 'Ngày tiêm' => 'thoigiantiem'];
+  $array = ['Tên chủ hộ' => -1, 'Điện thoại' => -1, 'Địa chỉ' => -1, 'Phường' => -1, 'Tên thú cưng' => -1, 'Microchip' => -1, 'Loài' => -1, 'Giống' => -1, 'Ngày sinh' => -1, 'Ngày tiêm' => -1];
+  $rev = ['Tên chủ hộ' => 'tenchu', 'Điện thoại' => 'dienthoai', 'Địa chỉ' => 'diachi', 'Phường' => 'phuong', 'Tên thú cưng' => 'tenthucung', 'Microchip' => 'micro', 'Loài' => 'loai', 'Giống' => 'giong', 'Ngày tiêm' => 'thoigiantiem', 'Ngày sinh' => 'ngaysinh'];
   $arr = [];
   for ($j = 0; $j <= $x[$highestColumn]; $j ++) {
     $arr [$j]= $sheet->getCell($xr[$j] . '1')->getValue();
@@ -427,4 +428,11 @@ function importnhaphang() {
 		$resp['messenger'] = "Đã import file";
 	}
   $resp['status'] = 1;
+}
+
+function timkiemthongke() {
+  global $db, $nv_Request, $resp;
+
+	$resp['danhsachthongke'] = danhsachthongke();
+	$resp['status'] = 1;
 }

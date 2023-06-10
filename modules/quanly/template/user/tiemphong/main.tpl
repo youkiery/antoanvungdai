@@ -200,6 +200,11 @@
           </div>
         </div>
 
+        <div class="form-group"> Ngày sinh </div>
+        <div class="form-group">
+          <input type="text" class="form-control date" id="ngaysinh">
+        </div>
+
         <div class="form-group"> Thời gian tiêm phòng </div>
         <div class="form-group">
           <input type="text" class="form-control date" id="thoigiantiem">
@@ -324,7 +329,7 @@
     else {
       var form = new FormData()
       form.append('file', $('#import-file')[0].files[0]);
-      form.append('action', 'importnhaphang');
+      form.append('action', 'importtiemphong');
       $.ajax({
         url: '/quanly/api/',
         type: 'post',
@@ -445,6 +450,7 @@
     $('#giongloai').val('')
     $('#loai').val('')
     $('#giong').val('')
+    $('#ngaysinh').val(global.homnay)
     $('#thoigiantiem').val(global.homnay)
     vimage.clear('hinhanh')
     $('#modal-themtiemphong').modal('show')
@@ -467,6 +473,7 @@
       $('#giongloai').val(phanhoi.giongloai)
       $('#loai').val(phanhoi.loai)
       $('#giong').val(phanhoi.giong)
+      $('#ngaysinh').val(phanhoi.ngaysinh)
       $('#thoigiantiem').val(phanhoi.thoigiantiem)
       phuong = $('#phuong option[value=' + phanhoi.idphuong + ']').prop('selected', true)
       vimage.data['hinhanh'] = [phanhoi.hinhanh]
@@ -504,6 +511,7 @@
       micro: $('#micro').val(),
       loai: $('#loai').val(),
       giong: $('#giong').val(),
+      ngaysinh: $('#ngaysinh').val(),
       thoigiantiem: $('#thoigiantiem').val(),
     }
     if (!dulieu.tenchu.length) vhttp.notify('Không được để trống tên chủ hộ')
@@ -514,6 +522,7 @@
     else if (!dulieu.giong.length) vhttp.notify('Không được để trống tên giống')
     else if (!dulieu.loai.length) vhttp.notify('Không được để trống tên loài')
     else if (!kiemtrangaythang(dulieu.thoigiantiem)) vhttp.notify('Ngày tháng không hợp lệ')
+    else if (!kiemtrangaythang(dulieu.thoigiantiem)) vhttp.notify('Ngày sinh không hợp lệ')
     else {
       vimage.uploadimage('hinhanh').then(() => {
         dulieu.hinhanh = vimage.data['hinhanh']

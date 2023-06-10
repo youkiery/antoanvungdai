@@ -13,10 +13,10 @@ if (!defined('NV_IS_FORM')) {
 
 $page_title = "Quản lý tài khoản";
 
-$xtpl = new XTemplate("main.tpl", PATH);
-$xtpl->assign('module_file', $module_file);
+$xtpl = new XTemplate("main.tpl", PATH .'/thongke/');
+$xtpl->assign('dulieuthongke', dulieuthongke());
+$xtpl->assign('danhsachthongke', danhsachthongke());
 
-// $xtpl->assign('content', danhsachthucung());
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

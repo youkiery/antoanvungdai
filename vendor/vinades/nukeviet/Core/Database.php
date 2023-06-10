@@ -676,7 +676,8 @@ class Database extends PDO
     public function count($sql) {
         $query = $this->query($sql);
         $num = $query->fetchColumn();
-        return $num;
+        if ($num > 0) return $num;
+        return 0;
     }
 }
 

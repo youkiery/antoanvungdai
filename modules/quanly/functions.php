@@ -82,6 +82,14 @@ function kiemtragiongloai($dulieu) {
   return $giongloai['id'];
 }
 
+function laytengiongloai($idgiong) {
+  global $db;
+
+  $sql = "select * from ". PREFIX ."_danhmuc_giong where id = $idgiong";
+  if (empty($giong = $db->fetch($sql))) return 'Chưa xác định';
+  return "$giong[loai] $giong[giong]";
+}
+
 function kiemtrahinhanh($hinhanh) {
   $hinhanhtam = '';
   foreach ($hinhanh as $diachianh) {
@@ -95,13 +103,14 @@ function kiemtrathucung($idchuho, $dulieu) {
 
   $idgiong = kiemtragiongloai($dulieu);
   $hinhanh = kiemtrahinhanh($dulieu['hinhanh']);
+  $ngaysinh = chuyendoithoigian($dulieu['ngaysinh']);
   $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $idchuho and micro = '$dulieu[micro]'";
   if (empty($thucung = $db->fetch($sql))) {
-    $sql = "insert into ". PREFIX ."_tiemphong_thucung (idchu, idgiong, ten, micro, hinhanh) values($idchuho, $idgiong, '$dulieu[tenthucung]', '$dulieu[micro]', '$hinhanh')";
+    $sql = "insert into ". PREFIX ."_tiemphong_thucung (idchu, idgiong, ten, micro, hinhanh, ngaysinh, ngaymat) values($idchuho, $idgiong, '$dulieu[tenthucung]', '$dulieu[micro]', '$hinhanh', $ngaysinh, 0)";
     return $db->insertid($sql);
   }
   else {
-    $sql = "update ". PREFIX ."_tiemphong_thucung set idgiong = $idgiong, ten = '$dulieu[tenthucung]', micro = '$dulieu[micro]', hinhanh = '$hinhanh' where id = $thucung[id]";
+    $sql = "update ". PREFIX ."_tiemphong_thucung set idgiong = $idgiong, ten = '$dulieu[tenthucung]', micro = '$dulieu[micro]', hinhanh = '$hinhanh', ngaysinh = $ngaysinh where id = $thucung[id]";
     $db->query($sql);
   }
   return $thucung['id'];
