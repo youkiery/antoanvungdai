@@ -209,7 +209,7 @@
               <input type="text" class="form-control date" id="ngaysinh">
             </div>
 
-            <div class="form-group"> Thời gian tiêm phòng </div>
+            <div class="form-group"> Thời gian tiêm phòng (nếu không chọn thú cưng sẽ được thêm nhưng không có trong danh sách) </div>
             <div class="form-group">
               <input type="text" class="form-control date" id="thoigiantiem">
             </div>
@@ -450,7 +450,7 @@
         $('#loai').val('')
         $('#giong').val('')
         $('#ngaysinh').val(global.homnay)
-        $('#thoigiantiem').val(global.homnay)
+        $('#thoigiantiem').val('')
         vimage.clear('hinhanh')
         $('#modal-themtiemphong').modal('show')
       }
@@ -482,6 +482,7 @@
       }
 
       function kiemtrangaythang(ngay) {
+        if (!ngay.length) return true
         var kiemtra = /\d{1,2}\/\d{1,2}\/\d{4}/.test(ngay)
         if (!kiemtra) return false;
         var parts = ngay.split("/");

@@ -343,18 +343,28 @@ function themtiemphong() {
 	$dulieu = $nv_Request->get_array('dulieu', 'post', '');
 	$idchuho = kiemtrachuho($dulieu);
 	$idthucung = kiemtrathucung($idchuho, $dulieu);
-	$thoigiantiem = chuyendoithoigian($dulieu['thoigiantiem']);
 	$thoigiannhac = strtotime('-1 year', $thoigiantiem);
 
-	if ($id) {
-		// cập nhật
-		$sql = "update ". PREFIX ."_tiemphong set idthucung = $idthucung, thoigiantiem = $thoigiantiem, thoigiannhac = $thoigiannhac where id = $id";
+	if (empty($dulieu['thoigiantiem'])) {
+		// chưa tiêm phòng
+		// xóa chưa tiêm phòng
+		if ($id) {
+			$sql = "delete from ". PREFIX ."_tiemphong where id = $id";
+			$db->query($sql);
+		}
 	}
 	else {
-		// thêm
-		$sql = "insert into ". PREFIX ."_tiemphong (idthucung, thoigiantiem, thoigiannhac) values ($idthucung, $thoigiantiem, $thoigiannhac)";
+		$thoigiantiem = chuyendoithoigian($dulieu['thoigiantiem']);
+		if ($id) {
+			// cập nhật
+			$sql = "update ". PREFIX ."_tiemphong set idthucung = $idthucung, thoigiantiem = $thoigiantiem, thoigiannhac = $thoigiannhac where id = $id";
+		}
+		else {
+			// thêm
+			$sql = "insert into ". PREFIX ."_tiemphong (idthucung, thoigiantiem, thoigiannhac) values ($idthucung, $thoigiantiem, $thoigiannhac)";
+		}
+		$db->query($sql);
 	}
-	$db->query($sql);
 
 	$resp['danhsachtiemphong'] = danhsachtiemphong();
 	$resp['status'] = 1;
