@@ -1,11 +1,13 @@
 <!-- BEGIN: main -->
 <div class="pw-side-bar nonprintable">
   <div class="pw-info-panel">
-    <div class="pw-avatar"> </div>
-    {nhanvien} <br>
-    Nhân viên 
+    <div class="pw-banner">
+      <a href="/"> <img src="{banner}" alt="banner">   </a>
+    </div>
+    <div> {nhanvien} </div>
+    <div> {chucvu}  </div>
     <!-- BEGIN: thanhvien -->
-    <div> <a href="/quanly/nguoidung"> Thông tin người dùng </a> </div>
+    <div> <a class="btn btn-info btn-block" href="/quanly/nguoidung" style="margin-bottom: 5px;"> Thông tin người dùng </a> </div>
     <!-- END: thanhvien -->
     <div> <a href="/dashboard/logout" class="btn btn-danger btn-block"> Đăng xuất </a> </div>
   </div>

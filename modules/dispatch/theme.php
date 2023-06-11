@@ -222,10 +222,23 @@ function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page
 }
 
 function sidemenu() {
-  global $db, $nv_Request;
+  global $db, $nv_Request, $user_info;
 
   $xtpl = new XTemplate("sidemenu.tpl", PATH);
   $phanquyen = kiemtraphanquyen();
+
+  $xtpl->assign('banner', laybanner());
+  
+  $sql = "select * from ". PREFIX ."_users where userid = $user_info[userid]";
+  $nhanvien = $db->fetch($sql);
+  $xtpl->assign('nhanvien', $nhanvien['first_name']);
+
+  $quyen = [0 => 'Thành viên', 'Nhân viên', 'Quản lý'];
+  $sql = "select * from ". PREFIX ."_phanquyen where userid = $user_info[userid]";
+  if (empty($quyennhanvien = $db->fetch($sql))) $quyennhanvien = 0;
+  else $quyennhanvien = $quyennhanvien['quyen'];
+  $xtpl->assign('chucvu', $quyen[$quyennhanvien]);
+
   if ($phanquyen >= 0) $xtpl->parse("main.thanhvien");
   if ($phanquyen >= 1) $xtpl->parse("main.nhanvien");
   if ($phanquyen == 2) $xtpl->parse("main.quanly");

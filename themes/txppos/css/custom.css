@@ -43,6 +43,11 @@ body {
   border-width: 1px;
 }
 
+.pw-banner img {
+  width: -webkit-fill-available;
+  margin: 5px 0px;
+}
+
 .pw-card {
   padding: 5px 10px;
 }
@@ -213,8 +218,6 @@ table {
 }
 
 .pw-menu-group {
-  margin-top: 20px;
-  margin-bottom: 20px;
   font-size: 1.2em;
 }
 

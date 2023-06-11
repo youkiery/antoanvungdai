@@ -298,7 +298,7 @@ function dulieuthongke() {
 }
 
 function sidemenu() {
-  global $db, $nv_Request, $op;
+  global $db, $nv_Request, $user_info, $op;
 
   $xtpl = new XTemplate("sidemenu.tpl", PATH);
   $phanquyen = kiemtraphanquyen();
@@ -306,6 +306,17 @@ function sidemenu() {
   if (in_array($op, $danhsachchucnang) !== false) $chucnang = $op;
   else $chucnang = 'main';
   $xtpl->assign($chucnang, 'active');
+  $xtpl->assign('banner', laybanner());
+  
+  $sql = "select * from ". PREFIX ."_users where userid = $user_info[userid]";
+  $nhanvien = $db->fetch($sql);
+  $xtpl->assign('nhanvien', $nhanvien['first_name']);
+
+  $quyen = [0 => 'Thành viên', 'Nhân viên', 'Quản lý'];
+  $sql = "select * from ". PREFIX ."_phanquyen where userid = $user_info[userid]";
+  if (empty($quyennhanvien = $db->fetch($sql))) $quyennhanvien = 0;
+  else $quyennhanvien = $quyennhanvien['quyen'];
+  $xtpl->assign('chucvu', $quyen[$quyennhanvien]);
 
   if ($phanquyen >= 0) $xtpl->parse("main.thanhvien");
   if ($phanquyen >= 1) $xtpl->parse("main.nhanvien");

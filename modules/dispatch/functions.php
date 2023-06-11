@@ -334,6 +334,17 @@ function kiemtraphanquyen() {
     $sql = "select * from ". PREFIX ."_phanquyen where userid = $id";
       if (!empty($phanquyen = $db->fetch($sql))) return $phanquyen['quyen'];
     return 0;
-  }
+}
+
+  
+function laybanner() {
+    global $db;
+  
+    $sql = "select * from ". PREFIX ."_config where module = 'global' and config_name = 'site_banner'";
+    $hinhanh = $db->fetch($sql);
+    if (empty($hinhanh)) return NV_ROOTDIR . '/assets/images/noimage.png';
+    if (strpos('http', $hinhanh['config_value']) !== false) return $hinhanh['config_value'];
+    return '/' . $hinhanh['config_value'];
+}
 ?>
 

@@ -1,5 +1,4 @@
 <!-- BEGIN: main -->
- <br>
 <table class="table table-bordered">
   <thead>
     <tr>
