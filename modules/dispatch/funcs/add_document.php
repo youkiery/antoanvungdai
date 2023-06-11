@@ -12,6 +12,7 @@ if (!defined('NV_IS_FILE_ADMIN')) die('Stop!!!');
 
 include_once(NV_ROOTDIR . '/modules/manage/global/admin.global.php');
 
+
 $array['parentid'] = $catid = $array['type'] = $array['from_signer'] = $array['from_depid'] = 0;
 $arr_de['parentid'] = $array['statusid'] = $deid = $id = 0;
 $arr_imgs = $arr_img = $list_de = $lis = $listde = array();
@@ -286,116 +287,123 @@ foreach ($arr_status as $a) {
 }
 
 $xtpl = new XTemplate("add_document.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
-$xtpl->assign('LANG', $lang_module);
-$xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
-$xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
-$xtpl->assign('NV_LANG_INTERFACE', NV_LANG_INTERFACE);
-$xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
-$xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
-$xtpl->assign('NV_ASSETS_DIR', NV_ASSETS_DIR);
-$xtpl->assign('MODULE_NAME', $module_name);
-$xtpl->assign('OP', $op);
-$xtpl->assign('id', $id);
-$xtpl->assign('FILES_DIR', NV_UPLOADS_DIR . '/' . $module_upload);
-$xtpl->assign('fileupload_num', $fileupload_num);
-$xtpl->assign('FORM_ACTION', NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=" . $op);
+$xtpl->assign('sidemenu', sidemenu());
+$phanquyen = kiemtraphanquyen();
+if ($phanquyen == 0) $xtpl->parse("main.coquyen.khongquyen");
+else {
+  $xtpl->assign('LANG', $lang_module);
+  $xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
+  $xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
+  $xtpl->assign('NV_LANG_INTERFACE', NV_LANG_INTERFACE);
+  $xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
+  $xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
+  $xtpl->assign('NV_ASSETS_DIR', NV_ASSETS_DIR);
+  $xtpl->assign('MODULE_NAME', $module_name);
+  $xtpl->assign('OP', $op);
+  $xtpl->assign('id', $id);
+  $xtpl->assign('FILES_DIR', NV_UPLOADS_DIR . '/' . $module_upload);
+  $xtpl->assign('fileupload_num', $fileupload_num);
+  $xtpl->assign('FORM_ACTION', NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=" . $op);
 
-if ($array['from_time'] != '') {
-  $array['from_time'] = date("d.m.Y", $array['from_time']);
-}
+  if ($array['from_time'] != '') {
+    $array['from_time'] = date("d.m.Y", $array['from_time']);
+  }
 
-if ($array['date_iss'] != '') {
-  $array['date_iss'] = date("d.m.Y", $array['date_iss']);
-}
+  if ($array['date_iss'] != '') {
+    $array['date_iss'] = date("d.m.Y", $array['date_iss']);
+  }
 
-if ($array['date_first'] != '') {
-  $array['date_first'] = date("d.m.Y", $array['date_first']);
-}
+  if ($array['date_first'] != '') {
+    $array['date_first'] = date("d.m.Y", $array['date_first']);
+  }
 
-if ($array['date_die'] != '' && $array['date_die'] != 0) {
-  $array['date_die'] = date("d.m.Y", $array['date_die']);
-}
+  if ($array['date_die'] != '' && $array['date_die'] != 0) {
+    $array['date_die'] = date("d.m.Y", $array['date_die']);
+  }
 
-if (empty($array['excode'])) {
-  $array['excode'] = $defcode;
-}
+  if (empty($array['excode'])) {
+    $array['excode'] = $defcode;
+  }
 
-$xtpl->assign('DATA', $array);
+  $xtpl->assign('DATA', $array);
 
-foreach ($listcats as $cat) {
-  $xtpl->assign('LISTCATS', $cat);
-  $xtpl->parse('inter.parentid');
-}
+  foreach ($listcats as $cat) {
+    $xtpl->assign('LISTCATS', $cat);
+    $xtpl->parse('inter.coquyen.parentid');
+  }
 
-foreach ($listtypes as $type) {
-  $xtpl->assign('LISTTYPES', $type);
-  $xtpl->parse('inter.typeid');
-}
+  foreach ($listtypes as $type) {
+    $xtpl->assign('LISTTYPES', $type);
+    $xtpl->parse('inter.coquyen.typeid');
+  }
 
-foreach ($listsinger as $singer) {
-  $xtpl->assign('LISSIS', $singer);
-  $xtpl->parse('inter.from_signer');
-}
+  foreach ($listsinger as $singer) {
+    $xtpl->assign('LISSIS', $singer);
+    $xtpl->parse('inter.coquyen.from_signer');
+  }
 
-foreach ($listdes as $de) {
-  $xtpl->assign('LISTDES', $de);
-  $xtpl->parse('inter.from_depid');
-}
+  foreach ($listdes as $de) {
+    $xtpl->assign('LISTDES', $de);
+    $xtpl->parse('inter.coquyen.from_depid');
+  }
 
-foreach ($as as $a) {
-  $xtpl->assign('LISTSTATUS', $a);
-  $xtpl->parse('inter.statusid');
-}
+  foreach ($as as $a) {
+    $xtpl->assign('LISTSTATUS', $a);
+    $xtpl->parse('inter.coquyen.statusid');
+  }
 
-$groups_view = explode(',', $array['groups_view']);
-foreach ($groups_list as $_group_id => $_title) {
-  $xtpl->assign('groups_view', array(
-    'value' => $_group_id,
-    'checked' => in_array($_group_id, $groups_view) ? ' checked="checked"' : '',
-    'title' => $_title
-  ));
-  $xtpl->parse('inter.groups_view');
-}
+  $groups_view = explode(',', $array['groups_view']);
+  foreach ($groups_list as $_group_id => $_title) {
+    $xtpl->assign('groups_view', array(
+      'value' => $_group_id,
+      'checked' => in_array($_group_id, $groups_view) ? ' checked="checked"' : '',
+      'title' => $_title
+    ));
+    $xtpl->parse('inter.coquyen.groups_view');
+  }
 
-foreach ($lis as $de) {
-  $xtpl->assign('ROW', $de);
-  $xtpl->parse('inter.loop');
-}
+  foreach ($lis as $de) {
+    $xtpl->assign('ROW', $de);
+    $xtpl->parse('inter.coquyen.loop');
+  }
 
-$a = 0;
-if (!empty($arr_imgs)) {
-  $str = NV_BASE_SITEURL . "uploads/" . $module_name . "/";
-  if ($arr_imgs[0] != '') {
-    foreach ($arr_imgs as $file) {
-      
-      // if (file_exists(NV_UPLOADS_REAL_DIR . "/" . $module_upload . "/" . $file)) {
-        $xtpl->assign('FILEUPLOAD', array(
-          'value' => $file,
-          'key' => $a
-        ));
-        $xtpl->parse('inter.fileupload');
-        $a++;
-      // }
+  $a = 0;
+  if (!empty($arr_imgs)) {
+    $str = NV_BASE_SITEURL . "uploads/" . $module_name . "/";
+    if ($arr_imgs[0] != '') {
+      foreach ($arr_imgs as $file) {
+        
+        // if (file_exists(NV_UPLOADS_REAL_DIR . "/" . $module_upload . "/" . $file)) {
+          $xtpl->assign('FILEUPLOAD', array(
+            'value' => $file,
+            'key' => $a
+          ));
+          $xtpl->parse('inter.coquyen.fileupload');
+          $a++;
+        // }
+      }
+    } else {
+      $xtpl->parse('inter.coquyen.fileupload');
     }
   } else {
-    $xtpl->parse('inter.fileupload');
+    $xtpl->parse('inter.coquyen.fileupload');
   }
-} else {
-  $xtpl->parse('inter.fileupload');
-}
 
-if ($error != '') {
+  if ($error != '') {
 
-  $xtpl->assign('ERROR', $error);
-  $xtpl->parse('inter.error');
-}
+    $xtpl->assign('ERROR', $error);
+    $xtpl->parse('inter.coquyen.error');
+  }
+  $xtpl->assign('SE_LINK', "/index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=main&amp;se=1");
 
-if ($nv_Request->isset_request('action', 'post')) {
-  $signer = $nv_Request->get_int('singer', 'post', 0);
-  $sql = "SELECT positions FROM " . NV_PREFIXLANG . "_" . $module_data . "_signer WHERE id=" . $signer;
-  $result = $db->query($sql);
-  $position = $result->fetchColumn();
-  nv_htmlOutput($lang_module['positions'] . ": " . $position);
+  if ($nv_Request->isset_request('action', 'post')) {
+    $signer = $nv_Request->get_int('singer', 'post', 0);
+    $sql = "SELECT positions FROM " . NV_PREFIXLANG . "_" . $module_data . "_signer WHERE id=" . $signer;
+    $result = $db->query($sql);
+    $position = $result->fetchColumn();
+    nv_htmlOutput($lang_module['positions'] . ": " . $position);
+  }
+  $xtpl->parse('inter.coquyen');
 }
 
 $xtpl->parse('inter');

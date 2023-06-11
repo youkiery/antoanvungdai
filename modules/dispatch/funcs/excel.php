@@ -212,6 +212,13 @@ if (!empty($action)) {
 
 $path = NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file;
 $xtpl = new XTemplate("excel.tpl", $path);
+$xtpl->assign('sidemenu', sidemenu());
+$phanquyen = kiemtraphanquyen();
+if ($phanquyen == 0) $xtpl->parse("main.coquyen.khongquyen");
+else {
+  $xtpl->assign('SE_LINK', "/index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=main&amp;se=1");
+  $xtpl->parse('main.coquyen');
+}
 
 $xtpl->parse('main');
 $contents = $xtpl->text();

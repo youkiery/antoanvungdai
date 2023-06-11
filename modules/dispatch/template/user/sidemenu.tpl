@@ -17,17 +17,17 @@
       <a href="/quanly/" class="pw-menu-item {main}"> Thông tin chung </a>
 
       <!-- BEGIN: nhanvien -->
-      <a href="/quanly/tiemphong" class="pw-menu-item {tiemphong}"> Tiêm phòng</a>
-      <a href="/dispatch" class="pw-menu-item {vanban}"> Quản lý văn bản </a>
+      <a href="/quanly/tiemphong" class="pw-menu-item"> Tiêm phòng</a>
+      <a href="/dispatch" class="pw-menu-item active"> Quản lý văn bản </a>
       <!-- END: nhanvien -->
 
 
       <!-- BEGIN: quanly -->
-      <a href="/quanly/danhmuc" class="pw-menu-item {danhmuc}"> Danh mục </a>
+      <a href="/quanly/danhmuc" class="pw-menu-item"> Danh mục </a>
 
-      <a href="/quanly/thongke" class="pw-menu-item {thongke}"> Thống kê </a>
+      <a href="/quanly/thongke" class="pw-menu-item"> Thống kê </a>
 
-      <a href="/quanly/thanhvien" class="pw-menu-item {thanhvien}"> Quản lý nhân viên </a>
+      <a href="/quanly/thanhvien" class="pw-menu-item"> Quản lý nhân viên </a>
       <!-- END: quanly -->
 
     </div>

@@ -9,6 +9,8 @@
  */
 
 if (!defined('NV_SYSTEM')) die('Stop!!!');
+define("PREFIX", $db_config['prefix']);
+define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/');
 global $arr_type, $arr_status;
 
 $arr_status = array(
@@ -318,4 +320,20 @@ function totime($time) {
     }
     return $time;
 }
+
+function kiemtraphanquyen() {
+    global $db, $user_info;
+    
+    if (!isset($user_info['userid'])) header('location: /users/login');
+    $id = $user_info['userid'];
+    if (empty($id)) return 0;
+    if ($id == 1) return 2;
+    $sql = "select active from ". PREFIX ."_users where userid = $id";
+    $nhanvien = $db->fetch($sql);
+    if (empty($nhanvien) || !$nhanvien['active']) return 0;
+    $sql = "select * from ". PREFIX ."_phanquyen where userid = $id";
+      if (!empty($phanquyen = $db->fetch($sql))) return $phanquyen['quyen'];
+    return 0;
+  }
 ?>
+
