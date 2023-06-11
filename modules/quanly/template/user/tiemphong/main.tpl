@@ -368,6 +368,7 @@
         }).then((resp) => {
           $('#tiemphong').html(resp.danhsachtiemphong)
           $('#modal-timkiem').modal('hide')
+          keolen()
           global.trang = trang
         })
       }
@@ -535,6 +536,11 @@
             })
           })
         }
+      }
+      
+      function keolen() {
+        $("html, body").animate({ scrollTop: $("#tiemphong").offset().top }, "slow");
+        return false;
       }
     </script>
     <!-- END: coquyen -->

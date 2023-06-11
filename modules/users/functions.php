@@ -15,6 +15,8 @@ if (!defined('NV_SYSTEM')) {
 
 define('NV_IS_MOD_USER', true);
 define('NV_MOD_TABLE', ($module_data == 'users') ? NV_USERS_GLOBALTABLE : $db_config['prefix'] . '_' . $module_data);
+define("PREFIX", $db_config['prefix']);
+define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/');
 
 $lang_module['in_groups'] = $lang_global['in_groups'];
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
@@ -318,4 +320,15 @@ if (defined('NV_IS_USER') and isset($array_op[0]) and isset($array_op[1]) and ($
             }
         }
     }
+}
+
+
+function laybanner() {
+    global $db;
+  
+    $sql = "select * from ". PREFIX ."_config where module = 'global' and config_name = 'site_banner'";
+    $hinhanh = $db->fetch($sql);
+    if (empty($hinhanh)) return NV_ROOTDIR . '/assets/images/noimage.png';
+    if (strpos('http', $hinhanh['config_value']) !== false) return $hinhanh['config_value'];
+    return '/' . $hinhanh['config_value'];
 }

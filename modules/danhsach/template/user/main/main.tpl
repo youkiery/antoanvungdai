@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<div style="text-align: right;">
+<div style="text-align: right; margin: 10px;">
   <!-- BEGIN: khach -->
   <a class="btn btn-info" href="/users/login/"> Đăng nhập </a>
   <a class="btn btn-success" href="/users/register/"> Đăng ký </a>
@@ -26,7 +26,7 @@
 <div class="main-search">
   <form onsubmit="return timkiem(event)">
     <div class="input-border">
-      <button class="input-button" onclick="dentrang(1)"><span class="fa fa-search"></span></button>
+      <button class="input-button"><span class="fa fa-search"></span></button>
       <input type="text" class="input-real" id="tukhoa" placeholder="Nhập tên hoặc số microchip" autocomplete="off">
     </div>
   </form>
@@ -50,6 +50,7 @@
     }).then((resp) => {
       $('#content').html(resp.danhsach)
       global.trang = 1
+      keolen()
     })
     return false;
   }
@@ -62,6 +63,7 @@
     }).then((resp) => {
       $('#content').html(resp.danhsach)
       global.trang = trang
+      keolen()
     })
   }
 
@@ -73,6 +75,11 @@
       $('#chitiet').html(resp.chitiet)
       $('#modal-chitiet').modal('show')
     })
+  }
+
+  function keolen() {
+    $("html, body").animate({ scrollTop: $("#content").offset().top }, "slow");
+    return false;
   }
 </script>
 <!-- END: main -->

@@ -9,6 +9,7 @@
       <th> Địa chỉ </th>
       <th> Phường </th>
       <th> Tiêm phòng </th> 
+      <th> Chức năng </th>
     </tr>
   </thead>
   <!-- BEGIN: thucung -->
@@ -25,11 +26,12 @@
     <!-- BEGIN: datiem -->
     <td style="color: green"> Đã tiêm phòng </td>
     <!-- END: datiem -->
+    <td> <button class="btn btn-info btn-xs" onclick="chitiet({id})"> chi tiết </button> </td>
   </tr>
   <!-- END: thucung -->
   <!-- BEGIN: trong -->
   <tr>
-    <td colspan="5" class="text-center"> Không có dữ liệu </td>
+    <td colspan="6" class="text-center"> Không có dữ liệu </td>
   </tr>
   <!-- END: trong -->
 </table>

@@ -3,6 +3,19 @@
   <div class="col-xs-24 col-sm-6"> {sidemenu} </div>
   <div class="col-xs-24 col-sm-18 pw-content">
     <!-- BEGIN: coquyen -->
+    <div id="modal-chitiet" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"> Thông tin thú cưng </h4>
+          </div>
+          <div class="modal-body" id="chitiet">
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="modal-timkiem" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -133,8 +146,24 @@
         }).then((resp) => {
           $('#danhsach').html(resp.danhsachthongke)
           global.trang = 1
+          keolen()
           $('#modal-timkiem').modal('hide')
         })
+      }
+
+      function chitiet(id) {
+        vhttp.post('/danhsach/api/', {
+          action: 'laychitiet',
+          id: id,
+        }).then((resp) => {
+          $('#chitiet').html(resp.chitiet)
+          $('#modal-chitiet').modal('show')
+        })
+      }
+
+      function keolen() {
+        $("html, body").animate({ scrollTop: $("#danhsach").offset().top }, "slow");
+        return false;
       }
     </script>
     <!-- END: coquyen -->

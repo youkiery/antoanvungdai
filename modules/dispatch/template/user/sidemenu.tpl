@@ -29,7 +29,7 @@
 
       <a href="/quanly/thongke" class="pw-menu-item"> Thống kê </a>
 
-      <a href="/quanly/thanhvien" class="pw-menu-item"> Quản lý nhân viên </a>
+      <a href="/quanly/thanhvien" class="pw-menu-item"> Quản lý tài khoản </a>
       <!-- END: quanly -->
 
     </div>

@@ -15,7 +15,7 @@ $page_title = "Quản lý tài khoản";
 
 $xtpl = new XTemplate("main.tpl", PATH . '/main/');
 $xtpl->assign('sidemenu', sidemenu());
-$xtpl->assign('module_file', $module_file);
+$xtpl->assign('dulieuthongke', dulieuthongke());
 $xtpl->parse('main');
 $contents = $xtpl->text();
 

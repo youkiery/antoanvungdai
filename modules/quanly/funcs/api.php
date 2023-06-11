@@ -289,6 +289,18 @@ function chuyentrangtiemphong() {
 	$resp['danhsachtiemphong'] = danhsachtiemphong();
 }
 
+function xoakichhoatthanhvien() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$sql = "update ". PREFIX ."_users set active = 0 where userid = $id";
+	$db->query($sql);
+
+	$resp['status'] = 1;
+	$resp['danhsachthanhvien'] = danhsachthanhvien();
+	$resp['danhsachxetduyet'] = danhsachxetduyet();
+}
+
 function xoatiemphong() {
 	global $db, $nv_Request, $resp;
 

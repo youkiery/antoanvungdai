@@ -68,7 +68,6 @@ if (isset($array_op[1]) and preg_match("/^([a-zA-Z0-9\-\_]+)\-([\d]+)$/", $array
     $phanquyen = kiemtraphanquyen();
     if ($phanquyen == 0) $xtpl->parse("main.coquyen.khongquyen");
     else {
-
       $xtpl->assign('LANG', $lang_module);
       $xtpl->assign('GLANG', $lang_global);
       $xtpl->assign('MODULE_URL', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . "&" . NV_OP_VARIABLE . "=main&type=" . $row['type']);
@@ -87,7 +86,7 @@ if (isset($array_op[1]) and preg_match("/^([a-zA-Z0-9\-\_]+)\-([\d]+)$/", $array
 
       $xtpl->assign('TYPELINK', NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=main&type=" . $row['type']);
       $xtpl->assign('TYPENAME', $listtypes[$row['type']]['title']);
-      $xtpl->parse('main.if_cat');
+      $xtpl->parse('main.coquyen.if_cat');
 
       $xtpl->assign('ROW', $row);
 
@@ -98,7 +97,7 @@ if (isset($array_op[1]) and preg_match("/^([a-zA-Z0-9\-\_]+)\-([\d]+)$/", $array
               $listdes = nv_listdes($ro['deid']);
 
               $xtpl->assign('dis_de', $listdes[$ro['deid']]['title']);
-              $xtpl->parse('main.depid');
+              $xtpl->parse('main.coquyen.depid');
           }
       }
 
@@ -106,9 +105,9 @@ if (isset($array_op[1]) and preg_match("/^([a-zA-Z0-9\-\_]+)\-([\d]+)$/", $array
           $fileupload = explode(",", $row['file']);
           foreach ($fileupload as $f) {
               $xtpl->assign('FILEUPLOAD', $f);
-              $xtpl->parse('main.taifile.row');
+              $xtpl->parse('main.coquyen.taifile.row');
           }
-          $xtpl->parse('main.taifile');
+          $xtpl->parse('main.coquyen.taifile');
       }
 
       $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_de_do WHERE doid=" . $id;
@@ -122,10 +121,10 @@ if (isset($array_op[1]) and preg_match("/^([a-zA-Z0-9\-\_]+)\-([\d]+)$/", $array
               $row['stt'] = $i;
               $row['name'] = $listdes[$row['deid']]['title'];
               $xtpl->assign('DATA', $row);
-              $xtpl->parse('main.de.loop');
+              $xtpl->parse('main.coquyen.de.loop');
 
           }
-          $xtpl->parse('main.de');
+          $xtpl->parse('main.coquyen.de');
       }
       $xtpl->parse('main.coquyen');
     }

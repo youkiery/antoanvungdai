@@ -29,6 +29,7 @@ function user_register($gfx_chk, $checkss, $data_questions, $array_field_config,
     global $module_info, $global_config, $lang_global, $lang_module, $module_name, $module_captcha, $op, $nv_redirect, $global_array_genders;
 
     $xtpl = new XTemplate('register.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_info['module_theme']);
+    $xtpl->assign('banner', laybanner());
     $xtpl->assign('NICK_MAXLENGTH', $global_config['nv_unickmax']);
     $xtpl->assign('NICK_MINLENGTH', $global_config['nv_unickmin']);
     $xtpl->assign('PASS_MAXLENGTH', $global_config['nv_upassmax']);
@@ -307,6 +308,7 @@ function user_login($is_ajax = false)
     $xtpl->assign('USER_LOGIN', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=login');
     $xtpl->assign('USER_LOSTPASS', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=lostpass');
     $xtpl->assign('LANG', $lang_module);
+    $xtpl->assign('banner', laybanner());
     $xtpl->assign('GLANG', $lang_global);
     $xtpl->assign('TEMPLATE', $module_info['template']);
 

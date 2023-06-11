@@ -13,7 +13,7 @@
     <td> Chờ kích hoạt </td>
     <td> 
       <button class="btn btn-info btn-xs" onclick="kichhoatthanhvien({userid})"> <span class="fa fa-check"></span> kích hoạt </button>  
-      <button class="btn btn-danger btn-xs" onclick="xoathanhvien({userid})"> <span class="fa fa-times"></span> xóa </button>  
+      <!-- <button class="btn btn-danger btn-xs" onclick="xoathanhvien({userid})"> <span class="fa fa-times"></span> xóa </button>   -->
     </td>
   </tr>
   <!-- END: user -->

@@ -3,6 +3,23 @@
   <div class="col-xs-24 col-sm-6"> {sidemenu} </div>
   <div class="col-xs-24 col-sm-18 pw-content">
     <!-- BEGIN: coquyen -->
+    <div id="modal-xoakichhoat" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"> Vô hiệu hóa thành viên </h4>
+          </div>
+          <div class="modal-body text-center">
+            Thành viên sẽ không thể đăng nhập cho đến khi được kích hoạt trở lại
+            <button class="btn btn-warning btn-block" onclick="xacnhanxoakichhoatthanhvien()">
+              Vô hiệu hóa
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="modal-xoathanhvien" class="modal fade" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -316,22 +333,38 @@
           $('#xetduyet').html(phanhoi.danhsachxetduyet)
         })
       }
-
-      function xoathanhvien(id) {
+      
+      function xoakichhoatthanhvien(id) {
         global.id = id
-        $('#modal-xoathanhvien').modal('show')
+        $('#modal-xoakichhoat').modal('show')
       }
 
-      function xacnhanxoathanhvien() {
+      function xacnhanxoakichhoatthanhvien() {
         vhttp.post('/quanly/api/', {
-          action: 'xoathanhvien',
+          action: 'xoakichhoatthanhvien',
           id: global.id,
         }).then((phanhoi) => {
-          $('#modal-xoathanhvien').modal('hide')
+          $('#modal-xoakichhoat').modal('hide')
           $('#thanhvien').html(phanhoi.danhsachthanhvien)
           $('#xetduyet').html(phanhoi.danhsachxetduyet)
         })
       }
+
+      // function xoathanhvien(id) {
+      //   global.id = id
+      //   $('#modal-xoathanhvien').modal('show')
+      // }
+
+      // function xacnhanxoathanhvien() {
+      //   vhttp.post('/quanly/api/', {
+      //     action: 'xoathanhvien',
+      //     id: global.id,
+      //   }).then((phanhoi) => {
+      //     $('#modal-xoathanhvien').modal('hide')
+      //     $('#thanhvien').html(phanhoi.danhsachthanhvien)
+      //     $('#xetduyet').html(phanhoi.danhsachxetduyet)
+      //   })
+      // }
     </script>
     <!-- END: coquyen -->
     <!-- BEGIN: khongquyen -->

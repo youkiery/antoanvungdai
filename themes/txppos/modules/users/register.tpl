@@ -1,19 +1,21 @@
 <!-- BEGIN: main -->
 <div class="row centered margin-top-lg margin-bottom-lg">
   <div style="max-width:500px">
-    <div class="page panel panel-default box-shadow bg-lavender">
-      <div class="panel-body">
-        <h2 class="text-center margin-bottom-lg">{LANG.register}</h2>
-        {FILE "register_form.tpl"}
-        <div class="centered margin-top-lg">
-          <ul class="users-menu nav navbar-nav">
-            <li> 
-              <a href="/" class="margin-right-lg"><em class="fa fa-caret-right margin-right-sm"></em>Trang chủ
-              </a>
-            </li>
-            <li> <a href="/users/login" class="margin-right-lg"><em class="fa fa-caret-right margin-right-sm"></em>Đăng nhập</a> </li>
-          </ul>
-        </div>
+    <div class="panel-body">
+      <div class="pw-banner">
+        <a href="/"> <img src="{banner}" alt="banner">   </a>
+      </div>
+      <h2 class="text-center margin-bottom-lg">{LANG.register}</h2>
+      {FILE "register_form.tpl"}
+      <div class="centered margin-top-lg">
+        <ul class="users-menu nav navbar-nav">
+          <li>
+            <a href="/" class="margin-right-lg"><em class="fa fa-caret-right margin-right-sm"></em>Trang chủ
+            </a>
+          </li>
+          <li> <a href="/users/login" class="margin-right-lg"><em class="fa fa-caret-right margin-right-sm"></em>Đăng
+              nhập</a> </li>
+        </ul>
       </div>
     </div>
   </div>

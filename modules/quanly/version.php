@@ -12,7 +12,7 @@ if (!defined('NV_ADMIN') or !defined('NV_MAINFILE')) {
 }
 
 $module_version = array(
-    'name' => 'Quản lý tài khoản',
+    'name' => 'Quản lý tiêm phòng',
     'modfuncs' => 'main,api,danhmuc,nguoidung,thanhvien,thongke,tiemphong',
     'submenu' => 'main,api,danhmuc,nguoidung,thanhvien,thongke,tiemphong',
     'is_sysmod' => 1,

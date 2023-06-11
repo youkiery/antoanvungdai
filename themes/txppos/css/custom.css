@@ -79,8 +79,8 @@ body {
   float: left;
 }
 .pw-card-left img {
-  max-height: 140px;
-  max-width: 140px;
+  height: 140px;
+  width: 140px;
 }
 .pw-card-right {
   width: calc(100% - 150px);
@@ -212,6 +212,13 @@ table {
   box-shadow: 0 2px 15px -4px rgb(0 0 0 / 15%);
 }
 
+.panel-body {
+  max-width: 800px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  background: white;
+}
+
 .pw-info-panel {
   padding: 10px;
   text-align: center;
@@ -248,7 +255,7 @@ table {
 
 .pw-content {
   background: white;
-  padding: 5px;
+  padding: 10px;
 }
 
 .input-border {
