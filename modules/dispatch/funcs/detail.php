@@ -14,13 +14,6 @@ $page_title = $module_info['site_title'];
 $key_words = $module_info['keywords'];
 
 include_once(NV_ROOTDIR . '/modules/manage/global/admin.global.php');
-$p = checkPer('document');
-if ($p < 1) {
-  // không có quyền
-  include NV_ROOTDIR . '/includes/header.php';
-  echo nv_site_theme('Người dùng chưa đăng nhập hoặc chưa cấp quyền');
-  include NV_ROOTDIR . '/includes/footer.php';
-}
 
 $fileupload = array();
 $array_data = array();
@@ -72,63 +65,69 @@ if (isset($array_op[1]) and preg_match("/^([a-zA-Z0-9\-\_]+)\-([\d]+)$/", $array
     $row['view'] = $row['view'] + 1;
 
     $xtpl = new XTemplate($op . ".tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_info['module_theme'] . "/");
-    $xtpl->assign('LANG', $lang_module);
-    $xtpl->assign('GLANG', $lang_global);
-    $xtpl->assign('MODULE_URL', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . "&" . NV_OP_VARIABLE . "=main&type=" . $row['type']);
-    $xtpl->assign('MODULE_URL2', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . "&" . NV_OP_VARIABLE . "=main&type=" . $row['type'] . "&catid=" . $row['catid']);
-    $xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
-    $xtpl->assign('NV_LANG_INTERFACE', NV_LANG_INTERFACE);
-    $xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
-    $xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
-    $xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
-    $xtpl->assign('MODULE_NAME', $module_file);
-    $xtpl->assign('OP', $op);
-    $xtpl->assign('detail_title', '<span style="font-weight: bold;">Công văn: ' . $row['code'] . '</span>');
-    $xtpl->assign('template', $module_info['template']);
-    $xtpl->assign('module', $module_name);
-    $xtpl->assign('MODULE_LINK', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name);
+    $phanquyen = kiemtraphanquyen();
+    if ($phanquyen == 0) $xtpl->parse("main.coquyen.khongquyen");
+    else {
 
-    $xtpl->assign('TYPELINK', NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=main&type=" . $row['type']);
-    $xtpl->assign('TYPENAME', $listtypes[$row['type']]['title']);
-    $xtpl->parse('main.if_cat');
+      $xtpl->assign('LANG', $lang_module);
+      $xtpl->assign('GLANG', $lang_global);
+      $xtpl->assign('MODULE_URL', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . "&" . NV_OP_VARIABLE . "=main&type=" . $row['type']);
+      $xtpl->assign('MODULE_URL2', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . "&" . NV_OP_VARIABLE . "=main&type=" . $row['type'] . "&catid=" . $row['catid']);
+      $xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
+      $xtpl->assign('NV_LANG_INTERFACE', NV_LANG_INTERFACE);
+      $xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
+      $xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
+      $xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
+      $xtpl->assign('MODULE_NAME', $module_file);
+      $xtpl->assign('OP', $op);
+      $xtpl->assign('detail_title', '<span style="font-weight: bold;">Công văn: ' . $row['code'] . '</span>');
+      $xtpl->assign('template', $module_info['template']);
+      $xtpl->assign('module', $module_name);
+      $xtpl->assign('MODULE_LINK', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name);
 
-    $xtpl->assign('ROW', $row);
+      $xtpl->assign('TYPELINK', NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=main&type=" . $row['type']);
+      $xtpl->assign('TYPENAME', $listtypes[$row['type']]['title']);
+      $xtpl->parse('main.if_cat');
 
-    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_de_do WHERE doid=" . $id;
-    $re = $db->query($sql);
-    if ($re->rowCount()) {
-        while ($ro = $re->fetch()) {
-            $listdes = nv_listdes($ro['deid']);
+      $xtpl->assign('ROW', $row);
 
-            $xtpl->assign('dis_de', $listdes[$ro['deid']]['title']);
-            $xtpl->parse('main.depid');
-        }
-    }
+      $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_de_do WHERE doid=" . $id;
+      $re = $db->query($sql);
+      if ($re->rowCount()) {
+          while ($ro = $re->fetch()) {
+              $listdes = nv_listdes($ro['deid']);
 
-    if (!empty($row['file'])) {
-        $fileupload = explode(",", $row['file']);
-        foreach ($fileupload as $f) {
-            $xtpl->assign('FILEUPLOAD', $f);
-            $xtpl->parse('main.taifile.row');
-        }
-        $xtpl->parse('main.taifile');
-    }
+              $xtpl->assign('dis_de', $listdes[$ro['deid']]['title']);
+              $xtpl->parse('main.depid');
+          }
+      }
 
-    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_de_do WHERE doid=" . $id;
-    $result = $db->query($sql);
-    $num = $result->rowCount();
-    $i = 0;
-    if ($num > 0) {
-        $xtpl->assign('de_title', $lang_module['list_de']);
-        while ($row = $result->fetch()) {
-            $i = $i + 1;
-            $row['stt'] = $i;
-            $row['name'] = $listdes[$row['deid']]['title'];
-            $xtpl->assign('DATA', $row);
-            $xtpl->parse('main.de.loop');
+      if (!empty($row['file'])) {
+          $fileupload = explode(",", $row['file']);
+          foreach ($fileupload as $f) {
+              $xtpl->assign('FILEUPLOAD', $f);
+              $xtpl->parse('main.taifile.row');
+          }
+          $xtpl->parse('main.taifile');
+      }
 
-        }
-        $xtpl->parse('main.de');
+      $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_de_do WHERE doid=" . $id;
+      $result = $db->query($sql);
+      $num = $result->rowCount();
+      $i = 0;
+      if ($num > 0) {
+          $xtpl->assign('de_title', $lang_module['list_de']);
+          while ($row = $result->fetch()) {
+              $i = $i + 1;
+              $row['stt'] = $i;
+              $row['name'] = $listdes[$row['deid']]['title'];
+              $xtpl->assign('DATA', $row);
+              $xtpl->parse('main.de.loop');
+
+          }
+          $xtpl->parse('main.de');
+      }
+      $xtpl->parse('main.coquyen');
     }
 
     $xtpl->parse('main');
