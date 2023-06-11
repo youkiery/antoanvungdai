@@ -15,9 +15,14 @@ $page_title = "Quản lý tài khoản";
 
 $xtpl = new XTemplate("main.tpl", PATH .'/nguoidung/');
 
-// $xtpl->assign('content', danhsachthucung());
+$xtpl->assign('sidemenu', sidemenu());
+$phanquyen = kiemtraphanquyen();
+if ($phanquyen < 2) $xtpl->parse("main.khongquyen");
+else {
+	$xtpl->parse("main.coquyen");
+}
 $xtpl->parse("main");
-$contents = $xtpl->text("main");
+$contents = $xtpl->text();
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);

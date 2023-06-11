@@ -15,9 +15,10 @@ define('NV_IS_FORM', true);
 define("PREFIX", $db_config['prefix']);
 define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/');
 
-function kiemtraphanquyen($id) {
-  global $db;
-  if (empty($id)) return 0;
+function kiemtraphanquyen() {
+  global $db, $user_info;
+  if (!isset($user_info['userid'])) return 0;
+  $id = $user_info['userid'];
   if ($id == 1) return 2;
   $sql = "select active from ". PREFIX ."_users where userid = $id";
   $nhanvien = $db->fetch($sql);

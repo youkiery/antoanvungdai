@@ -129,7 +129,7 @@ function danhsachtiemphong() {
   $xtpl = new XTemplate("danhsachtiemphong.tpl", PATH ."/tiemphong/");
   // bộ lọc: tên chủ, điện thoại, tên thú cưng, micro, giống, loài, phường, thời gian tiêm
   // kiểm tra quyền, nếu là quyền nhân viên thì lọc theo danh sách
-  $phanquyen = kiemtraphanquyen($user_info['userid']);
+  $phanquyen = kiemtraphanquyen();
   $xtra = [];
   if ($phanquyen == 1) {
     $sql = "select * from ". PREFIX ."_phanquyen_chitiet where userid = $user_info[userid]";
@@ -294,6 +294,23 @@ function dulieuthongke() {
   $xtpl->assign('tongthucung', $tongthucung);
 
   $xtpl->parse("main");
+  return $xtpl->text();
+}
+
+function sidemenu() {
+  global $db, $nv_Request, $op;
+
+  $xtpl = new XTemplate("sidemenu.tpl", PATH);
+  $phanquyen = kiemtraphanquyen();
+  $danhsachchucnang = ['thanhvien', 'tiemphong', 'thongke', 'nguoidung', 'danhmuc'];
+  if (in_array($op, $danhsachchucnang) !== false) $chucnang = $op;
+  else $chucnang = 'main';
+  $xtpl->assign($chucnang, 'active');
+
+  if ($phanquyen >= 0) $xtpl->parse("main.thanhvien");
+  if ($phanquyen >= 1) $xtpl->parse("main.nhanvien");
+  if ($phanquyen == 2) $xtpl->parse("main.quanly");
+  $xtpl->parse('main');
   return $xtpl->text();
 }
 

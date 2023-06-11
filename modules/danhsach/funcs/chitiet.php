@@ -21,7 +21,7 @@ $id = $nv_Request->get_string('id', 'get', '0');
 
 $sql = "select b.ten, b.id as idthucung, b.micro, b.idgiong, b.idchu, b.hinhanh, c.ten as tenchu, c.diachi, c.dienthoai, d.ten as tenphuong from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_danhmuc_phuong d on c.idphuong = d.id where b.id = $id";
 $thucung = $db->fetch($sql);
-$phanquyen = kiemtraphanquyen($user_info['userid']);
+$phanquyen = kiemtraphanquyen();
 
 $hinhanh = kiemtrahinhanh($thucung['hinhanh']);
 $xtpl->assign('hinhanh', $hinhanh);
@@ -45,7 +45,7 @@ foreach ($danhsach as $tiemphong) {
 }
 
 $xtpl->parse("main");
-$contents = $xtpl->text("main");
+$contents = $xtpl->text();
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);

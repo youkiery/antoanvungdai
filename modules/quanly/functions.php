@@ -25,8 +25,11 @@ function laybanner() {
   return '/' . $hinhanh['config_value'];
 }
 
-function kiemtraphanquyen($id) {
-  global $db;
+function kiemtraphanquyen() {
+  global $db, $user_info;
+  
+  if (!isset($user_info['userid'])) header('location: /users/login');
+  $id = $user_info['userid'];
   if (empty($id)) return 0;
   if ($id == 1) return 2;
   $sql = "select active from ". PREFIX ."_users where userid = $id";

@@ -195,3 +195,51 @@ table {
   height: 64px !important;
   background: url('/themes/default/images/thumbnail-xxs.jpg') !important;
 }
+
+.pw-side-bar {
+  background: white;
+  -webkit-box-shadow: 0 2px 15px -4px rgb(0 0 0 / 15%);
+  -moz-box-shadow: 0 2px 15px -4px rgba(0, 0, 0, .15);
+  box-shadow: 0 2px 15px -4px rgb(0 0 0 / 15%);
+}
+
+.pw-info-panel {
+  padding: 10px;
+  text-align: center;
+}
+
+.pw-menu-group {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+}
+
+.pw-menu-header {
+  color: gray;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin: 10px;
+}
+
+.pw-menu-content {
+  padding-right: 20px;
+}
+
+.pw-menu-item {
+  display: block;
+  padding-left: 20px;
+  color: black;
+  margin: 5px 0px;
+}
+
+.pw-menu-item.active {
+  color: green;
+  font-weight: bold;
+  border-left: 5px solid green;
+  padding-left: 15px;
+}
+
+.pw-content {
+  background: white;
+  padding: 5px;
+}

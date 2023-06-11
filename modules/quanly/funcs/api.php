@@ -16,7 +16,7 @@ $resp = array(
   'status' => 0
 );
 
-$phanquyen = kiemtraphanquyen($user_info['userid']);
+$phanquyen = kiemtraphanquyen();
 if ($phanquyen == 0) $resp = ['status' => 0, 'messenger' => 'Thành viên không có quyền'];
 else if (!empty($action) && function_exists($action)) {
   $action();
@@ -298,6 +298,18 @@ function xoatiemphong() {
 
 	$resp['status'] = 1;
 	$resp['danhsachtiemphong'] = danhsachtiemphong();
+}
+
+function kichhoatthanhvien() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$sql = "update ". PREFIX ."_users set active = 1 where userid = $id";
+	$db->query($sql);
+
+	$resp['status'] = 1;
+	$resp['danhsachthanhvien'] = danhsachthanhvien();
+	$resp['danhsachxetduyet'] = danhsachxetduyet();
 }
 
 function laythongtintiemphong() {

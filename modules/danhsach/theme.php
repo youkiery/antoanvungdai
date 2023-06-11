@@ -45,7 +45,7 @@ function danhsachthucung() {
   
   $xtpl->assign('danhsachtrang', phantrang($trang, $tong, GIOIHAN, 'dentrang'));
   $xtpl->parse("main");
-  return $xtpl->text("main");
+  return $xtpl->text();
 }
 
 function phantrang($trang, $tong, $gioihan, $chucnang = '') {

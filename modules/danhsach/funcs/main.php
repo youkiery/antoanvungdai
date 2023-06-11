@@ -22,7 +22,7 @@ else $xtpl->parse('main.khach');
 
 $xtpl->assign('content', danhsachthucung());
 $xtpl->parse("main");
-$contents = $xtpl->text("main");
+$contents = $xtpl->text();
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);

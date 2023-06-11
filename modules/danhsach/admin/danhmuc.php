@@ -15,7 +15,7 @@ $xtpl = new XTemplate("noidung.tpl", PATH);
 
 $xtpl->assign('noidung', danhsachphuong());
 $xtpl->parse("main");
-$contents = $xtpl->text("main");
+$contents = $xtpl->text();
 
 include (NV_ROOTDIR . "/includes/header.php");
 echo nv_admin_theme($contents);

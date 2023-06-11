@@ -13,18 +13,11 @@ if (!defined('NV_IS_FORM')) {
 
 $page_title = "Quản lý tài khoản";
 
-if (!isset($user_info['userid'])) header('location: /users/login');
-
-$phanquyen = kiemtraphanquyen($user_info['userid']);
 $xtpl = new XTemplate("main.tpl", PATH . '/main/');
-$xtpl->assign('banner', laybanner());
+$xtpl->assign('sidemenu', sidemenu());
 $xtpl->assign('module_file', $module_file);
-if ($phanquyen >= 0) $xtpl->parse("main.thanhvien");
-if ($phanquyen >= 1) $xtpl->parse("main.nhanvien");
-if ($phanquyen == 2) $xtpl->parse("main.quanly");
-$xtpl->parse("main");
-$contents = $xtpl->text("main");
-
+$xtpl->parse('main');
+$contents = $xtpl->text();
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);
