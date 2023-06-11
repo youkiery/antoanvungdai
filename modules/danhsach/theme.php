@@ -26,7 +26,7 @@ function danhsachthucung() {
   else $xtra = " where b.ten like '%$tukhoa%' or b.micro like '%$tukhoa%'";
 
   // gom tất cả idthucung lại, sort theo thời gian
-  $sql = "select a.id, b.ten, b.id as idthucung, b.idgiong, b.idchu, b.hinhanh from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id $xtra group by idthucung order by thoigiantiem desc, a.id desc limit ". GIOIHAN . " offset ". ($trang - 1) * GIOIHAN;
+  $sql = "select a.id, b.ten, b.id as idthucung, b.idgiong, b.idchu, b.hinhanh, b.micro from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id $xtra group by idthucung order by thoigiantiem desc, a.id desc limit ". GIOIHAN . " offset ". ($trang - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
   $sql = "select count(a.id) as tongtruong from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id $xtra";
   if (empty($tong = $db->fetch($sql))) $tong = 0;
@@ -44,6 +44,41 @@ function danhsachthucung() {
   }
   
   $xtpl->assign('danhsachtrang', phantrang($trang, $tong, GIOIHAN, 'dentrang'));
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+
+function thongtinchitiet() {
+  global $db, $nv_Request, $module_file;
+
+  $xtpl = new XTemplate("chitiet.tpl", PATH .'/main/');
+  $id = $nv_Request->get_string('id', 'post', '0');
+  
+  $sql = "select b.ten, b.id as idthucung, b.micro, b.idgiong, b.idchu, b.hinhanh, c.ten as tenchu, c.diachi, c.dienthoai, d.ten as tenphuong from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_danhmuc_phuong d on c.idphuong = d.id where b.id = $id";
+  $thucung = $db->fetch($sql);
+  $phanquyen = kiemtraphanquyen();
+  
+  $hinhanh = kiemtrahinhanh($thucung['hinhanh']);
+  $xtpl->assign('hinhanh', $hinhanh);
+  $xtpl->assign('tenthucung', $thucung['ten']);
+  $xtpl->assign('micro', $thucung['micro']);
+  $xtpl->assign('giongloai', laytengiongloai($thucung['idgiong']));
+  $xtpl->assign('tenchu', $thucung['tenchu']);
+  if ($phanquyen == 2) {
+    $xtpl->assign('diachi', $thucung['diachi']);
+    $xtpl->assign('dienthoai', $thucung['dienthoai']);
+    $xtpl->assign('tenphuong', $thucung['tenphuong']);
+    $xtpl->parse("main.thongtin");
+  }
+  
+  $sql = "select * from ". PREFIX ."_tiemphong where idthucung = $thucung[idthucung] order by thoigiantiem desc";
+  $danhsach = $db->all($sql);
+  
+  foreach ($danhsach as $tiemphong) {
+    $xtpl->assign('thoigian', date('d/m/Y', $tiemphong['thoigiantiem']));
+    $xtpl->parse("main.row");
+  }
+  
   $xtpl->parse("main");
   return $xtpl->text();
 }

@@ -52,7 +52,6 @@ body {
   border-radius: 10px;
   padding: 5px;
   background: white;
-  font-size: .8em;
   line-height: 18px;
   display: inline-block;
   position: relative;
@@ -64,6 +63,11 @@ body {
   height: 150px;
   width: 100%;
 }
+
+.pw-card-content.chitiet {
+  height: unset !important;
+}
+
 
 .pw-card-left {
   width: 140px;
@@ -242,4 +246,23 @@ table {
 .pw-content {
   background: white;
   padding: 5px;
+}
+
+.input-border {
+  border-radius: 10px;
+  position: relative;
+  background: white;
+  padding: 3px;
+  border: 1px solid gray;
+}
+.input-button {
+  background-color: white;
+  position: absolute;
+  right: 5px;
+  border: none;
+}
+.input-real {
+  background-color: white;
+  width: 100%;
+  border: none;
 }

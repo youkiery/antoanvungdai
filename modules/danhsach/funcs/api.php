@@ -29,3 +29,10 @@ function timkiem() {
 	$resp['status'] = 1;
 	$resp['danhsach'] = danhsachthucung();
 }
+
+function laychitiet() {
+	global $db, $nv_Request, $resp;
+
+	$resp['status'] = 1;
+	$resp['chitiet'] = thongtinchitiet();
+}

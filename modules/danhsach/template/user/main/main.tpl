@@ -1,33 +1,25 @@
 <!-- BEGIN: main -->
-<style>
-  .input-border {
-    border-radius: 10px;
-    position: relative;
-    background: white;
-    padding: 3px;
-    border: 1px solid gray;
-  }
-  .input-button {
-    background-color: white;
-    position: absolute;
-    right: 5px;
-    border: none;
-  }
-  .input-real {
-    background-color: white;
-    width: 100%;
-    border: none;
-  }
-</style>
+<div id="modal-chitiet" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"> Thông tin thú cưng </h4>
+      </div>
+      <div class="modal-body" id="chitiet">
+      </div>
+    </div>
+  </div>
+</div>
 
 <div style="text-align: right;">
   <!-- BEGIN: khach -->
-  <a href="/users/login/"> Đăng nhập </a> |
-  <a href="/users/register/"> Đăng ký </a>
+  <a class="btn btn-info" href="/users/login/"> Đăng nhập </a>
+  <a class="btn btn-success" href="/users/register/"> Đăng ký </a>
   <!-- END: khach -->
   <!-- BEGIN: nhanvien -->
-  <a href="/quanly/"> Quản lý </a> |
-  <a href="/users/logout"> Đăng xuất </a>
+  <a class="btn btn-info" href="/quanly/"> Quản lý </a>
+  <a class="btn btn-warning" href="/users/logout"> Đăng xuất </a>
   <!-- END: khach -->
 </div>
 <div class="banner"> <img class="img-responsive" src="{banner}"> </div>
@@ -70,6 +62,16 @@
     }).then((resp) => {
       $('#content').html(resp.danhsach)
       global.trang = trang
+    })
+  }
+
+  function chitiet(id) {
+    vhttp.post('/danhsach/api/', {
+      action: 'laychitiet',
+      id: id,
+    }).then((resp) => {
+      $('#chitiet').html(resp.chitiet)
+      $('#modal-chitiet').modal('show')
     })
   }
 </script>
