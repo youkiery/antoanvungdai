@@ -32,6 +32,30 @@ function timkiem() {
 	$resp['danhsach'] = danhsachthucung();
 }
 
+function xoaxuphat() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$sql = "delete from ". PREFIX ."_xuphat where id = $id";
+	$db->query($sql);
+
+	$resp['status'] = 1;
+	$resp['danhsachxuphat'] = danhsachxuphat();
+}
+
+function dongphat() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$thoigian = chuyendoithoigian($nv_Request->get_string('thoigian', 'post', '0'));
+
+	$sql = "update ". PREFIX ."_xuphat set dongphat = 1, thoigiandong = $thoigian where id = $id";
+	$db->query($sql);
+
+	$resp['status'] = 1;
+	$resp['danhsachxuphat'] = danhsachxuphat();
+}
+
 function xoaphuong() {
 	global $db, $nv_Request, $resp;
 
@@ -343,7 +367,6 @@ function themtiemphong() {
 	$dulieu = $nv_Request->get_array('dulieu', 'post', '');
 	$idchuho = kiemtrachuho($dulieu);
 	$idthucung = kiemtrathucung($idchuho, $dulieu);
-	$thoigiannhac = strtotime('-1 year', $thoigiantiem);
 
 	if (empty($dulieu['thoigiantiem'])) {
 		// chưa tiêm phòng
@@ -355,6 +378,7 @@ function themtiemphong() {
 	}
 	else {
 		$thoigiantiem = chuyendoithoigian($dulieu['thoigiantiem']);
+		$thoigiannhac = strtotime('-1 year', $thoigiantiem);
 		if ($id) {
 			// cập nhật
 			$sql = "update ". PREFIX ."_tiemphong set idthucung = $idthucung, thoigiantiem = $thoigiantiem, thoigiannhac = $thoigiannhac where id = $id";
@@ -367,6 +391,36 @@ function themtiemphong() {
 	}
 
 	$resp['danhsachtiemphong'] = danhsachtiemphong();
+	$resp['status'] = 1;
+}
+
+function themxuphat() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$dulieu = $nv_Request->get_array('dulieu', 'post', '');
+	$idchuho = kiemtrachuho($dulieu);
+	$thoigianphat = chuyendoithoigian($dulieu['thoigianphat']);
+	$mucphat = intval($dulieu['mucphat']);
+
+	if (empty($dulieu['thoigiandong'])) {
+		$thoigiandong = 0;
+		$dongphat = 0;
+	}
+	else {
+		$thoigiandong = chuyendoithoigian($dulieu['thoigiandong']);
+		$dongphat = 1;
+	}
+
+	if ($id) {
+		$sql = "update ". PREFIX ."_xuphat set idchuho = $idchuho, thoigianphat = $thoigianphat, thoigiandong = $thoigiandong, noidung = '$dulieu[noidung]', mucphat = $mucphat where id = $id";
+	}
+	else {
+		$sql = "insert into ". PREFIX ."_xuphat (idchuho, noidung, mucphat, dongphat, thoigianphat, thoigiandong) values ($idchuho, '$dulieu[noidung]', $mucphat, $dongphat, $thoigianphat, $thoigiandong)";
+	}
+	$db->query($sql);
+
+	$resp['danhsachxuphat'] = danhsachxuphat();
 	$resp['status'] = 1;
 }
 
@@ -471,5 +525,12 @@ function timkiemthongke() {
   global $db, $nv_Request, $resp;
 
 	$resp['danhsachthongke'] = danhsachthongke();
+	$resp['status'] = 1;
+}
+
+function timkiemxuphat() {
+  global $db, $nv_Request, $resp;
+
+	$resp['danhsachxuphat'] = danhsachxuphat();
 	$resp['status'] = 1;
 }

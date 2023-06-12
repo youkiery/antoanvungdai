@@ -25,9 +25,8 @@
 
       <!-- BEGIN: quanly -->
       <a href="/quanly/danhmuc" class="pw-menu-item {danhmuc}"> Danh mục </a>
-
       <a href="/quanly/thongke" class="pw-menu-item {thongke}"> Thống kê </a>
-
+      <a href="/quanly/xuphat" class="pw-menu-item {xuphat}"> Xử phạt </a>
       <a href="/quanly/thanhvien" class="pw-menu-item {thanhvien}"> Quản lý tài khoản </a>
       <!-- END: quanly -->
 

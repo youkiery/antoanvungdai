@@ -188,6 +188,66 @@ function danhsachtiemphong() {
   return $xtpl->text();
 }
 
+function danhsachxuphat() {
+  global $db, $nv_Request;
+
+	$truongloc = $nv_Request->get_array('truongloc', 'post', '');
+  if (empty($truongloc['trang'])) {
+    $truongloc = [
+      'tenchu' => '',
+      'dienthoai' => '',
+      'noidung' => '',
+      'phuong' => '',
+      'dongphat' => 0,
+      'batdau' => '',
+      'ketthuc' => '',
+      'trang' => 1,
+    ];
+  }
+  $xtpl = new XTemplate("danhsachxuphat.tpl", PATH ."/xuphat/");
+  // bộ lọc: tên chủ, điện thoại, tên thú cưng, micro, giống, loài, phường, thời gian tiêm
+  $xtra = [];
+  if (!empty($truongloc['tenchu'])) $xtra []= " c.ten like '%$truongloc[tenchu]%' ";
+  if (!empty($truongloc['dienthoai'])) $xtra []= " c.dienthoai like '%$truongloc[dienthoai]%' ";
+  if (!empty($truongloc['phuong'])) $xtra []= " e.ten like '%$truongloc[phuong]%' ";
+  if (!empty($truongloc['noidung'])) $xtra []= " a.noidung like '%$truongloc[noidung]%' ";
+  if (!empty($truongloc['dongphat'])) {
+    $truongloc['dongphat'] --;
+    $xtra []= " a.dongphat = $truongloc[dongphat]";
+  }
+
+  if (count($xtra)) $xtra = " where ". implode(' and ', $xtra);
+  else $xtra = '';
+
+  $sql = "select a.id, a.noidung, a.mucphat, a.dongphat, a.thoigianphat, c.ten as chuho, c.dienthoai, c.diachi, e.ten as phuong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_tiemphong_chuho c on a.idchuho = c.id inner join ". PREFIX ."_danhmuc_phuong e on c.idphuong = e.id $xtra order by a.thoigianphat desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
+  $danhsach = $db->all($sql);
+
+  $sql = "select count(c.id) as tong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_tiemphong_chuho c on a.idchuho = c.id inner join ". PREFIX ."_danhmuc_phuong e on c.idphuong = e.id $xtra";
+  if (!empty($tong = $db->fetch($sql))) $tong = $tong['tong'];
+  else $tong = 0;
+
+  foreach ($danhsach as $thucung) {
+    $xtpl->assign('id', $thucung['id']);
+    $xtpl->assign('chuho', $thucung['chuho']);
+    $xtpl->assign('dienthoai', $thucung['dienthoai']);
+    $xtpl->assign('diachi', $thucung['diachi']);
+    $xtpl->assign('phuong', $thucung['phuong']);
+    $xtpl->assign('noidung', $thucung['noidung']);
+    $xtpl->assign('mucphat', number_format($thucung['mucphat']));
+    $xtpl->assign('ngayphat', date('d/m/Y', $thucung['thoigianphat']));
+
+    if ($thucung['dongphat']) $xtpl->parse('main.thucung.datiem');
+    else {
+      $xtpl->parse('main.thucung.chuatiem');
+      $xtpl->parse('main.thucung.dongphat');
+    }
+    $xtpl->parse("main.thucung");
+  }
+  if (!count($danhsach)) $xtpl->parse('main.trong');
+  $xtpl->assign('phantrang', phantrang($truongloc['trang'], $tong, GIOIHAN, 'dentrang'));
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
 
 function danhsachthongke() {
   global $db, $nv_Request;
@@ -219,14 +279,8 @@ function danhsachthongke() {
   if (!empty($truongloc['loai'])) $xtra []= " d.giong like '%$truongloc[loai]%' ";
   if (!empty($truongloc['phuong'])) $xtra []= " e.ten like '%$truongloc[phuong]%' ";
   if (!empty($truongloc['tiemphong'])) {
-    if ($truongloc['tiemphong'] == 1) {
-      $ex = ' not in ';
-      // Chưa tiêm
-    }
-    else {
-      $ex = ' in ';
-      // Đã tiêm
-    }
+    if ($truongloc['tiemphong'] == 1) $ex = ' not in ';
+    else $ex = ' in ';
     $xtra []= " b.id $ex (select idthucung as id from ". PREFIX ."_tiemphong group by idthucung) ";
   }
 
@@ -302,7 +356,7 @@ function sidemenu() {
 
   $xtpl = new XTemplate("sidemenu.tpl", PATH);
   $phanquyen = kiemtraphanquyen();
-  $danhsachchucnang = ['thanhvien', 'tiemphong', 'thongke', 'nguoidung', 'danhmuc'];
+  $danhsachchucnang = ['thanhvien', 'tiemphong', 'thongke', 'nguoidung', 'danhmuc', 'xuphat'];
   if (in_array($op, $danhsachchucnang) !== false) $chucnang = $op;
   else $chucnang = 'main';
   $xtpl->assign($chucnang, 'active');

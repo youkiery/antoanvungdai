@@ -521,8 +521,8 @@
         else if (!dulieu.micro.length) vhttp.notify('Không được để trống số Microchip')
         else if (!dulieu.giong.length) vhttp.notify('Không được để trống tên giống')
         else if (!dulieu.loai.length) vhttp.notify('Không được để trống tên loài')
-        else if (!kiemtrangaythang(dulieu.thoigiantiem)) vhttp.notify('Ngày tháng không hợp lệ')
-        else if (!kiemtrangaythang(dulieu.thoigiantiem)) vhttp.notify('Ngày sinh không hợp lệ')
+        else if (dulieu.thoigiantiem.length && !kiemtrangaythang(dulieu.thoigiantiem)) vhttp.notify('Ngày tháng không hợp lệ')
+        else if (!kiemtrangaythang(dulieu.ngaysinh)) vhttp.notify('Ngày sinh không hợp lệ')
         else {
           vimage.uploadimage('hinhanh').then(() => {
             dulieu.hinhanh = vimage.data['hinhanh']

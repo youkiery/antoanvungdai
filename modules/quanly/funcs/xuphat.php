@@ -12,14 +12,13 @@ if (!defined('NV_IS_FORM')) {
 }
 
 $page_title = "Quản lý tài khoản";
-
-$xtpl = new XTemplate("main.tpl", PATH . '/tiemphong/');
+$xtpl = new XTemplate("main.tpl", PATH .'/xuphat/');
 $xtpl->assign('sidemenu', sidemenu());
 $phanquyen = kiemtraphanquyen();
-if ($phanquyen == 0) $xtpl->parse("main.khongquyen");
+if ($phanquyen < 2) $xtpl->parse("main.khongquyen");
 else {
 	$xtpl->assign('homnay', date('d/m/Y'));
-	$xtpl->assign('danhsachtiemphong', danhsachtiemphong());
+	$xtpl->assign('danhsachxuphat', danhsachxuphat());
 
 	$sql = "select * from ". PREFIX ."_danhmuc_phuong where kichhoat = 1 order by ten asc";
 	$danhsachphuong = $db->all($sql);

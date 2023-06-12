@@ -6,6 +6,7 @@
       <th> Giống loài </th>
       <th> Microchip </th>
       <th> Chủ hộ </th>
+      <th> Điện thoại </th>
       <th> Địa chỉ </th>
       <th> Phường </th>
       <th> Tiêm phòng </th> 
@@ -18,6 +19,7 @@
     <td> {giongloai} </td>
     <td> {micro} </td>
     <td> {chuho} </td>
+    <td> {dienthoai} </td>
     <td> {diachi} </td>
     <td> {phuong} </td>
     <!-- BEGIN: chuatiem -->
@@ -31,7 +33,7 @@
   <!-- END: thucung -->
   <!-- BEGIN: trong -->
   <tr>
-    <td colspan="6" class="text-center"> Không có dữ liệu </td>
+    <td colspan="9" class="text-center"> Không có dữ liệu </td>
   </tr>
   <!-- END: trong -->
 </table>
