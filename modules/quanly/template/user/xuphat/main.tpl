@@ -117,22 +117,10 @@
               </div>
             </div>
 
-            <!-- <div class="form-group"> Tệp đính kèm </div>
-            <div class="form-group">
-              <div class="input-group">
-                <input type="text" class="form-control">
-                <div class="input-group-btn"> <button class="btn btn-info"> <span class="fa fa-upload"></span> </button>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="input-group">
-                <input type="text" class="form-control">
-                <div class="input-group-btn"> <button class="btn btn-info"> <span class="fa fa-upload"></span> </button>
-                </div>
-              </div>
-            </div>
-            <button class="btn btn-success"> <span class="fa fa-plus"></span> Thêm tệp đính kèm </button> -->
+            <div class="form-group"> Tệp đính kèm </div>
+            <div id="tepdinhkem"></div>
+            <button class="btn btn-success" onclick="themtepdinhkem()"> <span class="fa fa-plus"></span> Thêm tệp đính
+              kèm </button>
 
             <div class="form-group"> Ngày phạt </div>
             <div class="form-group">
@@ -238,7 +226,8 @@
     <script>
       global = {
         trang: 1,
-        homnay: '{homnay}'
+        homnay: '{homnay}',
+        tepdinhkem: []
       }
 
       $(document).ready(() => {
@@ -269,6 +258,7 @@
       }
 
       function timkiem() {
+        radongbang()
         $('#modal-timkiem').modal('show')
       }
 
@@ -309,6 +299,7 @@
 
       function dongphat(id) {
         global.id = id
+        radongbang()
         $('#dongphat-thoigian').val(global.homnay)
         $('#modal-dongphat').modal('show')
       }
@@ -331,6 +322,7 @@
 
       function xoaxuphat(id) {
         global.id = id
+        radongbang()
         $('#modal-xoaxuphat').modal('show')
       }
 
@@ -356,9 +348,44 @@
         }
       }
 
+      function themtepdinhkem() {
+        global.tepdinhkem.push('')
+        tailaitepdinhkem()
+      }
+
+      function tailaitepdinhkem() {
+        html = ''
+        global.tepdinhkem.forEach((teptin, i) => {
+          console.log(teptin);
+          if (typeof (teptin) == 'string') tentep = teptin
+          else tentep = teptin.name
+          html += `
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" disabled value=`+ tentep + `>
+              <div class="input-group-btn">
+                <label>
+                  <div class="btn btn-info"> <span class="fa fa-upload"></span> </div>
+                  <input type="file" id="`+ i + `" onchange='chonteptin(` + i + `)' style="display: none;">
+                </label>
+              </div>
+            </div>
+          </div>`
+        });
+        $('#tepdinhkem').html(html)
+      }
+
+      function chonteptin(i) {
+        var file = $('#' + i)[0].files
+        if (file.length) global.tepdinhkem[i] = file[0]
+        else global.tepdinhkem[i] = ''
+        tailaitepdinhkem()
+      }
+
       function themxuphat() {
         global.id = 0
         hienthinut()
+        radongbang()
         $('#chuho').val('')
         $('#tenchu').val('')
         $('#dienthoai').val('')
@@ -367,6 +394,8 @@
         $('#mucphat').val('0')
         $('#thoigianphat').val(global.homnay)
         $('#thoigiandong').val('')
+        global.tepdinhkem = ['']
+        tailaitepdinhkem()
         $('#modal-themxuphat').modal('show')
       }
 
@@ -377,7 +406,8 @@
         }).then((phanhoi) => {
           global.id = id
           hienthinut()
-          $('#tenchu').val(phanhoi.chuho  )
+          radongbang()
+          $('#tenchu').val(phanhoi.chuho)
           $('#dienthoai').val(phanhoi.dienthoai)
           $('#diachi').val(phanhoi.diachi)
           $('#noidung').val(phanhoi.noidung)
@@ -404,6 +434,48 @@
         return day > 0 && day <= monthLength[month - 1];
       }
 
+      function uploadtoserver(file) {
+        return new Promise((resolve) => {
+          var form_data = new FormData()
+          form_data.append('file', file);
+          form_data.append('action', 'uploadfile');
+          $.ajax({
+            type: "POST",
+            processData: false,
+            mimeType: "multipart/form-data",
+            contentType: false,
+            data: form_data,
+            url: '/quanly/api/',
+            dataType: 'text', 
+            cache: false,
+            success: function (php_script_response) {
+              json = JSON.parse(php_script_response)
+              resolve(json.url)
+            },
+          })
+        })
+      }
+
+      function uploadfile() {
+        return new Promise((resolve) => {
+          let count = global.tepdinhkem.length
+          if (count == 0) resolve(true)
+          global.tepdinhkem.forEach((file, index) => {
+            if (typeof(file) == 'string') {
+              count--
+              if (count == 0) resolve(true)
+            }
+            else {
+              uploadtoserver(file).then((url) => {
+                global.tepdinhkem[index] = url
+                count--
+                if (count == 0) resolve(true)
+              })
+            }
+          });
+        })
+      }
+
       function xacnhanthemxuphat() {
         var phuong = $('#phuong option:selected')
         if (!phuong.length) {
@@ -428,16 +500,33 @@
         else if (!kiemtrangaythang(dulieu.thoigianphat)) vhttp.notify('Ngày tháng không hợp lệ')
         else if (!kiemtrangaythang(dulieu.thoigiandong)) vhttp.notify('Ngày tháng không hợp lệ')
         else {
-          vhttp.post('/quanly/api/', {
-            action: 'themxuphat',
-            id: global.id,
-            dulieu: dulieu,
-            truongloc: thongtintruongloc(global.trang),
-          }).then((phanhoi) => {
-            $('#danhsach').html(phanhoi.danhsachxuphat)
-            $('#modal-themxuphat').modal('hide')
+          uploadfile().then(() => {
+            dongbangnut()
+            dulieu.tepdinhkem = global.tepdinhkem
+            vhttp.post('/quanly/api/', {
+              action: 'themxuphat',
+              id: global.id,
+              dulieu: dulieu,
+              truongloc: thongtintruongloc(global.trang),
+            }).then((phanhoi) => {
+              radongbang()
+              $('#danhsach').html(phanhoi.danhsachxuphat)
+              $('#modal-themxuphat').modal('hide')
+            })
           })
         }
+      }
+
+      function taifile(diachi) {
+        window.location = diachi
+      }
+
+      function dongbangnut() {
+        $('button').prop('disabled', true)
+      }
+
+      function radongbang() {
+        $('button').prop('disabled', false)
       }
 
       function keolen() {

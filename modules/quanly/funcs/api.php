@@ -11,7 +11,7 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$action = $nv_Request->get_string('action', 'post');
+$action = $nv_Request->get_string('action', 'post/get');
 $resp = array(
   'status' => 0
 );
@@ -295,6 +295,20 @@ function timkiemchuho() {
 	$resp['danhsach']	= $xtpl->text();
 }
 
+function uploadfile() {
+	global $_FILES, $resp;
+
+	$target_dir = NV_ROOTDIR . "/uploads/quanly/";
+	$name = pathinfo($_FILES["file"]["name"], PATHINFO_FILENAME);
+	$extension = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
+	$time = time();
+	$target_file = $target_dir . "$name$time.$extension";
+	move_uploaded_file($_FILES["file"]["tmp_name"], $target_file);
+	
+	$resp['status']	= 1;
+	$resp['url']= "/uploads/quanly/$name$time.$extension";
+}
+
 function timkiemthucung() {
 	global $db, $nv_Request, $resp;
 
@@ -464,11 +478,20 @@ function themxuphat() {
 
 	if ($id) {
 		$sql = "update ". PREFIX ."_xuphat set idchuho = $idchuho, thoigianphat = $thoigianphat, thoigiandong = $thoigiandong, noidung = '$dulieu[noidung]', mucphat = $mucphat where id = $id";
+		$db->query($sql);
 	}
 	else {
 		$sql = "insert into ". PREFIX ."_xuphat (idchuho, noidung, mucphat, dongphat, thoigianphat, thoigiandong) values ($idchuho, '$dulieu[noidung]', $mucphat, $dongphat, $thoigianphat, $thoigiandong)";
+		$id = $db->insertid($sql);
 	}
+
+	$sql = "delete from ". PREFIX ."_xuphat_dinhkem where idxuphat = $id";
 	$db->query($sql);
+
+	foreach ($dulieu['tepdinhkem'] as $url) {
+		$sql = "insert into ". PREFIX ."_xuphat_dinhkem (idxuphat, diachi) values($id, '$url')";
+		$db->query($sql);
+	}
 
 	$resp['danhsachxuphat'] = danhsachxuphat();
 	$resp['status'] = 1;

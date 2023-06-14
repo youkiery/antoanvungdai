@@ -255,6 +255,12 @@ function danhsachxuphat() {
     $xtpl->assign('noidung', $thucung['noidung']);
     $xtpl->assign('mucphat', number_format($thucung['mucphat']));
     $xtpl->assign('ngayphat', date('d/m/Y', $thucung['thoigianphat']));
+    $sql = "select * from ". PREFIX ."_xuphat_dinhkem where idxuphat = $thucung[id]";
+    $danhsachdinhkem = $db->all($sql);
+    foreach ($danhsachdinhkem as $dinhkem) {
+      $xtpl->assign('url', $dinhkem['diachi']);
+      $xtpl->parse('main.thucung.dinhkem');
+    }
 
     if ($thucung['dongphat']) $xtpl->parse('main.thucung.datiem');
     else {
