@@ -46,7 +46,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title"> Thông tin thú cưng </h4>
+            <h4 class="modal-title"> Thông tin xử phạt </h4>
           </div>
           <div class="modal-body" id="chitiet">
           </div>
@@ -116,6 +116,23 @@
                 <input type="text" class="form-control" id="mucphat" placeholder="Mức phạt">
               </div>
             </div>
+
+            <!-- <div class="form-group"> Tệp đính kèm </div>
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" class="form-control">
+                <div class="input-group-btn"> <button class="btn btn-info"> <span class="fa fa-upload"></span> </button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" class="form-control">
+                <div class="input-group-btn"> <button class="btn btn-info"> <span class="fa fa-upload"></span> </button>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-success"> <span class="fa fa-plus"></span> Thêm tệp đính kèm </button> -->
 
             <div class="form-group"> Ngày phạt </div>
             <div class="form-group">
@@ -280,15 +297,15 @@
         })
       }
 
-      // function chitiet(id) {
-      //   vhttp.post('/danhsach/api/', {
-      //     action: 'laychitiet',
-      //     id: id,
-      //   }).then((resp) => {
-      //     $('#chitiet').html(resp.chitiet)
-      //     $('#modal-chitiet').modal('show')
-      //   })
-      // }
+      function chitiet(idchu) {
+        vhttp.post('/quanly/api/', {
+          action: 'chitietxuphat',
+          idchu: idchu,
+        }).then((resp) => {
+          $('#chitiet').html(resp.chitiet)
+          $('#modal-chitiet').modal('show')
+        })
+      }
 
       function dongphat(id) {
         global.id = id
@@ -353,28 +370,21 @@
         $('#modal-themxuphat').modal('show')
       }
 
-      function capnhattiemphong(id) {
+      function capnhatxuphat(id) {
         vhttp.post('/quanly/api/', {
-          action: 'laythongtintiemphong',
+          action: 'laythongtinxuphat',
           id: id,
         }).then((phanhoi) => {
           global.id = id
           hienthinut()
-          $('#chuho').val('')
-          $('#tenchu').val(phanhoi.tenchu)
+          $('#tenchu').val(phanhoi.chuho  )
           $('#dienthoai').val(phanhoi.dienthoai)
           $('#diachi').val(phanhoi.diachi)
-          $('#thucung').val('')
-          $('#tenthucung').val(phanhoi.tenthucung)
-          $('#micro').val(phanhoi.micro)
-          $('#giongloai').val(phanhoi.giongloai)
-          $('#loai').val(phanhoi.loai)
-          $('#giong').val(phanhoi.giong)
-          $('#ngaysinh').val(phanhoi.ngaysinh)
-          $('#thoigiantiem').val(phanhoi.thoigiantiem)
+          $('#noidung').val(phanhoi.noidung)
+          $('#mucphat').val(phanhoi.mucphat)
+          $('#thoigianphat').val(phanhoi.thoigianphat)
+          $('#thoigiandong').val(phanhoi.thoigiandong)
           phuong = $('#phuong option[value=' + phanhoi.idphuong + ']').prop('selected', true)
-          vimage.data['hinhanh'] = [phanhoi.hinhanh]
-          vimage.reload('hinhanh')
           $('#modal-themxuphat').modal('show')
         })
       }

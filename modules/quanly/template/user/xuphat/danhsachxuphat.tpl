@@ -17,7 +17,7 @@
   <!-- BEGIN: thucung -->
   <tr>
     <td> {chuho} </td>
-    <td> {dienthoai} </td>
+    <td> {dienthoai} <span class="fa fa-info-circle" onclick="chitiet({idchuho})"></span> </td>
     <td> {diachi} </td>
     <td> {phuong} </td>
     <td> {noidung} </td>
@@ -34,6 +34,7 @@
     <!-- BEGIN: dongphat -->
     <button class="btn btn-warning btn-xs" onclick="dongphat({id})"> Đóng phạt </button>
     <!-- END: dongphat -->
+    <button class="btn btn-info btn-xs" onclick="capnhatxuphat({id})"> Cập nhật </button>
     <button class="btn btn-danger btn-xs" onclick="xoaxuphat({id})"> Xóa </button>
     </td>
   </tr>

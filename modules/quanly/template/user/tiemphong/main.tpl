@@ -407,12 +407,15 @@
         $('#phuong option[value=' + idphuong + ']')[0].selected = true
       }
 
-      function chonthucung(idthucung, ten, micro, giong, loai) {
+      function chonthucung(idthucung, tenthucung, micro, giong, loai,tenchu, diachi, dienthoai) {
         global.idthucung = idthucung
-        $('#tenthucung').val(ten)
+        $('#tenthucung').val(tenthucung)
         $('#micro').val(micro)
         $('#giong').val(giong)
         $('#loai').val(loai)
+        $('#tenchu').val(tenchu)
+        $('#diachi').val(diachi)
+        $('#dienthoai').val(dienthoai)
       }
 
       function chongiongloai(giong, loai) {

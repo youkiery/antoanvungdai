@@ -216,10 +216,29 @@ function danhsachxuphat() {
     $xtra []= " a.dongphat = $truongloc[dongphat]";
   }
 
+  $thoigian = 0;
+  if (!empty($truongloc['batdau']) && ($batdau = chuyendoithoigian($truongloc['batdau']))) $thoigian += 1;
+  if (!empty($truongloc['ketthuc']) && ($ketthuc = chuyendoithoigian($truongloc['ketthuc']))) $thoigian += 2;
+
+  switch ($thoigian) {
+    case 1:
+      // chỉ bắt đầu
+      $xtra []= " a.thoigianphat >= $batdau ";
+      break;
+    case 2:
+      // chỉ kết thúc
+      $xtra []= " a.thoigianphat <= $ketthuc ";
+      break;
+    case 3:
+      // có bắt đầu & kết thúc
+      $xtra []= " (a.thoigianphat between $batdau and $ketthuc) ";
+      break;
+  }
+
   if (count($xtra)) $xtra = " where ". implode(' and ', $xtra);
   else $xtra = '';
 
-  $sql = "select a.id, a.noidung, a.mucphat, a.dongphat, a.thoigianphat, c.ten as chuho, c.dienthoai, c.diachi, e.ten as phuong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_tiemphong_chuho c on a.idchuho = c.id inner join ". PREFIX ."_danhmuc_phuong e on c.idphuong = e.id $xtra order by a.thoigianphat desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
+  $sql = "select a.id, a.noidung, a.mucphat, a.dongphat, a.thoigianphat, c.id as idchuho, c.ten as chuho, c.dienthoai, c.diachi, e.ten as phuong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_tiemphong_chuho c on a.idchuho = c.id inner join ". PREFIX ."_danhmuc_phuong e on c.idphuong = e.id $xtra order by a.thoigianphat desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
 
   $sql = "select count(c.id) as tong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_tiemphong_chuho c on a.idchuho = c.id inner join ". PREFIX ."_danhmuc_phuong e on c.idphuong = e.id $xtra";
@@ -228,6 +247,7 @@ function danhsachxuphat() {
 
   foreach ($danhsach as $thucung) {
     $xtpl->assign('id', $thucung['id']);
+    $xtpl->assign('idchuho', $thucung['idchuho']);
     $xtpl->assign('chuho', $thucung['chuho']);
     $xtpl->assign('dienthoai', $thucung['dienthoai']);
     $xtpl->assign('diachi', $thucung['diachi']);

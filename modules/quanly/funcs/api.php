@@ -43,6 +43,43 @@ function xoaxuphat() {
 	$resp['danhsachxuphat'] = danhsachxuphat();
 }
 
+function chitietxuphat() {
+	global $db, $nv_Request, $resp;
+
+  $xtpl = new XTemplate("chitietxuphat.tpl", PATH ."/xuphat/");
+	$idchu = $nv_Request->get_string('idchu', 'post', '0');
+	$sql = "select * from ". PREFIX ."_tiemphong_chuho where id = $idchu";
+	$thongtin = $db->fetch($sql);
+	$tongphat = 0;
+	$chuadongphat = 0;
+	$dongphat = 0;
+
+	$sql = "select * from ". PREFIX ."_xuphat where idchuho = $idchu";
+	$danhsach = $db->all($sql);
+
+	foreach ($danhsach as $xuphat) {
+		$tongphat ++;
+		if ($xuphat['dongphat']) $dongphat ++;
+		else $chuadongphat ++;
+
+		$xtpl->assign('mucphat', number_format($xuphat['mucphat']));
+		$xtpl->assign('ngayphat', date('d/m/Y', $xuphat['thoigianphat']));
+		$xtpl->assign('ngaydong', ($xuphat['thoigiandong'] ? " ngày đóng phạt " . date('d/m/Y', $xuphat['thoigiandong']) : ''));
+		$xtpl->parse('main.dongphat');
+	}
+
+	$xtpl->assign('tongphat', number_format($tongphat));
+	$xtpl->assign('chuadongphat', number_format($chuadongphat));
+	$xtpl->assign('dongphat', number_format($dongphat));
+	$xtpl->assign('chuho', $thongtin['ten']);
+	$xtpl->assign('diachi', $thongtin['diachi']);
+	$xtpl->assign('dienthoai', $thongtin['dienthoai']);
+	$xtpl->parse('main');
+
+	$resp['status'] = 1;
+	$resp['chitiet'] = $xtpl->text();
+}
+
 function dongphat() {
 	global $db, $nv_Request, $resp;
 
@@ -357,6 +394,19 @@ function laythongtintiemphong() {
 	$resp = $db->fetch($sql);
 	$resp['thoigiantiem'] = date('d/m/Y', $resp['thoigiantiem']);
 	$resp['ngaysinh'] = date('d/m/Y', $resp['ngaysinh']);
+	$resp['status'] = 1;
+}
+
+function laythongtinxuphat() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	
+  $sql = "select a.id, a.noidung, a.mucphat, a.dongphat, a.thoigianphat, a.thoigiandong, c.id as idchuho, c.ten as chuho, c.dienthoai, c.diachi, c.idphuong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_tiemphong_chuho c on a.idchuho = c.id where a.id = $id";
+	$resp = $db->fetch($sql);
+	$resp['mucphat'] = number_format($resp['mucphat']);
+	$resp['thoigianphat'] = date('d/m/Y', $resp['thoigianphat']);
+	$resp['thoigiandong'] = date('d/m/Y', $resp['thoigiandong']);
 	$resp['status'] = 1;
 }
 
