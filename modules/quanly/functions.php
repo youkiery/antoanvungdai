@@ -44,7 +44,7 @@ function chuyendoithoigian($ngay) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $ngay, $m)) {
     return mktime(0, 0, 0, $m[2], $m[1], $m[3]);
   }
-  return false;
+  return 0;
 }
 
 function kiemtrangaythang($ngay) {
@@ -63,16 +63,26 @@ function kiemtrangaythang($ngay) {
 function kiemtrachuho($dulieu) {
 	global $db;
 
-  $sql = "select * from ". PREFIX ."_tiemphong_chuho where dienthoai = '$dulieu[dienthoai]'";
-  if (empty($chuho = $db->fetch($sql))) {
-    $sql = "insert into ". PREFIX ."_tiemphong_chuho (idphuong, ten, dienthoai, diachi) values($dulieu[idphuong], '$dulieu[tenchu]', '$dulieu[dienthoai]', '$dulieu[diachi]')";
-    return $db->insertid($sql);
+  if (empty($dulieu['dienthoai'])) {
+    $sql = "select * from ". PREFIX ."_tiemphong_chuho where diachi = '$dulieu[diachi]' and idphuong = $dulieu[idphuong]";
+    if (empty($chuho = $db->fetch($sql))) {
+      $sql = "insert into ". PREFIX ."_tiemphong_chuho (idphuong, ten, dienthoai, diachi) values($dulieu[idphuong], '$dulieu[tenchu]', '$dulieu[dienthoai]', '$dulieu[diachi]')";
+      return $db->insertid($sql);
+    }
+    return $chuho['id'];
   }
   else {
-    $sql = "update ". PREFIX ."_tiemphong_chuho set idphuong = $dulieu[idphuong], ten = '$dulieu[tenchu]', dienthoai = '$dulieu[dienthoai]', diachi = '$dulieu[diachi]' where id = $chuho[id]";
-    $db->query($sql);
+    $sql = "select * from ". PREFIX ."_tiemphong_chuho where dienthoai = '$dulieu[dienthoai]'";
+    if (empty($chuho = $db->fetch($sql))) {
+      $sql = "insert into ". PREFIX ."_tiemphong_chuho (idphuong, ten, dienthoai, diachi) values($dulieu[idphuong], '$dulieu[tenchu]', '$dulieu[dienthoai]', '$dulieu[diachi]')";
+      return $db->insertid($sql);
+    }
+    else {
+      $sql = "update ". PREFIX ."_tiemphong_chuho set idphuong = $dulieu[idphuong], ten = '$dulieu[tenchu]', dienthoai = '$dulieu[dienthoai]', diachi = '$dulieu[diachi]' where id = $chuho[id]";
+      $db->query($sql);
+      return $chuho['id'];
+    }
   }
-  return $chuho['id'];
 }
 
 function kiemtragiongloai($dulieu) {
@@ -108,14 +118,21 @@ function kiemtrathucung($idchuho, $dulieu) {
   $idgiong = kiemtragiongloai($dulieu);
   $hinhanh = kiemtrahinhanh($dulieu['hinhanh']);
   $ngaysinh = chuyendoithoigian($dulieu['ngaysinh']);
-  $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $idchuho and micro = '$dulieu[micro]'";
-  if (empty($thucung = $db->fetch($sql))) {
+
+  // nếu tồn tại microchip thì cập nhật riêng, nếu không thì thêm thẳng
+  // trường hợp thêm thẳng nếu có số lượng thì for
+
+  if (!empty($dulieu['micro'])) {
+    $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $idchuho and micro = '$dulieu[micro]'";
+    if (empty($thucung = $db->fetch($sql))) {
+      $sql = "insert into ". PREFIX ."_tiemphong_thucung (idchu, idgiong, ten, micro, hinhanh, ngaysinh, ngaymat) values($idchuho, $idgiong, '$dulieu[tenthucung]', '$dulieu[micro]', '$hinhanh', $ngaysinh, 0)";
+      return $db->insertid($sql);
+    }
+  }
+  else {
     $sql = "insert into ". PREFIX ."_tiemphong_thucung (idchu, idgiong, ten, micro, hinhanh, ngaysinh, ngaymat) values($idchuho, $idgiong, '$dulieu[tenthucung]', '$dulieu[micro]', '$hinhanh', $ngaysinh, 0)";
     return $db->insertid($sql);
   }
-  else {
-    $sql = "update ". PREFIX ."_tiemphong_thucung set idgiong = $idgiong, ten = '$dulieu[tenthucung]', micro = '$dulieu[micro]', hinhanh = '$hinhanh', ngaysinh = $ngaysinh where id = $thucung[id]";
-    $db->query($sql);
-  }
+
   return $thucung['id'];
 }

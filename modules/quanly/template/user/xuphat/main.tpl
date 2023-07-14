@@ -414,6 +414,9 @@
           $('#mucphat').val(phanhoi.mucphat)
           $('#thoigianphat').val(phanhoi.thoigianphat)
           $('#thoigiandong').val(phanhoi.thoigiandong)
+          if (phanhoi.dinhkem.length) global.tepdinhkem = phanhoi.dinhkem
+          else global.tepdinhkem = ['']
+          tailaitepdinhkem()
           phuong = $('#phuong option[value=' + phanhoi.idphuong + ']').prop('selected', true)
           $('#modal-themxuphat').modal('show')
         })

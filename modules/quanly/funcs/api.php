@@ -418,9 +418,13 @@ function laythongtinxuphat() {
 	
   $sql = "select a.id, a.noidung, a.mucphat, a.dongphat, a.thoigianphat, a.thoigiandong, c.id as idchuho, c.ten as chuho, c.dienthoai, c.diachi, c.idphuong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_tiemphong_chuho c on a.idchuho = c.id where a.id = $id";
 	$resp = $db->fetch($sql);
+
+	$sql = "select * from ". PREFIX ."_xuphat_dinhkem where idxuphat = $id";
+	$resp['dinhkem'] = $db->arr($sql, 'diachi');
 	$resp['mucphat'] = number_format($resp['mucphat']);
+	if (empty($resp['thoigiandong'])) $resp['thoigiandong'] = '';
+	else $resp['thoigiandong'] = date('d/m/Y', $resp['thoigiandong']);
 	$resp['thoigianphat'] = date('d/m/Y', $resp['thoigianphat']);
-	$resp['thoigiandong'] = date('d/m/Y', $resp['thoigiandong']);
 	$resp['status'] = 1;
 }
 
@@ -442,7 +446,9 @@ function themtiemphong() {
 	}
 	else {
 		$thoigiantiem = chuyendoithoigian($dulieu['thoigiantiem']);
-		$thoigiannhac = strtotime('-1 year', $thoigiantiem);
+		if ($thoigiantiem > 0) $thoigiannhac = strtotime('-1 year', $thoigiantiem);
+		else $thoigiannhac = 0;
+		
 		if ($id) {
 			// cập nhật
 			$sql = "update ". PREFIX ."_tiemphong set idthucung = $idthucung, thoigiantiem = $thoigiantiem, thoigiannhac = $thoigiannhac where id = $id";
@@ -516,8 +522,8 @@ function importtiemphong() {
   $sheet = $objPHPExcel->getSheet(0); 
   $tongdong = intval($sheet->getHighestRow()); 
   $highestColumn = $sheet->getHighestColumn();
-  $array = ['Tên chủ hộ' => -1, 'Điện thoại' => -1, 'Địa chỉ' => -1, 'Phường' => -1, 'Tên thú cưng' => -1, 'Microchip' => -1, 'Loài' => -1, 'Giống' => -1, 'Ngày sinh' => -1, 'Ngày tiêm' => -1];
-  $rev = ['Tên chủ hộ' => 'tenchu', 'Điện thoại' => 'dienthoai', 'Địa chỉ' => 'diachi', 'Phường' => 'phuong', 'Tên thú cưng' => 'tenthucung', 'Microchip' => 'micro', 'Loài' => 'loai', 'Giống' => 'giong', 'Ngày tiêm' => 'thoigiantiem', 'Ngày sinh' => 'ngaysinh'];
+  $array = ['Tên chủ hộ' => -1, 'Điện thoại' => -1, 'Địa chỉ' => -1, 'Phường' => -1, 'Số con' => -1, 'Tên thú cưng' => -1, 'Microchip' => -1, 'Loài' => -1, 'Giống' => -1, 'Ngày sinh' => -1, 'Ngày tiêm' => -1];
+  $rev = ['Tên chủ hộ' => 'tenchu', 'Điện thoại' => 'dienthoai', 'Địa chỉ' => 'diachi', 'Số con' => 'soluong', 'Phường' => 'phuong', 'Tên thú cưng' => 'tenthucung', 'Microchip' => 'micro', 'Loài' => 'loai', 'Giống' => 'giong', 'Ngày tiêm' => 'thoigiantiem', 'Ngày sinh' => 'ngaysinh'];
   $arr = [];
   for ($j = 0; $j <= $x[$highestColumn]; $j ++) {
     $arr [$j]= $sheet->getCell($xr[$j] . '1')->getValue();
@@ -563,14 +569,15 @@ function importtiemphong() {
 			// kiểm tra thú cưng, nếu chưa có micro thì thêm
 			$dulieu['idgiong'] = kiemtragiongloai($dulieu);
 			$hinhanh = '';
-			$idthucung = kiemtrathucung($chuho['id'], $dulieu);
-			if (!kiemtrangaythang($dulieu['thoigiantiem'])) {
-				$loi []= "Dòng $i ngày $dulieu[thoigiantiem] không đúng định dạng";
-			}
-			else {
+			
+			if (empty($dulieu['soluong']) || $dulieu['soluong'] <= 0) $dulieu['soluong'] = 1;
+			for ($j = 0; $j < $dulieu['soluong']; $j++) { 
+				$dulieu['tenthucung'] = $j + 1;
+				$idthucung = kiemtrathucung($chuho['id'], $dulieu);
+				
 				$thoigiantiem = chuyendoithoigian($dulieu['thoigiantiem']);
-				$thoigiannhac = strtotime('-1 year', $thoigiantiem);
-	
+				if ($thoigiantiem > 0) $thoigiannhac = strtotime('-1 year', $thoigiantiem);
+				else $thoigiannhac = 0;
 				// kiểm tra cấu trúc ngày, nếu đúng thì thêm
 				$sql = "select * from ". PREFIX ."_tiemphong where idthucung = $idthucung and thoigiantiem = $thoigiantiem and thoigiannhac = $thoigiannhac";
 				if (!empty($db->fetch($sql))) {
