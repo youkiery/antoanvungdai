@@ -350,21 +350,20 @@
         })
       }
 
-      // function xoathanhvien(id) {
-      //   global.id = id
-      //   $('#modal-xoathanhvien').modal('show')
-      // }
+      function xoathanhvien(id) {
+        global.id = id
+        $('#modal-xoathanhvien').modal('show')
+      }
 
-      // function xacnhanxoathanhvien() {
-      //   vhttp.post('/quanly/api/', {
-      //     action: 'xoathanhvien',
-      //     id: global.id,
-      //   }).then((phanhoi) => {
-      //     $('#modal-xoathanhvien').modal('hide')
-      //     $('#thanhvien').html(phanhoi.danhsachthanhvien)
-      //     $('#xetduyet').html(phanhoi.danhsachxetduyet)
-      //   })
-      // }
+      function xacnhanxoathanhvien() {
+        vhttp.post('/quanly/api/', {
+          action: 'xoathanhvien',
+          id: global.id,
+        }).then((phanhoi) => {
+          $('#modal-xoathanhvien').modal('hide')
+          $('#xetduyet').html(phanhoi.danhsachxetduyet)
+        })
+      }
     </script>
     <!-- END: coquyen -->
     <!-- BEGIN: khongquyen -->

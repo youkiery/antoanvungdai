@@ -43,6 +43,21 @@ function xoaxuphat() {
 	$resp['danhsachxuphat'] = danhsachxuphat();
 }
 
+function xoathanhvien() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$sql = "delete from ". PREFIX ."_phanquyen where userid = $id";
+	$db->query($sql);
+	$sql = "delete from ". PREFIX ."_phanquyen_chitiet where userid = $id";
+	$db->query($sql);
+	$sql = "delete from ". PREFIX ."_users where userid = $id";
+	$db->query($sql);
+
+	$resp['status'] = 1;
+	$resp['danhsachxetduyet'] = danhsachxetduyet();
+}
+
 function chitietxuphat() {
 	global $db, $nv_Request, $resp;
 
@@ -579,14 +594,16 @@ function importtiemphong() {
 				if ($thoigiantiem > 0) $thoigiannhac = strtotime('-1 year', $thoigiantiem);
 				else $thoigiannhac = 0;
 				// kiểm tra cấu trúc ngày, nếu đúng thì thêm
-				$sql = "select * from ". PREFIX ."_tiemphong where idthucung = $idthucung and thoigiantiem = $thoigiantiem and thoigiannhac = $thoigiannhac";
-				if (!empty($db->fetch($sql))) {
-					$loi []= "Dòng $i chủ hộ $dulieu[tenchu] thú cưng $dulieu[tenthucung] đã có dữ liệu trước đó";
-					// continue;
-				}
-				else {
-					$sql = "insert into ". PREFIX ."_tiemphong (idthucung, thoigiantiem, thoigiannhac) values ($idthucung, $thoigiantiem, $thoigiannhac)";
-					$db->query($sql);
+				if (!empty($thoigiantiem)) {
+					$sql = "select * from ". PREFIX ."_tiemphong where idthucung = $idthucung and thoigiantiem = $thoigiantiem and thoigiannhac = $thoigiannhac";
+					if (!empty($db->fetch($sql))) {
+						$loi []= "Dòng $i chủ hộ $dulieu[tenchu] thú cưng $dulieu[tenthucung] đã có dữ liệu trước đó";
+						// continue;
+					}
+					else {
+						$sql = "insert into ". PREFIX ."_tiemphong (idthucung, thoigiantiem, thoigiannhac) values ($idthucung, $thoigiantiem, $thoigiannhac)";
+						$db->query($sql);
+					}
 				}
 			}
 		}

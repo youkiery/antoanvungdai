@@ -369,6 +369,11 @@ function dulieuthongke() {
     $xtpl->assign('datiemphong', $datiemphong);
     $xtpl->assign('chuatiemphong', $chuatiemphong);
     $xtpl->assign('tongthucungphuong', $datiemphong + $chuatiemphong);
+    $tong = $datiemphong + $chuatiemphong;
+    if ($tong == 0) $tile = 0;
+    else $tile = round($datiemphong * 100 / $tong);
+
+    $xtpl->assign('tiletiemphong', $tile);
     $xtpl->parse('main.row');
   }
   $xtpl->assign('tongthucung', $tongthucung);
