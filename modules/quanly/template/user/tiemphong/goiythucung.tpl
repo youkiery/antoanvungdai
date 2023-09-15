@@ -1,6 +1,6 @@
 <!-- BEGIN: main -->
 <!-- BEGIN: row -->
-<div onclick="chonthucung({idthucung}, '{ten}', '{micro}', '{giong}', '{loai}')">
+<div onclick="chonthucung({idthucung}, '{ten}', '{micro}', '{giong}', '{loai}', '{tenchu}', '{diachi}', '{dienthoai}')">
   Tên thú cưng: {ten} <br>
   Microchip: {micro} <br>
   Loài: {loai} <br>

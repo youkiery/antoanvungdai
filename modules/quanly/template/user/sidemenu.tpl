@@ -9,7 +9,7 @@
     <!-- BEGIN: thanhvien -->
     <div> <a class="btn btn-info btn-block" href="/quanly/nguoidung" style="margin-bottom: 5px;"> Thông tin người dùng </a> </div>
     <!-- END: thanhvien -->
-    <div> <a href="/dashboard/logout" class="btn btn-danger btn-block"> Đăng xuất </a> </div>
+    <div> <a href="/users/logout" class="btn btn-danger btn-block"> Đăng xuất </a> </div>
   </div>
   <div class="pw-menu-group">
     <div class="pw-menu-header">

@@ -407,7 +407,7 @@
         $('#phuong option[value=' + idphuong + ']')[0].selected = true
       }
 
-      function chonthucung(idthucung, tenthucung, micro, giong, loai,tenchu, diachi, dienthoai) {
+      function chonthucung(idthucung, tenthucung, micro, giong, loai, tenchu, diachi, dienthoai) {
         global.idthucung = idthucung
         $('#tenthucung').val(tenthucung)
         $('#micro').val(micro)

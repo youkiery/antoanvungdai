@@ -336,11 +336,17 @@ function timkiemthucung() {
 	foreach ($danhsach as $thucung) {
 		$sql = "select * from ". PREFIX ."_danhmuc_giong where id = $thucung[idgiong]";
 		$giongloai = $db->fetch($sql);
+
+		$sql = "select * from ". PREFIX ."_tiemphong_chuho where id = $thucung[idchu]";
+		$chuho = $db->fetch($sql);
 		$xtpl->assign('idthucung', $thucung['id']);
 		$xtpl->assign('ten', $thucung['ten']);
 		$xtpl->assign('micro', $thucung['micro']);
 		$xtpl->assign('giong', $giongloai['giong']);
 		$xtpl->assign('loai', $giongloai['loai']);
+		$xtpl->assign('tenchu', $chuho['ten']);
+		$xtpl->assign('diachi', $chuho['diachi']);
+		$xtpl->assign('dienthoai', $chuho['dienthoai']);
 		$xtpl->parse('main.row');
 	}
 
@@ -567,28 +573,22 @@ function importtiemphong() {
     }
 		
     // kiểm tra chủ hộ, nếu chưa có sđt thì thêm
-		$sql = "select * from ". PREFIX ."_tiemphong_chuho where dienthoai = '$dulieu[dienthoai]'";
-		if (empty($chuho = $db->fetch($sql))) {
-			// kiểm tra phường
-			$sql = "select * from ". PREFIX ."_danhmuc_phuong where ten = '$dulieu[phuong]'";
-			if (empty($phuong = $db->fetch($sql))) {
-				$loi []= "Dòng $i tên phường $dulieu[phuong] không có trong danh mục";
-			}
-			else {
-				$sql = "insert into ". PREFIX ."_tiemphong_chuho (idphuong, ten, dienthoai, diachi) values($phuong[id], '$dulieu[tenchu]', '$dulieu[dienthoai]', '$dulieu[diachi]')";
-				$chuho = ['id' => $db->insertid($sql)];
-			}
+		$sql = "select * from ". PREFIX ."_danhmuc_phuong where ten = '$dulieu[phuong]'";
+		if (empty($phuong = $db->fetch($sql))) {
+			$loi []= "Dòng $i tên phường $dulieu[phuong] không có trong danh mục";
 		}
+		else {
+			$dulieu['idphuong'] = $phuong['id'];
+			$idchuho = kiemtrachuho($dulieu);
 
-		if (isset($chuho['id']) && !empty($chuho['id'])) {
 			// kiểm tra thú cưng, nếu chưa có micro thì thêm
 			$dulieu['idgiong'] = kiemtragiongloai($dulieu);
-			$hinhanh = '';
+			$dulieu['hinhanh'] = '';
 			
 			if (empty($dulieu['soluong']) || $dulieu['soluong'] <= 0) $dulieu['soluong'] = 1;
 			for ($j = 0; $j < $dulieu['soluong']; $j++) { 
 				$dulieu['tenthucung'] = $j + 1;
-				$idthucung = kiemtrathucung($chuho['id'], $dulieu);
+				$idthucung = kiemtrathucung($idchuho, $dulieu);
 				
 				$thoigiantiem = chuyendoithoigian($dulieu['thoigiantiem']);
 				if ($thoigiantiem > 0) $thoigiannhac = strtotime('-1 year', $thoigiantiem);
