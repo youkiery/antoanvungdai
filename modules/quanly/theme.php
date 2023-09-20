@@ -430,6 +430,7 @@ function phantrang($trang, $tong, $gioihan, $chucnang = '') {
 
   ksort($danhsachtrang);
   $trangtruoc = 0;
+  $xtpl->assign('hientai', $trang);
   foreach ($danhsachtrang as $sotrang => $value) {
     if ($sotrang <= 0 || $sotrang > $tongtrang) continue;
     if ($trang == $sotrang) $xtpl->assign('active', 'btn-info');

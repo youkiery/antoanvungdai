@@ -8,7 +8,7 @@
 </div>
 
 <div class="input-group" style="float:left; width: 130px;">
-  <input type="number" class="form-control" placeholder="đến trang" id="dentrang" style="width: 100px">
+  <input type="number" value="{hientai}" class="form-control" placeholder="đến trang" id="dentrang" style="width: 100px">
   <div class="input-group-btn">
     <button class="btn btn-default" onclick="chuyendentrang()"> Đi! </button>
   </div>
