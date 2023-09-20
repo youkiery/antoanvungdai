@@ -244,7 +244,7 @@
               tukhoa: key,
             }).then((phanhoi) => {
               resolve(phanhoi.danhsach)
-            })
+            }, (error) => { })
           })
         }, 300, 300)
       })
@@ -284,7 +284,7 @@
           global.trang = 1
           keolen()
           $('#modal-timkiem').modal('hide')
-        })
+        }, (error) => { })
       }
 
       function chitiet(idchu) {
@@ -294,7 +294,7 @@
         }).then((resp) => {
           $('#chitiet').html(resp.chitiet)
           $('#modal-chitiet').modal('show')
-        })
+        }, (error) => { })
       }
 
       function dongphat(id) {
@@ -316,7 +316,7 @@
           }).then((phanhoi) => {
             $('#danhsach').html(phanhoi.danhsachxuphat)
             $('#modal-dongphat').modal('hide')
-          })
+          }, (error) => { })
         }
       }
 
@@ -334,7 +334,7 @@
         }).then((phanhoi) => {
           $('#danhsach').html(phanhoi.danhsachxuphat)
           $('#modal-xoaxuphat').modal('hide')
-        })
+        }, (error) => { })
       }
 
       function hienthinut() {
@@ -419,7 +419,7 @@
           tailaitepdinhkem()
           phuong = $('#phuong option[value=' + phanhoi.idphuong + ']').prop('selected', true)
           $('#modal-themxuphat').modal('show')
-        })
+        }, (error) => { })
       }
 
       function kiemtrangaythang(ngay) {
@@ -449,7 +449,7 @@
             contentType: false,
             data: form_data,
             url: '/quanly/api/',
-            dataType: 'text', 
+            dataType: 'text',
             cache: false,
             success: function (php_script_response) {
               json = JSON.parse(php_script_response)
@@ -464,7 +464,7 @@
           let count = global.tepdinhkem.length
           if (count == 0) resolve(true)
           global.tepdinhkem.forEach((file, index) => {
-            if (typeof(file) == 'string') {
+            if (typeof (file) == 'string') {
               count--
               if (count == 0) resolve(true)
             }
@@ -515,7 +515,7 @@
               radongbang()
               $('#danhsach').html(phanhoi.danhsachxuphat)
               $('#modal-themxuphat').modal('hide')
-            })
+            }, (error) => { })
           })
         }
       }

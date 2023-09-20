@@ -209,7 +209,7 @@ function themthanhvien() {
 	$group_id = 4;
 	$username = $tendangnhap;
 	$md5username = md5($tendangnhap);
-	$password = $crypt->hash_password($matkhau, $global_config['hashprefix']);;
+	$password = $crypt->hash_password($matkhau, $global_config['hashprefix']);
 	$email = $email;
 	$first_name = $hoten;
 	$last_name = '';
@@ -522,6 +522,24 @@ function themxuphat() {
 
 	$resp['danhsachxuphat'] = danhsachxuphat();
 	$resp['status'] = 1;
+}
+
+function doimatkhau() {
+	global $db, $nv_Request, $resp, $user_info, $global_config, $crypt;
+
+	$userid = $user_info['userid'];
+	$dulieu = $nv_Request->get_array('dulieu', 'post', '');
+	$matkhaumoi = $crypt->hash_password($dulieu["matkhaumoi"], $global_config['hashprefix']);
+
+	$sql = "select * from pet_users where userid = $userid";
+	$nguoidung = $db->fetch($sql);
+	if (!$crypt->validate_password($dulieu["matkhaucu"], $nguoidung['password'])) $resp["messenger"] = "Sai mật khẩu";
+	else {
+		$sql = "update pet_users set `password` = '$matkhaumoi' where userid = $userid";
+		$db->query($sql);
+		$resp["messenger"] = "Đã đổi mật khẩu";
+		$resp['status'] = 1;
+	}
 }
 
 function importtiemphong() {

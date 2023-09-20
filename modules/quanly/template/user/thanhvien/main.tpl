@@ -285,7 +285,7 @@
           phanquyen()
           tailaiquyen()
           $('#modal-themthanhvien').modal('show')
-        })
+        }, (error) => { })
       }
 
       function xacnhanthemthanhvien() {
@@ -314,7 +314,7 @@
           }).then((phanhoi) => {
             $('#modal-themthanhvien').modal('hide')
             $('#thanhvien').html(phanhoi.danhsachthanhvien)
-          })
+          }, (error) => { })
         }
       }
 
@@ -331,9 +331,9 @@
           $('#modal-kichhoatthanhvien').modal('hide')
           $('#thanhvien').html(phanhoi.danhsachthanhvien)
           $('#xetduyet').html(phanhoi.danhsachxetduyet)
-        })
+        }, (error) => { })
       }
-      
+
       function xoakichhoatthanhvien(id) {
         global.id = id
         $('#modal-xoakichhoat').modal('show')
@@ -347,7 +347,7 @@
           $('#modal-xoakichhoat').modal('hide')
           $('#thanhvien').html(phanhoi.danhsachthanhvien)
           $('#xetduyet').html(phanhoi.danhsachxetduyet)
-        })
+        }, (error) => { })
       }
 
       function xoathanhvien(id) {
@@ -362,7 +362,7 @@
         }).then((phanhoi) => {
           $('#modal-xoathanhvien').modal('hide')
           $('#xetduyet').html(phanhoi.danhsachxetduyet)
-        })
+        }, (error) => { })
       }
     </script>
     <!-- END: coquyen -->

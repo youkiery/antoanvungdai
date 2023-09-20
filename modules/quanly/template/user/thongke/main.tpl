@@ -148,7 +148,7 @@
           global.trang = 1
           keolen()
           $('#modal-timkiem').modal('hide')
-        })
+        }, (error) => { })
       }
 
       function chitiet(id) {
@@ -158,7 +158,7 @@
         }).then((resp) => {
           $('#chitiet').html(resp.chitiet)
           $('#modal-chitiet').modal('show')
-        })
+        }, (error) => { })
       }
 
       function keolen() {

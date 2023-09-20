@@ -180,7 +180,7 @@
         }).then((phanhoi) => {
           $('#phuong').html(phanhoi.danhsachphuong)
           $('#modal-xoaphuong').modal('hide')
-        })
+        }, (error) => { })
       }
 
       function xacnhanxoagiong() {
@@ -190,7 +190,7 @@
         }).then((phanhoi) => {
           $('#giong').html(phanhoi.danhsachgiong)
           $('#modal-xoagiong').modal('hide')
-        })
+        }, (error) => { })
       }
 
       function xacnhanthemphuong() {
@@ -204,7 +204,7 @@
             $('#phuong').html(phanhoi.danhsachphuong)
             $('.nav-tabs a[href="#phuong"]').tab('show');
             $('#modal-themphuong').modal('hide')
-          })
+          }, (error) => { })
         }
       }
 
@@ -237,7 +237,7 @@
             $('#giong').html(phanhoi.danhsachgiong)
             $('.nav-tabs a[href="#giong"]').tab('show');
             $('#modal-themgiong').modal('hide')
-          })
+          }, (error) => { })
         }
       }
     </script>

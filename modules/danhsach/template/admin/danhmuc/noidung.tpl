@@ -54,9 +54,7 @@
     }).then((resp) => {
       $('#noidung').html(resp.danhsach)
       $('#modal-them-phuong').modal('hide')
-    }, () => {
-
-    })
+    }, (error) => { })
   }
 </script>
 <!-- END: main  -->

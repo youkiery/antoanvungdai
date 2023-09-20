@@ -209,7 +209,8 @@
               <input type="text" class="form-control date" id="ngaysinh">
             </div>
 
-            <div class="form-group"> Thời gian tiêm phòng (nếu không chọn thú cưng sẽ được thêm nhưng không có trong danh sách) </div>
+            <div class="form-group"> Thời gian tiêm phòng (nếu không chọn thú cưng sẽ được thêm nhưng không có trong
+              danh sách) </div>
             <div class="form-group">
               <input type="text" class="form-control date" id="thoigiantiem">
             </div>
@@ -281,7 +282,7 @@
               tukhoa: key,
             }).then((phanhoi) => {
               resolve(phanhoi.danhsach)
-            })
+            }, (error) => { })
           })
         }, 300, 300)
 
@@ -293,7 +294,7 @@
               tukhoa: key,
             }).then((phanhoi) => {
               resolve(phanhoi.danhsach)
-            })
+            }, (error) => { })
           })
         }, 300, 300)
 
@@ -304,7 +305,7 @@
               tukhoa: key,
             }).then((phanhoi) => {
               resolve(phanhoi.danhsach)
-            })
+            }, (error) => { })
           })
         }, 300, 300)
       })
@@ -370,7 +371,7 @@
           $('#modal-timkiem').modal('hide')
           keolen()
           global.trang = trang
-        })
+        }, (error) => { })
       }
 
       function thongtintruongloc(trang) {
@@ -436,7 +437,7 @@
         }).then((phanhoi) => {
           $('#tiemphong').html(phanhoi.danhsachtiemphong)
           $('#modal-xoatiemphong').modal('hide')
-        })
+        }, (error) => { })
       }
 
       function themtiemphong() {
@@ -481,7 +482,7 @@
           vimage.data['hinhanh'] = [phanhoi.hinhanh]
           vimage.reload('hinhanh')
           $('#modal-themtiemphong').modal('show')
-        })
+        }, (error) => { })
       }
 
       function kiemtrangaythang(ngay) {
@@ -537,11 +538,11 @@
             }).then((phanhoi) => {
               $('#tiemphong').html(phanhoi.danhsachtiemphong)
               $('#modal-themtiemphong').modal('hide')
-            })
+            }, (error) => { })
           })
         }
       }
-      
+
       function keolen() {
         $("html, body").animate({ scrollTop: $("#tiemphong").offset().top }, "slow");
         return false;

@@ -413,15 +413,55 @@ function sidemenu() {
 function phantrang($trang, $tong, $gioihan, $chucnang = '') {
   $xtpl = new XTemplate('phantrang.tpl', PATH);
   $tongtrang = floor($tong / $gioihan) + (fmod($tong, $gioihan) ? 1 : 0);
-  if (!$tongtrang) $tongtrang = 1;
-  for ($i = 1; $i <= $tongtrang; $i++) {
-    if ($trang == $i) $xtpl->assign('active', 'btn-info');
-    else $xtpl->assign('active', 'btn-default');
-    if (!empty($chucnang)) $xtpl->assign('chucnang', 'onclick="'. $chucnang .'('. $i .')"');
-    else $xtpl->assign('chucnang', '');
-    $xtpl->assign('trang', $i);
+  if ($tongtrang < 1) $tongtrang = 1;
+  
+  $danhsachtrang = [];
+  $danhsachtrang[1] = 1;
+  $danhsachtrang[2] = 1;
+  $danhsachtrang[3] = 1;
+  $danhsachtrang[$trang - 2] = 1;
+  $danhsachtrang[$trang - 1] = 1;
+  $danhsachtrang[$trang] = 1;
+  $danhsachtrang[$trang + 1] = 1;
+  $danhsachtrang[$trang + 2] = 1;
+  $danhsachtrang[$tongtrang - 2] = 1;
+  $danhsachtrang[$tongtrang - 1] = 1;
+  $danhsachtrang[$tongtrang] = 1;
+
+  ksort($danhsachtrang);
+  $trangtruoc = 0;
+  foreach ($danhsachtrang as $sotrang => $value) {
+    if ($sotrang <= 0 || $sotrang > $tongtrang) continue;
+    if ($trang == $sotrang) $xtpl->assign('active', 'btn-info');
+    else {
+      if ($trangtruoc && (($sotrang - $trangtruoc) > 2)) {
+        $xtpl->assign('active', 'btn-default');
+        $xtpl->assign('chucnang', '');
+        $xtpl->assign('trang', "...");
+        $xtpl->parse('main.row');
+      }
+      $xtpl->assign('active', 'btn-default');
+      if (!empty($chucnang)) $xtpl->assign('chucnang', 'onclick="'. $chucnang .'('. $sotrang .')"');
+      else $xtpl->assign('chucnang', '');
+    }
+    $xtpl->assign('trang', $sotrang);
+    $trangtruoc = $sotrang;
     $xtpl->parse('main.row');
   }
+
+  if (!empty($chucnang)) {
+    $xtpl->assign('func', 'let trang = $("#dentrang").val(); if (trang < 1 || trang > '.$tongtrang.') return vhttp.notify("Vượt quá giới hạn trang"); '. $chucnang . '(trang);');
+  }
+  else $xtpl->assign('func', 'return 0;');
+
+  // for ($i = 1; $i <= $tongtrang; $i++) {
+  //   if ($trang == $i) $xtpl->assign('active', 'btn-info');
+  //   else $xtpl->assign('active', 'btn-default');
+  //   if (!empty($chucnang)) $xtpl->assign('chucnang', 'onclick="'. $chucnang .'('. $i .')"');
+  //   else $xtpl->assign('chucnang', '');
+  //   $xtpl->assign('trang', $i);
+  //   $xtpl->parse('main.row');
+  // }
   $xtpl->parse('main');
   return $xtpl->text();
 }

@@ -51,7 +51,7 @@
       $('#content').html(resp.danhsach)
       global.trang = 1
       keolen()
-    })
+    }, (error) => { })
     return false;
   }
 
@@ -64,7 +64,7 @@
       $('#content').html(resp.danhsach)
       global.trang = trang
       keolen()
-    })
+    }, (error) => { })
   }
 
   function chitiet(id) {
@@ -74,7 +74,7 @@
     }).then((resp) => {
       $('#chitiet').html(resp.chitiet)
       $('#modal-chitiet').modal('show')
-    })
+    }, (error) => { })
   }
 
   function keolen() {
