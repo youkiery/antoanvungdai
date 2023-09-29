@@ -589,7 +589,7 @@ function importtiemphong() {
       if ($val !== 0 && empty($val)) $val = '';
       $dulieu[$rev[$key]] = trim($val);
     }
-		
+
     // kiểm tra chủ hộ, nếu chưa có sđt thì thêm
 		$sql = "select * from ". PREFIX ."_danhmuc_phuong where ten = '$dulieu[phuong]'";
 		if (empty($phuong = $db->fetch($sql))) {

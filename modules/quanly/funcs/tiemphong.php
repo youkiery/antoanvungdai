@@ -27,6 +27,7 @@ else {
 	foreach ($danhsachphuong as $phuong) {
 		$xtpl->assign('idphuong', $phuong['id']);
 		$xtpl->assign('tenphuong', $phuong['ten']);
+		$xtpl->parse('main.coquyen.timkiemphuong');
 		$xtpl->parse('main.coquyen.phuong');
 	}
 

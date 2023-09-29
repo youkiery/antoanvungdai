@@ -95,7 +95,12 @@
             <div class="form-group row">
               <div class="col-xs-6"> Phường </div>
               <div class="col-xs-18">
-                <input type="text" class="form-control" id="timkiem-phuong" placeholder="Phường">
+                <select class="form-control" id="timkiem-phuong">
+                  <option value="0"> --- </option>
+                  <!-- BEGIN: timkiemphuong -->
+                  <option value="{idphuong}"> {tenphuong} </option>
+                  <!-- END: timkiemphuong -->
+                </select>
               </div>
             </div>
 
@@ -378,7 +383,7 @@
         return {
           'tenchu': $('#timkiem-tenchu').val(),
           'dienthoai': $('#timkiem-dienthoai').val(),
-          'thucung': $('#timkiem-thucung').val(),
+          'thucung': $('#timkiem-tenthucung').val(),
           'micro': $('#timkiem-micro').val(),
           'giong': $('#timkiem-giong').val(),
           'loai': $('#timkiem-loai').val(),

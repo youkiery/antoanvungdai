@@ -20,6 +20,15 @@ else {
 	$xtpl->assign('dulieuthongke', dulieuthongke());
 	$xtpl->assign('danhsachthongke', danhsachthongke());
 
+	$sql = "select * from ". PREFIX ."_danhmuc_phuong where kichhoat = 1 order by ten asc";
+	$danhsachphuong = $db->all($sql);
+
+	foreach ($danhsachphuong as $phuong) {
+		$xtpl->assign('idphuong', $phuong['id']);
+		$xtpl->assign('tenphuong', $phuong['ten']);
+		$xtpl->parse('main.coquyen.timkiemphuong');
+	}
+
 	$xtpl->parse("main.coquyen");
 }
 $xtpl->parse("main");
