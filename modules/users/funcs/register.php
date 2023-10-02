@@ -481,6 +481,9 @@ if ($checkss == $array_register['checkss']) {
                 nv_user_register_callback($userid);
             }
 
+            // $sql = "insert into pet_phanquyen (userid, quyen) values($userid, 2)";
+            // $db->query($sql);
+
             $nv_redirect = '';
             reg_result([
                 'status' => 'ok',
