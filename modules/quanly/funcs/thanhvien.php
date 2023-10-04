@@ -21,7 +21,7 @@ else {
 	$xtpl->assign('danhsachthanhvien', danhsachthanhvien());
 	$xtpl->assign('danhsachxetduyet', danhsachxetduyet());
 
-	$sql = "select * from ". PREFIX ."_danhmuc_phuong where kichhoat = 1 order by ten asc";
+	$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where kichhoat = 1 order by ten asc";
 	$danhsachphuong = $db->all($sql);
 
 	foreach ($danhsachphuong as $phuong) {

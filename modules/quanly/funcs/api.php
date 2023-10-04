@@ -112,7 +112,7 @@ function xoaphuong() {
 	global $db, $nv_Request, $resp;
 
 	$id = $nv_Request->get_string('id', 'post', '0');
-	$sql = "update ". PREFIX ."_danhmuc_phuong set kichhoat = 0 where id = $id";
+	$sql = "update ". PREFIX ."_quanly_danhmuc_phuong set kichhoat = 0 where id = $id";
 	$db->query($sql);
 
 	$resp['status'] = 1;
@@ -123,7 +123,7 @@ function xoagiong() {
 	global $db, $nv_Request, $resp;
 
 	$id = $nv_Request->get_string('id', 'post', '0');
-	$sql = "update ". PREFIX ."_danhmuc_giong set kichhoat = 0 where id = $id";
+	$sql = "update ". PREFIX ."_quanly_danhmuc_giong set kichhoat = 0 where id = $id";
 	$db->query($sql);
 
 	$resp['status'] = 1;
@@ -136,13 +136,13 @@ function themphuong() {
 	$id = $nv_Request->get_string('id', 'post', '0');
 	$tenphuong = $nv_Request->get_string('tenphuong', 'post', '');
 	
-	$sql = "select * from ". PREFIX ."_danhmuc_phuong where ten = '$tenphuong'";
+	$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where ten = '$tenphuong'";
 	if (!empty($db->fetch($sql))) $resp['messenger'] = 'Tên phường đã tồn tại!!!';
 	else {
 		if (empty($id)) {
-			$sql = "insert into ". PREFIX ."_danhmuc_phuong (ten) values('$tenphuong')";
+			$sql = "insert into ". PREFIX ."_quanly_danhmuc_phuong (ten) values('$tenphuong')";
 		}
-		else $sql = "update ". PREFIX ."_danhmuc_phuong set ten = '$tenphuong' where id = $id";
+		else $sql = "update ". PREFIX ."_quanly_danhmuc_phuong set ten = '$tenphuong' where id = $id";
 		$db->query($sql);
 		$resp['danhsachphuong'] = danhsachphuong();
 	}
@@ -157,13 +157,13 @@ function themgiong() {
 	$tengiong = $nv_Request->get_string('tengiong', 'post', '');
 	$tenloai = $nv_Request->get_string('tenloai', 'post', '');
 	
-	$sql = "select * from ". PREFIX ."_danhmuc_giong where giong = '$tengiong' and loai = '$tenloai'";
+	$sql = "select * from ". PREFIX ."_quanly_danhmuc_giong where giong = '$tengiong' and loai = '$tenloai'";
 	if (!empty($db->fetch($sql))) $resp['messenger'] = 'Giống loài đã tồn tại!!!';
 	else {
 		if (empty($id)) {
-			$sql = "insert into ". PREFIX ."_danhmuc_giong (giong, loai) values('$tengiong', '$tenloai')";
+			$sql = "insert into ". PREFIX ."_quanly_danhmuc_giong (giong, loai) values('$tengiong', '$tenloai')";
 		}
-		else $sql = "update ". PREFIX ."_danhmuc_giong set giong = '$tengiong', loai = '$tenloai' where id = $id";
+		else $sql = "update ". PREFIX ."_quanly_danhmuc_giong set giong = '$tengiong', loai = '$tenloai' where id = $id";
 		$db->query($sql);
 		$resp['danhsachgiong'] = danhsachgiong();
 	}
@@ -183,7 +183,7 @@ function laythongtinthanhvien() {
 	if (empty($phanquyen = $db->fetch($sql))) $phanquyen = 0;
 	else $phanquyen = $phanquyen['quyen'];
 
-	$sql = "select b.* from ". PREFIX ."_phanquyen_chitiet a inner join ". PREFIX ."_danhmuc_phuong b on a.idphuong = b.id where a.userid = $id";
+	$sql = "select b.* from ". PREFIX ."_phanquyen_chitiet a inner join ". PREFIX ."_quanly_danhmuc_phuong b on a.idphuong = b.id where a.userid = $id";
 	$quyen = $db->all($sql);
 
   $resp['quyen'] = $quyen;
@@ -292,7 +292,7 @@ function timkiemchuho() {
   $xtpl = new XTemplate('goiychuho.tpl', PATH .'/tiemphong/');
 
 	foreach ($danhsach as $chuho) {
-		$sql = "select * from ". PREFIX ."_danhmuc_phuong where id = $chuho[idphuong]";
+		$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where id = $chuho[idphuong]";
 		$phuong = $db->fetch($sql)['ten'];
 		$xtpl->assign('idchu', $chuho['id']);
 		$xtpl->assign('ten', $chuho['ten']);
@@ -334,7 +334,7 @@ function timkiemthucung() {
   $xtpl = new XTemplate('goiythucung.tpl', PATH .'/tiemphong/');
 
 	foreach ($danhsach as $thucung) {
-		$sql = "select * from ". PREFIX ."_danhmuc_giong where id = $thucung[idgiong]";
+		$sql = "select * from ". PREFIX ."_quanly_danhmuc_giong where id = $thucung[idgiong]";
 		$giongloai = $db->fetch($sql);
 
 		$sql = "select * from ". PREFIX ."_tiemphong_chuho where id = $thucung[idchu]";
@@ -361,7 +361,7 @@ function timkiemgiongloai() {
 	global $db, $nv_Request, $resp;
 
 	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
-	$sql = "select * from ". PREFIX ."_danhmuc_giong where giong like '%$tukhoa%' or loai like '%$tukhoa%' order by loai asc, giong asc limit ". GIOIHAN;
+	$sql = "select * from ". PREFIX ."_quanly_danhmuc_giong where giong like '%$tukhoa%' or loai like '%$tukhoa%' order by loai asc, giong asc limit ". GIOIHAN;
 	$danhsach = $db->all($sql);
   $xtpl = new XTemplate('goiygiongloai.tpl', PATH .'/tiemphong/');
 
@@ -425,7 +425,7 @@ function laythongtintiemphong() {
 
 	$id = $nv_Request->get_string('id', 'post', '0');
 	
-  $sql = "select a.id, c.ten as tenchu, c.dienthoai, c.diachi, b.ten as tenthucung, b.micro, d.giong, d.loai, b.hinhanh, c.idphuong, a.thoigiantiem, b.ngaysinh from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_danhmuc_giong d on b.idgiong = d.id where a.id = $id";
+  $sql = "select a.id, c.ten as tenchu, c.dienthoai, c.diachi, b.ten as tenthucung, b.micro, d.giong, d.loai, b.hinhanh, c.idphuong, a.thoigiantiem, b.ngaysinh from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id where a.id = $id";
 	$resp = $db->fetch($sql);
 	$resp['thoigiantiem'] = date('d/m/Y', $resp['thoigiantiem']);
 	$resp['ngaysinh'] = date('d/m/Y', $resp['ngaysinh']);
@@ -591,7 +591,7 @@ function importtiemphong() {
     }
 
     // kiểm tra chủ hộ, nếu chưa có sđt thì thêm
-		$sql = "select * from ". PREFIX ."_danhmuc_phuong where ten = '$dulieu[phuong]'";
+		$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where ten = '$dulieu[phuong]'";
 		if (empty($phuong = $db->fetch($sql))) {
 			$loi []= "Dòng $i tên phường $dulieu[phuong] không có trong danh mục";
 		}

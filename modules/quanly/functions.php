@@ -88,9 +88,9 @@ function kiemtrachuho($dulieu) {
 function kiemtragiongloai($dulieu) {
 	global $db;
 
-  $sql = "select * from ". PREFIX ."_danhmuc_giong where giong = '$dulieu[giong]' and loai = '$dulieu[loai]'";
+  $sql = "select * from ". PREFIX ."_quanly_danhmuc_giong where giong = '$dulieu[giong]' and loai = '$dulieu[loai]'";
   if (empty($giongloai = $db->fetch($sql))) {
-    $sql = "insert into ". PREFIX ."_danhmuc_giong (giong, loai) values('$dulieu[giong]', '$dulieu[loai]')";
+    $sql = "insert into ". PREFIX ."_quanly_danhmuc_giong (giong, loai) values('$dulieu[giong]', '$dulieu[loai]')";
     return $db->insertid($sql);
   }
   return $giongloai['id'];
@@ -99,7 +99,7 @@ function kiemtragiongloai($dulieu) {
 function laytengiongloai($idgiong) {
   global $db;
 
-  $sql = "select * from ". PREFIX ."_danhmuc_giong where id = $idgiong";
+  $sql = "select * from ". PREFIX ."_quanly_danhmuc_giong where id = $idgiong";
   if (empty($giong = $db->fetch($sql))) return 'Chưa xác định';
   return "$giong[loai] $giong[giong]";
 }
