@@ -6,6 +6,7 @@
       <th> Giống loài </th>
       <th> Microchip </th>
       <th> Tiêm phòng cuối </th>
+      <th> Tiêm phòng </th>
       <th></th>
     </tr>
   </thead>
@@ -15,6 +16,7 @@
     <td> {giongloai} </td>
     <td> {micro} </td>
     <td> {tiemcuoi} </td>
+    <td class="{color}"> {tiemphong} </td>
     <td> <button class="btn btn-info btn-xs" onclick="chitiet({id})"> chi tiết </button> </td>
   </tr>
   <!-- END: thucung -->

@@ -395,18 +395,36 @@ function danhsachvatnuoi() {
 
   $sql = "select * from pet_tiemphong_thucung where idchu in (select id as idchu from pet_tiemphong_chuho where dienthoai = '$chuho[dienthoai]' and $x)";
   $danhsachthucung = $db->all($sql);
+  $homnay = strtotime(date("Y/m/d"));
 
   foreach ($danhsachthucung as $thucung) {
     $sql = "select thoigiantiem from ". PREFIX ."_tiemphong where idthucung = $thucung[id] order by id desc limit 1";
     $tiemphong = $db->fetch($sql);
-    if (empty($tiemphong)) $tiemcuoi = "-";
-    else $tiemcuoi = date("d/m/Y", $tiemphong["thoigiantiem"]);
+    if (empty($tiemphong)) {
+      $tiemcuoi = "-";
+      $tiemphong = "Chưa tiêm";
+      $color = "orange";
+    }
+    else {
+      $tiemcuoi = date("d/m/Y", $tiemphong["thoigiantiem"]);
+      $ngaytiem = strtotime(" +1 year", $tiemphong["thoigiantiem"]);
+      if ($ngaytiem >= $homnay) {
+        $color = "green";
+        $tiemphong = date("d/m/Y", $ngaytiem);
+      }
+      else {
+        $color = "red";
+        $tiemphong = "Quá hạn tiêm";
+      }
+    }
 
     $xtpl->assign('id', $thucung['id']);
     $xtpl->assign('tenthucung', $thucung['ten']);
     $xtpl->assign('giongloai', laytengiongloai($thucung['idgiong']));
     $xtpl->assign('micro', $thucung['micro']);
     $xtpl->assign('tiemcuoi', $tiemcuoi);
+    $xtpl->assign('tiemphong', $tiemphong);
+    $xtpl->assign('color', $color);
     $xtpl->parse("main.thucung");
   }
   if (!count($danhsachthucung)) $xtpl->parse('main.trong');

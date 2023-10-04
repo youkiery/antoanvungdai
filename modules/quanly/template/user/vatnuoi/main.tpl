@@ -3,6 +3,12 @@
   <div class="col-xs-24 col-sm-6"> {sidemenu} </div>
   <div class="col-xs-24 col-sm-18 pw-content">
     <!-- BEGIN: coquyen -->
+    <style>
+      .red { background: pink; }
+      .green { background: lightgreen; }
+      .orange { background: orange; }
+    </style>
+
     <div id="modal-thongtin" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
