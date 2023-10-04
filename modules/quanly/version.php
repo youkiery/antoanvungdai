@@ -13,8 +13,8 @@ if (!defined('NV_ADMIN') or !defined('NV_MAINFILE')) {
 
 $module_version = array(
     'name' => 'Quản lý tiêm phòng',
-    'modfuncs' => 'main,api,danhmuc,nguoidung,thanhvien,thongke,xuphat,tiemphong,vatnuoi',
-    'submenu' => 'main,api,danhmuc,nguoidung,thanhvien,thongke,xuphat,tiemphong,vatnuoi',
+    'modfuncs' => 'main,api,danhmuc,nguoidung,thanhvien,thongke,xuphat,tiemphong,vatnuoi,xetduyet',
+    'submenu' => 'main,api,danhmuc,nguoidung,thanhvien,thongke,xuphat,tiemphong,vatnuoi,xetduyet',
     'is_sysmod' => 1,
     'virtual' => 1,
     'version' => '4.3.04',

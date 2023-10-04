@@ -433,12 +433,27 @@ function danhsachvatnuoi() {
   return $xtpl->text();
 }
 
+function danhsachduyet() {
+  global $db, $nv_Request, $user_info, $op;
+
+  if (empty($truongloc)) $truongloc = [];
+  if (empty($truongloc["trang"])) $truongloc["trang"] = 1;
+
+  $idchu = $user_info["userid"];
+  $xtpl = new XTemplate("danhsachxetduyet.tpl", PATH . '/xetduyet/');
+
+  $xtpl->assign('phantrang', phantrang($truongloc['trang'], 0, GIOIHAN, 'dentrang'));
+  $xtpl->parse("main.trong");
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+
 function sidemenu() {
   global $db, $nv_Request, $user_info, $op;
 
   $xtpl = new XTemplate("sidemenu.tpl", PATH);
   $phanquyen = kiemtraphanquyen();
-  $danhsachchucnang = ['thanhvien', 'tiemphong', 'thongke', 'nguoidung', 'danhmuc', 'xuphat', 'vatnuoi'];
+  $danhsachchucnang = ['thanhvien', 'tiemphong', 'thongke', 'nguoidung', 'danhmuc', 'xuphat', 'vatnuoi', 'xetduyet'];
   if (in_array($op, $danhsachchucnang) !== false) $chucnang = $op;
   else $chucnang = 'main';
   $xtpl->assign($chucnang, 'active');

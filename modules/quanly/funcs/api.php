@@ -385,6 +385,13 @@ function chuyentrangtiemphong() {
 	$resp['danhsachtiemphong'] = danhsachtiemphong();
 }
 
+function chuyentrangduyet() {
+	global $db, $nv_Request, $resp;
+
+	$resp['status'] = 1;
+	$resp['danhsachxetduyet'] = danhsachduyet();
+}
+
 function xoakichhoatthanhvien() {
 	global $db, $nv_Request, $resp;
 
