@@ -16,12 +16,14 @@
       Quản lý
     </div>
     <div class="pw-menu-content">
-      <a href="/quanly/" class="pw-menu-item {main}"> Thông tin chung </a>
-
       <!-- BEGIN: nhanvien -->
+      <a href="/quanly/" class="pw-menu-item {main}"> Thông tin chung </a>
       <a href="/quanly/tiemphong" class="pw-menu-item {tiemphong}"> Tiêm phòng</a>
       <a href="/dispatch" class="pw-menu-item {vanban}"> Quản lý văn bản </a>
       <!-- END: nhanvien -->
+      <!-- BEGIN: thanhvien2 -->
+      <a href="/quanly/vatnuoi" class="pw-menu-item {vatnuoi}"> Vật nuôi</a>
+      <!-- END: thanhvien2 -->
 
       <!-- BEGIN: quanly -->
       <a href="/quanly/danhmuc" class="pw-menu-item {danhmuc}"> Danh mục </a>

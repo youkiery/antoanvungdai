@@ -11,14 +11,21 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "Quản lý tài khoản";
+$page_title = "Quản lý vật nuôi";
 
 $phanquyen = kiemtraphanquyen();
-if ($phanquyen == 0) header("location: /quanly/vatnuoi");
-
-$xtpl = new XTemplate("main.tpl", PATH . '/main/');
+$xtpl = new XTemplate("main.tpl", PATH . '/vatnuoi/');
 $xtpl->assign('sidemenu', sidemenu());
-$xtpl->assign('dulieuthongke', dulieuthongke());
+$xtpl->assign('danhsachvatnuoi', danhsachvatnuoi());
+
+$thongtin = [
+	'diachi' => "",
+	'idphuong' => "",
+	'dienthoai' => "",
+];
+
+if ($phanquyen == 0) $xtpl->parse('main.coquyen');
+else $xtpl->parse('main.khongquyen');
 $xtpl->parse('main');
 $contents = $xtpl->text();
 

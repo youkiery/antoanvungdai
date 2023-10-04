@@ -382,12 +382,40 @@ function dulieuthongke() {
   return $xtpl->text();
 }
 
+function danhsachvatnuoi() {
+  global $db, $nv_Request, $user_info, $op;
+
+  $idchu = $user_info["userid"];
+  $xtpl = new XTemplate("danhsachvatnuoi.tpl", PATH . '/vatnuoi/');
+
+  $sql = "select * from pet_tiemphong_thucung where idchu in (select idchu from pet_tiemphong_chuho_lienket where idthanhvien = $idchu)";
+  $danhsachthucung = $db->all($sql);
+
+  foreach ($danhsachthucung as $thucung) {
+    $sql = "select id from ". PREFIX ."_tiemphong where idthucung = $thucung[id]";
+    $xtpl->assign('id', $thucung['id']);
+    $xtpl->assign('chuho', $thucung['chuho']);
+    $xtpl->assign('diachi', $thucung['diachi']);
+    $xtpl->assign('phuong', $thucung['phuong']);
+    $xtpl->assign('tenthucung', $thucung['tenthucung']);
+    $xtpl->assign('giongloai', laytengiongloai($thucung['idgiong']));
+    $xtpl->assign('micro', $thucung['micro']);
+    if (empty($db->fetch($sql))) $xtpl->parse('main.thucung.chuatiem');
+    else $xtpl->parse('main.thucung.datiem');
+    $xtpl->parse("main.thucung");
+  }
+  if (!count($danhsach)) $xtpl->parse('main.trong');
+  $xtpl->assign('phantrang', phantrang($truongloc['trang'], $tong, GIOIHAN, 'dentrang'));
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+
 function sidemenu() {
   global $db, $nv_Request, $user_info, $op;
 
   $xtpl = new XTemplate("sidemenu.tpl", PATH);
   $phanquyen = kiemtraphanquyen();
-  $danhsachchucnang = ['thanhvien', 'tiemphong', 'thongke', 'nguoidung', 'danhmuc', 'xuphat'];
+  $danhsachchucnang = ['thanhvien', 'tiemphong', 'thongke', 'nguoidung', 'danhmuc', 'xuphat', 'vatnuoi'];
   if (in_array($op, $danhsachchucnang) !== false) $chucnang = $op;
   else $chucnang = 'main';
   $xtpl->assign($chucnang, 'active');
@@ -404,6 +432,7 @@ function sidemenu() {
   $xtpl->assign('chucvu', $quyen[$quyennhanvien]);
 
   if ($phanquyen >= 0) $xtpl->parse("main.thanhvien");
+  if ($phanquyen >= 0) $xtpl->parse("main.thanhvien2");
   if ($phanquyen >= 1) $xtpl->parse("main.nhanvien");
   if ($phanquyen == 2) $xtpl->parse("main.quanly");
   $xtpl->parse('main');
