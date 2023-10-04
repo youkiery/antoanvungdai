@@ -388,23 +388,28 @@ function danhsachvatnuoi() {
   $idchu = $user_info["userid"];
   $xtpl = new XTemplate("danhsachvatnuoi.tpl", PATH . '/vatnuoi/');
 
-  $sql = "select * from pet_tiemphong_thucung where idchu in (select idchu from pet_tiemphong_chuho_lienket where idthanhvien = $idchu)";
+  $sql = "select * from pet_users_info where userid = $idchu";
+  $chuho = $db->fetch($sql);
+  if (empty($chuho)) $x = 0;
+  else $x = 1;
+
+  $sql = "select * from pet_tiemphong_thucung where idchu in (select id as idchu from pet_tiemphong_chuho where dienthoai = '$chuho[dienthoai]' and $x)";
   $danhsachthucung = $db->all($sql);
 
   foreach ($danhsachthucung as $thucung) {
-    $sql = "select id from ". PREFIX ."_tiemphong where idthucung = $thucung[id]";
+    $sql = "select thoigiantiem from ". PREFIX ."_tiemphong where idthucung = $thucung[id] order by id desc limit 1";
+    $tiemphong = $db->fetch($sql);
+    if (empty($tiemphong)) $tiemcuoi = "-";
+    else $tiemcuoi = date("d/m/Y", $tiemphong["thoigiantiem"]);
+
     $xtpl->assign('id', $thucung['id']);
-    $xtpl->assign('chuho', $thucung['chuho']);
-    $xtpl->assign('diachi', $thucung['diachi']);
-    $xtpl->assign('phuong', $thucung['phuong']);
-    $xtpl->assign('tenthucung', $thucung['tenthucung']);
+    $xtpl->assign('tenthucung', $thucung['ten']);
     $xtpl->assign('giongloai', laytengiongloai($thucung['idgiong']));
     $xtpl->assign('micro', $thucung['micro']);
-    if (empty($db->fetch($sql))) $xtpl->parse('main.thucung.chuatiem');
-    else $xtpl->parse('main.thucung.datiem');
+    $xtpl->assign('tiemcuoi', $tiemcuoi);
     $xtpl->parse("main.thucung");
   }
-  if (!count($danhsach)) $xtpl->parse('main.trong');
+  if (!count($danhsachthucung)) $xtpl->parse('main.trong');
   $xtpl->assign('phantrang', phantrang($truongloc['trang'], $tong, GIOIHAN, 'dentrang'));
   $xtpl->parse("main");
   return $xtpl->text();
