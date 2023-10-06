@@ -296,41 +296,50 @@ function danhsachthongke() {
   }
   $xtpl = new XTemplate("danhsachthongke.tpl", PATH ."/thongke/");
   // bộ lọc: tên chủ, điện thoại, tên thú cưng, micro, giống, loài, phường, thời gian tiêm
+  $hantiemphong = time() - 365.25 * 60 * 60 * 24;
   $xtra = [];
   if (!empty($truongloc['tenchu'])) $xtra []= " c.ten like '%$truongloc[tenchu]%' ";
   if (!empty($truongloc['dienthoai'])) $xtra []= " c.dienthoai like '%$truongloc[dienthoai]%' ";
   if (!empty($truongloc['thucung'])) $xtra []= " b.ten like '%$truongloc[thucung]%' ";
   if (!empty($truongloc['micro'])) $xtra []= " b.micro like '%$truongloc[micro]%' ";
   if (!empty($truongloc['giong'])) $xtra []= " d.giong like '%$truongloc[giong]%' ";
-  if (!empty($truongloc['loai'])) $xtra []= " d.giong like '%$truongloc[loai]%' ";
+  if (!empty($truongloc['loai'])) $xtra []= " d.loai like '%$truongloc[loai]%' ";
   if (!empty($truongloc['phuong'])) $xtra []= " e.id = $truongloc[phuong] ";
   if (!empty($truongloc['tiemphong'])) {
     if ($truongloc['tiemphong'] == 1) $ex = ' not in ';
     else $ex = ' in ';
-    $xtra []= " b.id $ex (select idthucung as id from ". PREFIX ."_tiemphong group by idthucung) ";
+    $xtra []= " b.id $ex (select idthucung as id from ". PREFIX ."_tiemphong where thoigiantiem >= $hantiemphong group by idthucung) ";
   }
 
   if (count($xtra)) $xtra = " where ". implode(' and ', $xtra);
   else $xtra = '';
 
-  $sql = "select c.ten as chuho, c.diachi, e.ten as phuong, b.id, b.ten as tenthucung, b.idgiong, b.micro from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra order by b.id desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
+  $sql = "select c.ten as chuho, c.diachi, e.ten as phuong, c.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra and b.ngaymat = 0 group by c.id order by c.id desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
 
-  $sql = "select count(c.id) as tong from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra";
-  if (!empty($tong = $db->fetch($sql))) $tong = $tong['tong'];
-  else $tong = 0;
+  $sql = "select c.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra and b.ngaymat = 0 group by c.id";
+  $tong = count($db->arr($sql, "id"));
 
-  foreach ($danhsach as $thucung) {
-    $sql = "select id from ". PREFIX ."_tiemphong where idthucung = $thucung[id]";
-    $xtpl->assign('id', $thucung['id']);
-    $xtpl->assign('chuho', $thucung['chuho']);
-    $xtpl->assign('diachi', $thucung['diachi']);
-    $xtpl->assign('phuong', $thucung['phuong']);
-    $xtpl->assign('tenthucung', $thucung['tenthucung']);
-    $xtpl->assign('giongloai', laytengiongloai($thucung['idgiong']));
-    $xtpl->assign('micro', $thucung['micro']);
-    if (empty($db->fetch($sql))) $xtpl->parse('main.thucung.chuatiem');
-    else $xtpl->parse('main.thucung.datiem');
+  foreach ($danhsach as $chuho) {
+    $tongtiemphong = 0;
+    $datiemphong = 0;
+    $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $chuho[id] and ngaymat = 0";
+    $danhsachthucung = $db->all($sql);
+    foreach ($danhsachthucung as $thucung) {
+      $sql = "select * from ". PREFIX ."_tiemphong where idthucung = $thucung[id] and thoigiantiem >= $hantiemphong";
+      if (!empty($db->fetch($sql))) $datiemphong ++;
+      $tongtiemphong ++;
+    }
+
+    $xtpl->assign('id', $chuho['id']);
+    $xtpl->assign('chuho', $chuho['chuho']);
+    $xtpl->assign('diachi', $chuho['diachi']);
+    $xtpl->assign('phuong', $chuho['phuong']);
+    if ($datiemphong == $tongtiemphong) $xtpl->assign('color', 'style="color: green"');
+    else $xtpl->assign('color', 'style="color: red"');
+    $xtpl->assign('tongtiemphong', $tongtiemphong);
+    $xtpl->assign('datiemphong', $datiemphong);
+
     $xtpl->parse("main.thucung");
   }
   if (!count($danhsach)) $xtpl->parse('main.trong');
@@ -352,21 +361,27 @@ function dulieuthongke() {
 
   $sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where kichhoat = 1";
   $danhsach = $db->all($sql);
+  $hantiemphong = time() - 365.25 * 60 * 60 * 24;
 
   foreach ($danhsach as $phuong) {
     $datiemphong = 0;
+    $tungtiemphong = 0;
     $chuatiemphong = 0;
-    $sql = "select b.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id where c.idphuong = $phuong[id]";
+    $sql = "select b.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id where c.idphuong = $phuong[id] and ngaymat = 0";
     $danhsachthucung = $db->all($sql);
 
     foreach ($danhsachthucung as $thucung) {
-      $sql = "select id from ". PREFIX ."_tiemphong where idthucung = $thucung[id]";
-      if (!empty($db->fetch($sql))) $datiemphong ++;
+      $sql = "select thoigiantiem from ". PREFIX ."_tiemphong where idthucung = $thucung[id] order by thoigiantiem desc limit 1";
+      if (!empty($tiemphong = $db->fetch($sql))) {
+        if ($tiemphong['thoigiantiem'] >= $hantiemphong) $datiemphong ++;
+        else $tungtiemphong ++;
+      }
       else $chuatiemphong ++;
     }
 
     $xtpl->assign('tenphuong', $phuong['ten']);
     $xtpl->assign('datiemphong', $datiemphong);
+    $xtpl->assign('tungtiemphong', $tungtiemphong);
     $xtpl->assign('chuatiemphong', $chuatiemphong);
     $xtpl->assign('tongthucungphuong', $datiemphong + $chuatiemphong);
     $tong = $datiemphong + $chuatiemphong;
@@ -470,7 +485,7 @@ function sidemenu() {
   $xtpl->assign('chucvu', $quyen[$quyennhanvien]);
 
   if ($phanquyen >= 0) $xtpl->parse("main.thanhvien");
-  if ($phanquyen >= 0) $xtpl->parse("main.thanhvien2");
+  if ($phanquyen == 0) $xtpl->parse("main.thanhvien2");
   if ($phanquyen >= 1) $xtpl->parse("main.nhanvien");
   if ($phanquyen == 2) $xtpl->parse("main.quanly");
   $xtpl->parse('main');
@@ -531,5 +546,41 @@ function phantrang($trang, $tong, $gioihan, $chucnang = '') {
   //   $xtpl->parse('main.row');
   // }
   $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function danhsachchitietchunuoi() {
+  global $db, $nv_Request;
+
+  $idchu = $nv_Request->get_string("idchu", "post");
+	$sql = "select a.*, b.giong, b.loai from ". PREFIX ."_tiemphong_thucung a inner join ". PREFIX ."_quanly_danhmuc_giong b on a.idgiong = b.id where idchu = $idchu and ngaymat = 0";
+	$danhsachthucung = $db->all($sql);
+  $hantiemphong = time() - 365.25 * 60 * 60 * 24;
+
+  $xtpl = new XTemplate("danhsachthucung.tpl", PATH ."/thongke/");
+	foreach ($danhsachthucung as $thucung) {
+    $sql = "select * from ". PREFIX ."_tiemphong where idthucung = $thucung[id] order by thoigiantiem desc limit 1";
+    if (empty($tiemphong = $db->fetch($sql))) {
+      $tiemcuoi = "Chưa tiêm phòng";
+      $color = "style='color: red'";
+    }
+    else {
+      $tiemcuoi = date("d/m/Y", $tiemphong["thoigiantiem"]);
+      if ($tiemphong["thoigiantiem"] >= $hantiemphong) $color = "style='color: green'";
+      else $color = "style='color: red'";
+    }
+
+    $xtpl->assign("id", $thucung["id"]);
+    $xtpl->assign("tenthucung", $thucung["ten"]);
+    $xtpl->assign("micro", $thucung["micro"]);
+    $xtpl->assign("giongloai", $thucung["loai"]. " " .$thucung["giong"]);
+    $xtpl->assign("ngaysinh", ($thucung["ngaysinh"] ? date("d/m/Y", $thucung["ngaysinh"]) : "-"));
+    $xtpl->assign("tiemcuoi", $tiemcuoi);
+    $xtpl->parse("main.thucung");
+	}
+
+  if (!count($danhsachthucung)) $xtpl->parse("main.trong");
+
+  $xtpl->parse("main");
   return $xtpl->text();
 }

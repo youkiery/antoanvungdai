@@ -656,3 +656,53 @@ function timkiemxuphat() {
 	$resp['danhsachxuphat'] = danhsachxuphat();
 	$resp['status'] = 1;
 }
+
+function laychitiet() {
+  global $db, $nv_Request, $resp;
+
+	$resp['chitiet'] = danhsachchitietchunuoi();
+	$resp['status'] = 1;
+}
+
+function xoachitietchuho() {
+  global $db, $nv_Request, $resp;
+
+	$idthucung = $nv_Request->get_string("id", "post");
+
+	$sql = "delete from ". PREFIX ."_tiemphong where idthucung = $idthucung";
+	$db->query($sql);
+	$sql = "delete from ". PREFIX ."_tiemphong_thucung where id = $idthucung";
+	$db->query($sql);
+
+	$resp['chitiet'] = danhsachchitietchunuoi();
+	$resp['danhsachthongke'] = danhsachthongke();
+	$resp['status'] = 1;
+}
+
+function laythongtinthucung() {
+  global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	
+  $sql = "select b.ten as tenthucung, b.micro, d.giong, d.loai, b.hinhanh, b.ngaysinh from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id where b.id = $id";
+	$resp = $db->fetch($sql);
+	$resp['ngaysinh'] = (empty($resp['ngaysinh']) ? "" : date("d/m/Y", $resp['ngaysinh']));
+	$resp['status'] = 1;
+}
+
+function capnhatthucung() {
+  global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$dulieu = $nv_Request->get_array('dulieu', 'post', '0');
+  $idgiong = kiemtragiongloai($dulieu);
+  $hinhanh = kiemtrahinhanh($dulieu['hinhanh']);
+  $ngaysinh = chuyendoithoigian($dulieu['ngaysinh']);
+	
+  $sql = "update ". PREFIX ."_tiemphong_thucung set ten = '$dulieu[tenthucung]', micro = '$dulieu[micro]', idgiong = $idgiong, hinhanh = '$hinhanh', ngaysinh = $ngaysinh where id = $id";
+	$db->query($sql);
+	
+	$resp['chitiet'] = danhsachchitietchunuoi();
+	$resp['danhsachthongke'] = danhsachthongke();
+	$resp['status'] = 1;
+}

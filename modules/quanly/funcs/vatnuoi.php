@@ -13,6 +13,8 @@ if (!defined('NV_IS_FORM')) {
 
 $page_title = "Quản lý vật nuôi";
 
+$xtpl = new XTemplate("main.tpl", PATH . '/vatnuoi/');
+$xtpl->assign('sidemenu', sidemenu());
 $phanquyen = kiemtraphanquyen();
 if ($phanquyen == 0) {
 	$action = $nv_Request->get_string('action', 'post/get');
@@ -27,8 +29,6 @@ if ($phanquyen == 0) {
 		die();
 	}
 
-	$xtpl = new XTemplate("main.tpl", PATH . '/vatnuoi/');
-	$xtpl->assign('sidemenu', sidemenu());
 	$xtpl->assign('idchu', $user_info["userid"]);
 	$xtpl->assign('danhsachvatnuoi', danhsachvatnuoi());
 

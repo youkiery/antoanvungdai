@@ -2,32 +2,24 @@
 <table class="table table-bordered">
   <thead>
     <tr>
-      <th> Tên thú cưng </th>
-      <th> Giống loài </th>
-      <th> Microchip </th>
       <th> Chủ hộ </th>
       <th> Điện thoại </th>
       <th> Địa chỉ </th>
       <th> Phường </th>
-      <th> Tiêm phòng </th> 
+      <th class="text-center"> Đã tiêm </th> 
       <th> Chức năng </th>
     </tr>
   </thead>
   <!-- BEGIN: thucung -->
   <tr>
-    <td> {tenthucung} </td>
-    <td> {giongloai} </td>
-    <td> {micro} </td>
     <td> {chuho} </td>
     <td> {dienthoai} </td>
     <td> {diachi} </td>
     <td> {phuong} </td>
-    <!-- BEGIN: chuatiem -->
-    <td style="color: red"> Chưa tiêm phòng </td>
-    <!-- END: chuatiem -->
-    <!-- BEGIN: datiem -->
-    <td style="color: green"> Đã tiêm phòng </td>
-    <!-- END: datiem -->
+    <td class="text-center" {color}> 
+      {datiemphong} / 
+      {tongtiemphong} 
+    </td>
     <td> <button class="btn btn-info btn-xs" onclick="chitiet({id})"> chi tiết </button> </td>
   </tr>
   <!-- END: thucung -->
