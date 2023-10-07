@@ -389,7 +389,7 @@ if ($checkss == $array_register['checkss']) {
         $sql = 'INSERT INTO ' . $db_config['prefix'] . '_users (
             group_id, username, md5username, password, email, first_name, last_name, gender, photo, birthday, sig, regdate,
             question, answer, passlostkey, view_mail, remember, in_groups,
-            active, checknum, last_login, last_ip, last_agent, last_openid, idsite, email_verification_time, active_obj
+            active, checknum, last_login, last_ip, last_agent, last_openid, idsite, email_verification_time, active_obj, level
         ) VALUES (
             ' . (defined('ACCESS_ADDUS') ? $group_id : ($global_users_config['active_group_newusers'] ? 7 : 4)) . ",
             :username,
@@ -407,7 +407,7 @@ if ($checkss == $array_register['checkss']) {
             :answer,
             '', 0, 1,
             '" . (defined('ACCESS_ADDUS') ? $group_id : ($global_users_config['active_group_newusers'] ? 7 : 4)) . "',
-            0, '', 0, '', '', '', " . $global_config['idsite'] . ", -1, 'SYSTEM'
+            0, '', 0, '', '', '', " . $global_config['idsite'] . ", -1, 'SYSTEM', 0
         )";
 
         $data_insert = [];

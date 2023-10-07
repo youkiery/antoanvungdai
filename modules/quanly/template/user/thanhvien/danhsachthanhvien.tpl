@@ -14,10 +14,18 @@
     <td> {username} </td>
     <td> {first_name} </td>
     <td> {quyen} </td>
-    <td> Đã kích hoạt </td>
+    <td> {trangthai} </td>
     <td> 
+      <!-- BEGIN: chucnang -->
       <button class="btn btn-info btn-xs" onclick="capnhatthanhvien({userid})"> <span class="fa fa-pencil-square-o"></span> cập nhật </button>  
+      <!-- BEGIN: kichhoat -->
       <button class="btn btn-warning btn-xs" onclick="xoakichhoatthanhvien({userid})"> <span class="fa fa-times"></span> vô hiệu hóa </button>  
+      <!-- END: kichhoat -->
+      <!-- BEGIN: vohieuhoa -->
+      <button class="btn btn-success btn-xs" onclick="kichhoatthanhvien({userid})"> <span class="fa fa-times"></span> kích hoạt </button>  
+      <!-- END: vohieuhoa -->
+      <button class="btn btn-danger btn-xs" onclick="xoathanhvien({userid})"> <span class="fa fa-times"></span> xoá </button>  
+      <!-- END: chucnang -->
     </td>
   </tr>
   <!-- END: user -->

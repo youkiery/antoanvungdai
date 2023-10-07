@@ -19,6 +19,9 @@
       <!-- BEGIN: nhanvien -->
       <a href="/quanly/" class="pw-menu-item {main}"> Thông tin chung </a>
       <a href="/quanly/tiemphong" class="pw-menu-item {tiemphong}"> Tiêm phòng</a>
+      <a href="/quanly/thongke" class="pw-menu-item {thongke}"> Danh sách hộ nuôi </a>
+      <a href="/quanly/xuphat" class="pw-menu-item {xuphat}"> Xử phạt </a>
+      <a href="/quanly/xetduyet" class="pw-menu-item {xetduyet}"> Xét duyệt nội dung </a>
       <a href="/dispatch" class="pw-menu-item {vanban}"> Quản lý văn bản </a>
       <!-- END: nhanvien -->
       <!-- BEGIN: thanhvien2 -->
@@ -27,9 +30,6 @@
 
       <!-- BEGIN: quanly -->
       <a href="/quanly/danhmuc" class="pw-menu-item {danhmuc}"> Danh mục </a>
-      <a href="/quanly/thongke" class="pw-menu-item {thongke}"> Danh sách hộ nuôi </a>
-      <a href="/quanly/xuphat" class="pw-menu-item {xuphat}"> Xử phạt </a>
-      <a href="/quanly/xetduyet" class="pw-menu-item {xetduyet}"> Xét duyệt nội dung </a>
       <a href="/quanly/thanhvien" class="pw-menu-item {thanhvien}"> Quản lý tài khoản </a>
       <!-- END: quanly -->
 

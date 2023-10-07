@@ -15,7 +15,7 @@ $page_title = "Quản lý tài khoản";
 $xtpl = new XTemplate("main.tpl", PATH .'/thongke/');
 $xtpl->assign('sidemenu', sidemenu());
 $phanquyen = kiemtraphanquyen();
-if ($phanquyen < 2) $xtpl->parse("main.khongquyen");
+if ($phanquyen < 1) $xtpl->parse("main.khongquyen");
 else {
 	$xtpl->assign('dulieuthongke', dulieuthongke());
 	$xtpl->assign('danhsachthongke', danhsachthongke());

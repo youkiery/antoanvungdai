@@ -10,10 +10,15 @@
   <tr>
     <td> {username} </td>
     <td> {first_name} </td>
-    <td> Chờ kích hoạt </td>
+    <td> {trangthai} </td>
     <td> 
-      <button class="btn btn-info btn-xs" onclick="kichhoatthanhvien({userid})"> <span class="fa fa-check"></span> kích hoạt </button>  
-      <button class="btn btn-danger btn-xs" onclick="xoathanhvien({userid})"> <span class="fa fa-times"></span> xóa </button>  
+      <!-- BEGIN: kichhoat -->
+      <button class="btn btn-warning btn-xs" onclick="xoakichhoatthanhvien({userid})"> <span class="fa fa-times"></span> vô hiệu hóa </button>  
+      <!-- END: kichhoat -->
+      <!-- BEGIN: vohieuhoa -->
+      <button class="btn btn-success btn-xs" onclick="kichhoatthanhvien({userid})"> <span class="fa fa-times"></span> kích hoạt </button>  
+      <!-- END: vohieuhoa -->
+      <button class="btn btn-danger btn-xs" onclick="xoathanhvien({userid})"> <span class="fa fa-times"></span> xoá </button>  
     </td>
   </tr>
   <!-- END: user -->

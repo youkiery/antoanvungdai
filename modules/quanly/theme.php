@@ -65,14 +65,18 @@ function danhsachgiong() {
 }
 
 function danhsachthanhvien() {
-  global $db;
+  global $db, $user_info;
 
   $xtpl = new XTemplate("danhsachthanhvien.tpl", PATH ."/thanhvien/");
 
-  $sql = "select * from ". PREFIX ."_users where active = 1 order by userid desc";
+  $sql = "select * from ". PREFIX ."_users where level = 1 order by userid desc";
   $danhsach = $db->all($sql);
 
   $quyen = [0 => 'Thành viên', 'Nhân viên', 'Quản lý'];
+  // nếu userid == 1, toàn quyền
+  // có quyền quản lý và đối phương không phải quản lý thì hiện
+  $chucnang = false;
+  if ($user_info["userid"] == 1 || kiemtraphanquyennhanvien($user_info["userid"])) $chucnang = true;
 
   foreach ($danhsach as $user) {
     $sql = "select * from ". PREFIX ."_phanquyen where userid = $user[userid]";
@@ -82,6 +86,14 @@ function danhsachthanhvien() {
     $xtpl->assign('username', $user['username']);
     $xtpl->assign('first_name', $user['first_name']);
     $xtpl->assign('quyen', $quyen[$quyennhanvien]);
+    if ($user["active"]) $xtpl->assign('trangthai', "Đã kích hoạt");
+    else $xtpl->assign('trangthai', "Đã vô hiệu");
+
+    if ($chucnang) {
+      if ($user["active"]) $xtpl->parse("main.user.chucnang.kichhoat");
+      else $xtpl->parse("main.user.chucnang.vohieuhoa");
+      if ($user_info["userid"] == 1 || kiemtraphanquyennhanvien($user["userid"]) < 2) $xtpl->parse("main.user.chucnang");
+    }
     $xtpl->parse("main.user");
   }
   if (!count($danhsach)) $xtpl->parse('main.trong');
@@ -94,13 +106,21 @@ function danhsachxetduyet() {
 
   $xtpl = new XTemplate("danhsachxetduyet.tpl", PATH ."/thanhvien/");
 
-  $sql = "select * from ". PREFIX ."_users where active = 0 order by userid desc";
+  $sql = "select * from ". PREFIX ."_users where level = 0 order by userid desc";
   $danhsach = $db->all($sql);
 
   foreach ($danhsach as $user) {
     $xtpl->assign('userid', $user['userid']);
     $xtpl->assign('username', $user['username']);
     $xtpl->assign('first_name', $user['first_name']);
+    if ($user["active"]) {
+      $xtpl->assign('trangthai', "Đã kích hoạt");
+      $xtpl->parse("main.user.kichhoat");
+    }
+    else {
+      $xtpl->assign('trangthai', "Chờ kích hoạt");
+      $xtpl->parse("main.user.vohieuhoa");
+    } 
     $xtpl->parse("main.user");
   }
   if (!count($danhsach)) $xtpl->parse('main.trong');

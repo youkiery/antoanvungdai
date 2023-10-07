@@ -40,6 +40,20 @@ function kiemtraphanquyen() {
   return 0;
 }
 
+function kiemtraphanquyennhanvien($userid) {
+  global $db, $user_info;
+  
+  if (!isset($userid)) return 0;
+  if (empty($userid)) return 0;
+  if ($userid == 1) return 2;
+  $sql = "select active from ". PREFIX ."_users where userid = $userid";
+  $nhanvien = $db->fetch($sql);
+  if (empty($nhanvien) || !$nhanvien['active']) return 0;
+  $sql = "select * from ". PREFIX ."_phanquyen where userid = $userid";
+	if (!empty($phanquyen = $db->fetch($sql))) return $phanquyen['quyen'];
+  return 0;
+}
+
 function chuyendoithoigian($ngay) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $ngay, $m)) {
     return mktime(0, 0, 0, $m[2], $m[1], $m[3]);

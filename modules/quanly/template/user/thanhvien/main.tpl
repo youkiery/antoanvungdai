@@ -8,10 +8,10 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title"> Vô hiệu hóa thành viên </h4>
+            <h4 class="modal-title"> Vô hiệu hóa tài khoản </h4>
           </div>
           <div class="modal-body text-center">
-            Thành viên sẽ không thể đăng nhập cho đến khi được kích hoạt trở lại
+            tài khoản sẽ không thể đăng nhập cho đến khi được kích hoạt trở lại
             <button class="btn btn-warning btn-block" onclick="xacnhanxoakichhoatthanhvien()">
               Vô hiệu hóa
             </button>
@@ -25,10 +25,10 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title"> Xóa thành viên </h4>
+            <h4 class="modal-title"> Xóa tài khoản </h4>
           </div>
           <div class="modal-body text-center">
-            Xác nhận xóa thành viên này
+            Xác nhận xóa tài khoản này
             <button class="btn btn-danger btn-block" onclick="xacnhanxoathanhvien()">
               Xóa
             </button>
@@ -42,10 +42,10 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title"> Kích hoạt thành viên </h4>
+            <h4 class="modal-title"> Kích hoạt tài khoản </h4>
           </div>
           <div class="modal-body text-center">
-            Kích hoạt thành viên này
+            Kích hoạt tài khoản này
             <button class="btn btn-info btn-block" onclick="xacnhankichhoatthanhvien()">
               Kích hoạt
             </button>
@@ -143,13 +143,13 @@
 
     <div class="form-group">
       <button class="btn btn-success" onclick="themthanhvien()">
-        <span class="fa fa-plus-circle"></span> Thêm thành viên
+        <span class="fa fa-plus-circle"></span> Thêm tài khoản
       </button>
     </div>
 
     <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#thanhvien"> Danh sách thành viên </a></li>
-      <li><a data-toggle="tab" href="#xetduyet"> Danh sách cần xét duyệt </a></li>
+      <li class="active"><a data-toggle="tab" href="#thanhvien"> Danh sách nhân viên </a></li>
+      <li><a data-toggle="tab" href="#xetduyet"> Danh sách chủ nuôi </a></li>
     </ul>
 
     <div class="form-group"></div>
@@ -222,11 +222,11 @@
       }
 
       function tailaiquyen() {
-        // nếu là thành viên thì hiển thị chỉ được xem
+        // nếu là tài khoản thì hiển thị chỉ được xem
         // nếu là nhân viên, hiển thị số lượng phường quản lý, danh sách phường
         // nếu là quản lý hiển thị được xem dữ liệu tất cả các phường
         var quyen = kiemtraphanquyen()
-        var html = 'Thành viên chỉ được chỉnh sửa dữ liệu bản thân'
+        var html = 'Tài khoản chỉ được chỉnh sửa dữ liệu bản thân'
         switch (quyen) {
           case '1':
             // đếm số phường từ danh sách global
@@ -361,6 +361,7 @@
           id: global.id,
         }).then((phanhoi) => {
           $('#modal-xoathanhvien').modal('hide')
+          $('#thanhvien').html(phanhoi.danhsachthanhvien)
           $('#xetduyet').html(phanhoi.danhsachxetduyet)
         }, (error) => { })
       }

@@ -43,21 +43,6 @@ function xoaxuphat() {
 	$resp['danhsachxuphat'] = danhsachxuphat();
 }
 
-function xoathanhvien() {
-	global $db, $nv_Request, $resp;
-
-	$id = $nv_Request->get_string('id', 'post', '0');
-	$sql = "delete from ". PREFIX ."_phanquyen where userid = $id";
-	$db->query($sql);
-	$sql = "delete from ". PREFIX ."_phanquyen_chitiet where userid = $id";
-	$db->query($sql);
-	$sql = "delete from ". PREFIX ."_users where userid = $id";
-	$db->query($sql);
-
-	$resp['status'] = 1;
-	$resp['danhsachxetduyet'] = danhsachxetduyet();
-}
-
 function chitietxuphat() {
 	global $db, $nv_Request, $resp;
 
@@ -244,7 +229,7 @@ function themthanhvien() {
 		$sql = "select * from ". PREFIX ."_users where username = '$username'";
 
 		if (empty($db->fetch($sql))) {
-			$sql = "insert into ". PREFIX ."_users (group_id, username, md5username, password, email, first_name, last_name, gender, photo, birthday, sig, regdate, question, answer, passlostkey, view_mail, remember, in_groups, active, active2step, secretkey, checknum, last_login, last_ip, last_agent, last_openid, last_update, idsite, safemode, safekey, email_verification_time, active_obj) values('$group_id', '$username', '$md5username', '$password', '$email', '$first_name', '$last_name', '$gender', '$photo', '$birthday', '$sig', '$regdate', '$question', '$answer', '$passlostkey', '$view_mail', '$remember', '$in_groups', '$active', '$active2step', '$secretkey', '$checknum', '$last_login', '$last_ip', '$last_agent', '$last_openid', '$last_update', '$idsite', '$safemode', '$safekey', '$email_verification_time', '$active_obj')";
+			$sql = "insert into ". PREFIX ."_users (group_id, username, md5username, password, email, first_name, last_name, gender, photo, birthday, sig, regdate, question, answer, passlostkey, view_mail, remember, in_groups, active, active2step, secretkey, checknum, last_login, last_ip, last_agent, last_openid, last_update, idsite, safemode, safekey, email_verification_time, active_obj, level) values('$group_id', '$username', '$md5username', '$password', '$email', '$first_name', '$last_name', '$gender', '$photo', '$birthday', '$sig', '$regdate', '$question', '$answer', '$passlostkey', '$view_mail', '$remember', '$in_groups', '$active', '$active2step', '$secretkey', '$checknum', '$last_login', '$last_ip', '$last_agent', '$last_openid', '$last_update', '$idsite', '$safemode', '$safekey', '$email_verification_time', '$active_obj', 1)";
 			$id = $db->insertid($sql);
 			$resp['messenger'] = 'Đã thêm thành viên';
 		}
@@ -397,6 +382,36 @@ function xoakichhoatthanhvien() {
 
 	$id = $nv_Request->get_string('id', 'post', '0');
 	$sql = "update ". PREFIX ."_users set active = 0 where userid = $id";
+	$db->query($sql);
+
+	$resp['status'] = 1;
+	$resp['danhsachthanhvien'] = danhsachthanhvien();
+	$resp['danhsachxetduyet'] = danhsachxetduyet();
+}
+
+function mokichhoatthanhvien() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$sql = "update ". PREFIX ."_users set active = 1 where userid = $id";
+	$db->query($sql);
+
+	$resp['status'] = 1;
+	$resp['danhsachthanhvien'] = danhsachthanhvien();
+	$resp['danhsachxetduyet'] = danhsachxetduyet();
+}
+
+function xoathanhvien() {
+	global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$sql = "delete from ". PREFIX ."_users where userid = $id";
+	$db->query($sql);
+	$sql = "delete from ". PREFIX ."_phanquyen where userid = $id";
+	$db->query($sql);
+	$sql = "delete from ". PREFIX ."_phanquyen_chitiet where userid = $id";
+	$db->query($sql);
+	$sql = "delete from ". PREFIX ."_tiemphong_chuho_lienket where idchu = $id";
 	$db->query($sql);
 
 	$resp['status'] = 1;
