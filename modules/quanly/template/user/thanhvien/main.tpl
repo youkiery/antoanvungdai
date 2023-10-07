@@ -166,6 +166,8 @@
     <script>
       global = {
         id: 0,
+        trangnhanvien: 1,
+        trangchunuoi: 1,
         quyen: [],
       }
 
@@ -219,6 +221,26 @@
           vhttp.notify('Hãy thêm ít nhất 1 quyền')
           // báo chưa chọn quyền
         }
+      }
+
+      function dentrangnhanvien(trang) {
+        vhttp.post('/quanly/api/', {
+          action: 'chuyentrangnhanvien',
+          trangnhanvien: trang
+        }).then((phanhoi) => {
+          global.trangnhanvien = 1
+          $('#thanhvien').html(phanhoi.danhsachthanhvien)
+        }, (error) => { })
+      }
+      function dentrangchunuoi(trang) {
+        vhttp.post('/quanly/api/', {
+          action: 'chuyentrangchunuoi',
+          trangchunuoi: trang
+        }).then((phanhoi) => {
+          global.trangchunuoi = 1
+          $('#xetduyet').html(phanhoi.danhsachxetduyet)
+          global.trang = 1
+        }, (error) => { })
       }
 
       function tailaiquyen() {
@@ -310,7 +332,8 @@
             matkhau: $('#matkhau').val(),
             gioitinh: gioitinh,
             phanquyen: phanquyen,
-            quyen: quyen
+            quyen: quyen,
+            trangnhanvien: global.trangnhanvien,
           }).then((phanhoi) => {
             $('#modal-themthanhvien').modal('hide')
             $('#thanhvien').html(phanhoi.danhsachthanhvien)
@@ -327,6 +350,8 @@
         vhttp.post('/quanly/api/', {
           action: 'kichhoatthanhvien',
           id: global.id,
+          trangnhanvien: global.trangnhanvien,
+          trangchunuoi: global.trangchunuoi
         }).then((phanhoi) => {
           $('#modal-kichhoatthanhvien').modal('hide')
           $('#thanhvien').html(phanhoi.danhsachthanhvien)
@@ -343,6 +368,8 @@
         vhttp.post('/quanly/api/', {
           action: 'xoakichhoatthanhvien',
           id: global.id,
+          trangnhanvien: global.trangnhanvien,
+          trangchunuoi: global.trangchunuoi
         }).then((phanhoi) => {
           $('#modal-xoakichhoat').modal('hide')
           $('#thanhvien').html(phanhoi.danhsachthanhvien)
@@ -359,6 +386,8 @@
         vhttp.post('/quanly/api/', {
           action: 'xoathanhvien',
           id: global.id,
+          trangnhanvien: global.trangnhanvien,
+          trangchunuoi: global.trangchunuoi
         }).then((phanhoi) => {
           $('#modal-xoathanhvien').modal('hide')
           $('#thanhvien').html(phanhoi.danhsachthanhvien)

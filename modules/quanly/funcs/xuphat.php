@@ -27,6 +27,7 @@ else {
 		$xtpl->assign('idphuong', $phuong['id']);
 		$xtpl->assign('tenphuong', $phuong['ten']);
 		$xtpl->parse('main.coquyen.phuong');
+		$xtpl->parse('main.coquyen.timkiemphuong');
 	}
 
 	$xtpl->parse("main.coquyen");

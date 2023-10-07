@@ -17,15 +17,15 @@ $xtpl->assign('sidemenu', sidemenu());
 $phanquyen = kiemtraphanquyen();
 if ($phanquyen < 1) $xtpl->parse("main.khongquyen");
 else {
-	$xtpl->assign('dulieuthongke', dulieuthongke());
+	// $xtpl->assign('dulieuthongke', dulieuthongke());
 	$xtpl->assign('danhsachthongke', danhsachthongke());
 
-	$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where kichhoat = 1 order by ten asc";
-	$danhsachphuong = $db->all($sql);
+	$phanquyen = kiemtraphanquyen();
+	$danhsachphuong = kiemtraphanquyenphuong();
 
-	foreach ($danhsachphuong as $phuong) {
-		$xtpl->assign('idphuong', $phuong['id']);
-		$xtpl->assign('tenphuong', $phuong['ten']);
+	foreach ($danhsachphuong as $tenphuong => $idphuong) {
+		$xtpl->assign('idphuong', $idphuong);
+		$xtpl->assign('tenphuong', $tenphuong);
 		$xtpl->parse('main.coquyen.timkiemphuong');
 	}
 

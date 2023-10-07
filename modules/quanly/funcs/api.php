@@ -295,6 +295,33 @@ function timkiemchuho() {
 	$resp['danhsach']	= $xtpl->text();
 }
 
+function timkiemchuhomorong() {
+	global $db, $nv_Request, $resp;
+
+	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
+	$sql = "select * from ". PREFIX ."_tiemphong_chuho a inner join ". PREFIX ."_tiemphong_thucung b on a.id = b.idchu where a.ten like '%$tukhoa%' or a.diachi like '%$tukhoa%' or a.dienthoai like '%$tukhoa%' or b.micro like '%$tukhoa%' order by id asc limit ". GIOIHAN;
+	$danhsach = $db->all($sql);
+  $xtpl = new XTemplate('goiychuho.tpl', PATH .'/tiemphong/');
+
+	foreach ($danhsach as $chuho) {
+		$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where id = $chuho[idphuong]";
+		$phuong = $db->fetch($sql)['ten'];
+		$xtpl->assign('idchu', $chuho['id']);
+		$xtpl->assign('ten', $chuho['ten']);
+		$xtpl->assign('diachi', $chuho['diachi']);
+		$xtpl->assign('dienthoai', $chuho['dienthoai']);
+		$xtpl->assign('idphuong', $chuho['idphuong']);
+		$xtpl->assign('phuong', $phuong);
+		$xtpl->parse('main.row');
+	}
+
+	if (empty($danhsach)) $xtpl->parse('main.trong');
+	$xtpl->parse('main');
+
+	$resp['status']	= 1;
+	$resp['danhsach']	= $xtpl->text();
+}
+
 function uploadfile() {
 	global $_FILES, $resp;
 
@@ -375,6 +402,20 @@ function chuyentrangduyet() {
 
 	$resp['status'] = 1;
 	$resp['danhsachxetduyet'] = danhsachduyet();
+}
+
+function chuyentrangnhanvien() {
+	global $db, $nv_Request, $resp;
+
+	$resp['status'] = 1;
+	$resp['danhsachthanhvien'] = danhsachthanhvien();
+}
+
+function chuyentrangchunuoi() {
+	global $db, $nv_Request, $resp;
+
+	$resp['status'] = 1;
+	$resp['danhsachxetduyet'] = danhsachxetduyet();
 }
 
 function xoakichhoatthanhvien() {

@@ -65,12 +65,16 @@ function danhsachgiong() {
 }
 
 function danhsachthanhvien() {
-  global $db, $user_info;
+  global $db, $user_info, $nv_Request;
 
   $xtpl = new XTemplate("danhsachthanhvien.tpl", PATH ."/thanhvien/");
+  $trangnhanvien = $nv_Request->get_string("trangnhanvien", "post", 1);
 
-  $sql = "select * from ". PREFIX ."_users where level = 1 order by userid desc";
+  $sql = "select * from ". PREFIX ."_users where level = 1 order by userid desc limit ". GIOIHAN ." offset ". ($trangnhanvien - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
+
+  $sql = "select userid from ". PREFIX ."_users where level = 1 order by userid desc";
+  $tong = count($db->all($sql));
 
   $quyen = [0 => 'Thành viên', 'Nhân viên', 'Quản lý'];
   // nếu userid == 1, toàn quyền
@@ -97,17 +101,23 @@ function danhsachthanhvien() {
     $xtpl->parse("main.user");
   }
   if (!count($danhsach)) $xtpl->parse('main.trong');
+  $xtpl->assign('phantrang', phantrang($trangnhanvien, $tong, GIOIHAN, 'dentrangnhanvien'));
   $xtpl->parse("main");
   return $xtpl->text();
 }
 
 function danhsachxetduyet() {
-  global $db;
+  global $db, $nv_Request;
 
   $xtpl = new XTemplate("danhsachxetduyet.tpl", PATH ."/thanhvien/");
 
-  $sql = "select * from ". PREFIX ."_users where level = 0 order by userid desc";
+  $trangchunuoi = $nv_Request->get_string("trangchunuoi", "post", 1);
+
+  $sql = "select * from ". PREFIX ."_users where level = 0 order by userid desc limit ". GIOIHAN ." offset ". ($trangchunuoi - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
+
+  $sql = "select userid from ". PREFIX ."_users where level = 1 order by userid desc";
+  $tong = count($db->all($sql));
 
   foreach ($danhsach as $user) {
     $xtpl->assign('userid', $user['userid']);
@@ -124,6 +134,7 @@ function danhsachxetduyet() {
     $xtpl->parse("main.user");
   }
   if (!count($danhsach)) $xtpl->parse('main.trong');
+  $xtpl->assign('phantrang', phantrang($trangchunuoi, $tong, GIOIHAN, 'dentrangchunuoi'));
   $xtpl->parse("main");
   return $xtpl->text();
 }
@@ -151,6 +162,13 @@ function danhsachtiemphong() {
   // kiểm tra quyền, nếu là quyền nhân viên thì lọc theo danh sách
   $phanquyen = kiemtraphanquyen();
   $xtra = [];
+  
+  $phanquyen = kiemtraphanquyen();
+  $danhsachphuong = kiemtraphanquyenphuong($phanquyen);
+  if ($phanquyen == 2) $xtra []= 1;
+  else if (empty($danhsachphuong)) $xtra []= 0;
+  else $xtra [] = "(e.id in (". implode(", ", $danhsachphuong) .") )";
+
   if ($phanquyen == 1) {
     $sql = "select * from ". PREFIX ."_phanquyen_chitiet where userid = $user_info[userid]";
     $danhsachphuong = $db->arr($sql, 'idphuong');
@@ -229,7 +247,7 @@ function danhsachxuphat() {
   $xtra = [];
   if (!empty($truongloc['tenchu'])) $xtra []= " c.ten like '%$truongloc[tenchu]%' ";
   if (!empty($truongloc['dienthoai'])) $xtra []= " c.dienthoai like '%$truongloc[dienthoai]%' ";
-  if (!empty($truongloc['phuong'])) $xtra []= " e.ten like '%$truongloc[phuong]%' ";
+  if (!empty($truongloc['phuong'])) $xtra []= " e.id = '$truongloc[phuong]' ";
   if (!empty($truongloc['noidung'])) $xtra []= " a.noidung like '%$truongloc[noidung]%' ";
   if (!empty($truongloc['dongphat'])) {
     $truongloc['dongphat'] --;
@@ -318,6 +336,13 @@ function danhsachthongke() {
   // bộ lọc: tên chủ, điện thoại, tên thú cưng, micro, giống, loài, phường, thời gian tiêm
   $hantiemphong = time() - 365.25 * 60 * 60 * 24;
   $xtra = [];
+
+  $phanquyen = kiemtraphanquyen();
+  $danhsachphuong = kiemtraphanquyenphuong($phanquyen);
+  if ($phanquyen == 2) $xtra []= 1;
+  else if (empty($danhsachphuong)) $xtra []= 0;
+  else $xtra [] = "(e.id in (". implode(", ", $danhsachphuong) .") )";
+
   if (!empty($truongloc['tenchu'])) $xtra []= " c.ten like '%$truongloc[tenchu]%' ";
   if (!empty($truongloc['dienthoai'])) $xtra []= " c.dienthoai like '%$truongloc[dienthoai]%' ";
   if (!empty($truongloc['thucung'])) $xtra []= " b.ten like '%$truongloc[thucung]%' ";
@@ -372,22 +397,27 @@ function dulieuthongke() {
   global $db, $nv_Request;
 
   $xtpl = new XTemplate("dulieuthongke.tpl", PATH ."/thongke/");
+
+  $phanquyen = kiemtraphanquyen();
+  $danhsachphuong = kiemtraphanquyenphuong($phanquyen);
+  if ($phanquyen == 2) $x = 1;
+  else if (empty($danhsachphuong)) $x = 0;
+  else $x = "(c.id in (". implode(", ", $danhsachphuong) .") )";
+
   $tongthucung = 0;
-  $sql = "select a.id from ". PREFIX ."_tiemphong_thucung a inner join ". PREFIX ."_tiemphong_chuho b on a.idchu = b.id inner join ". PREFIX ."_quanly_danhmuc_phuong c on b.idphuong = c.id";
+  $sql = "select a.id from ". PREFIX ."_tiemphong_thucung a inner join ". PREFIX ."_tiemphong_chuho b on a.idchu = b.id inner join ". PREFIX ."_quanly_danhmuc_phuong c on b.idphuong = c.id and $x and a.ngaymat = 0";
   $danhsach = $db->all($sql);
   foreach ($danhsach as $thucung) {
     $tongthucung ++;
   }
 
-  $sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where kichhoat = 1";
-  $danhsach = $db->all($sql);
   $hantiemphong = time() - 365.25 * 60 * 60 * 24;
 
-  foreach ($danhsach as $phuong) {
+  foreach ($danhsachphuong as $tenphuong => $idphuong) {
     $datiemphong = 0;
     $tungtiemphong = 0;
     $chuatiemphong = 0;
-    $sql = "select b.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id where c.idphuong = $phuong[id] and ngaymat = 0";
+    $sql = "select b.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id where c.idphuong = $idphuong and ngaymat = 0";
     $danhsachthucung = $db->all($sql);
 
     foreach ($danhsachthucung as $thucung) {
@@ -399,7 +429,7 @@ function dulieuthongke() {
       else $chuatiemphong ++;
     }
 
-    $xtpl->assign('tenphuong', $phuong['ten']);
+    $xtpl->assign('tenphuong', $tenphuong);
     $xtpl->assign('datiemphong', $datiemphong);
     $xtpl->assign('tungtiemphong', $tungtiemphong);
     $xtpl->assign('chuatiemphong', $chuatiemphong);
@@ -476,6 +506,15 @@ function danhsachduyet() {
 
   $idchu = $user_info["userid"];
   $xtpl = new XTemplate("danhsachxetduyet.tpl", PATH . '/xetduyet/');
+
+  $phanquyen = kiemtraphanquyen();
+  $danhsachphuong = kiemtraphanquyenphuong($phanquyen);
+  if ($phanquyen == 2) $x = 1;
+  else if (empty($danhsachphuong)) $x = 0;
+  else $x = "(c.id in (". implode(", ", $danhsachphuong) .") )";
+
+  $sql = "select * from ". PREFIX ."_quanly_xetduyet a inner join ". PREFIX ."_tiemphong_chunuoi c on a.idchu = c.id where a.trangthai = 0 order by a.thoigian asc";
+  $danhsach = $db->all($sql);
 
   $xtpl->assign('phantrang', phantrang($truongloc['trang'], 0, GIOIHAN, 'dentrang'));
   $xtpl->parse("main.trong");

@@ -65,7 +65,7 @@
             <div class="form-group"> <b>Chủ hộ</b> </div>
             <div class="form-group goiy">
               <input type="text" class="form-control" id="chuho"
-                placeholder="Tìm kiếm chủ hộ theo tên, địa chỉ, số điện thoại">
+                placeholder="Tìm kiếm chủ hộ theo Microchip, tên chủ, địa chỉ, số điện thoại">
               <div class="danhsachgoiy" id="goiychuho"></div>
             </div>
 
@@ -168,7 +168,12 @@
             <div class="form-group row">
               <div class="col-xs-6"> Phường </div>
               <div class="col-xs-18">
-                <input type="text" class="form-control" id="timkiem-phuong" placeholder="Phường">
+                <select class="form-control" id="timkiem-phuong">
+                  <option value="0"> --- </option>
+                  <!-- BEGIN: timkiemphuong -->
+                  <option value="{idphuong}"> {tenphuong} </option>
+                  <!-- END: timkiemphuong -->
+                </select>
               </div>
             </div>
 
@@ -240,7 +245,7 @@
         vremind.install('#chuho', '#goiychuho', (key) => {
           return new Promise(resolve => {
             vhttp.post('/quanly/api/', {
-              action: 'timkiemchuho',
+              action: 'timkiemchuhomorong',
               tukhoa: key,
             }).then((phanhoi) => {
               resolve(phanhoi.danhsach)

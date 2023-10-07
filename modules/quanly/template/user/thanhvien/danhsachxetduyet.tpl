@@ -28,4 +28,5 @@
   </tr>
   <!-- END: trong -->
 </table>
+{phantrang}
 <!-- END: main -->
