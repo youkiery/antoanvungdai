@@ -9,25 +9,27 @@
     <!-- BEGIN: thanhvien -->
     <div> <a class="btn btn-info btn-block" href="/quanly/nguoidung" style="margin-bottom: 5px;"> Thông tin người dùng </a> </div>
     <!-- END: thanhvien -->
-    <div> <a href="/dashboard/logout" class="btn btn-danger btn-block"> Đăng xuất </a> </div>
+    <div> <a href="/users/logout" class="btn btn-danger btn-block"> Đăng xuất </a> </div>
   </div>
   <div class="pw-menu-group">
     <div class="pw-menu-header">
       Quản lý
     </div>
     <div class="pw-menu-content">
-      <a href="/quanly/" class="pw-menu-item {main}"> Thông tin chung </a>
-
       <!-- BEGIN: nhanvien -->
+      <a href="/quanly/" class="pw-menu-item"> Thông tin chung </a>
       <a href="/quanly/tiemphong" class="pw-menu-item"> Tiêm phòng</a>
+      <a href="/quanly/thongke" class="pw-menu-item"> Danh sách hộ nuôi </a>
+      <a href="/quanly/xuphat" class="pw-menu-item"> Xử phạt </a>
+      <a href="/quanly/xetduyet" class="pw-menu-item"> Xét duyệt nội dung </a>
       <a href="/dispatch" class="pw-menu-item active"> Quản lý văn bản </a>
       <!-- END: nhanvien -->
-
+      <!-- BEGIN: thanhvien2 -->
+      <a href="/quanly/vatnuoi" class="pw-menu-item {vatnuoi}"> Vật nuôi</a>
+      <!-- END: thanhvien2 -->
 
       <!-- BEGIN: quanly -->
       <a href="/quanly/danhmuc" class="pw-menu-item"> Danh mục </a>
-      <a href="/quanly/thongke" class="pw-menu-item"> Thống kê </a>
-      <a href="/quanly/xuphat" class="pw-menu-item"> Xử phạt </a>
       <a href="/quanly/thanhvien" class="pw-menu-item"> Quản lý tài khoản </a>
       <!-- END: quanly -->
 

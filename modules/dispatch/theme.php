@@ -226,7 +226,7 @@ function sidemenu() {
 
   $xtpl = new XTemplate("sidemenu.tpl", PATH);
   $phanquyen = kiemtraphanquyen();
-
+  $danhsachchucnang = ['thanhvien', 'tiemphong', 'thongke', 'nguoidung', 'danhmuc', 'xuphat', 'vatnuoi', 'xetduyet'];
   $xtpl->assign('banner', laybanner());
   
   $sql = "select * from ". PREFIX ."_users where userid = $user_info[userid]";
@@ -240,6 +240,7 @@ function sidemenu() {
   $xtpl->assign('chucvu', $quyen[$quyennhanvien]);
 
   if ($phanquyen >= 0) $xtpl->parse("main.thanhvien");
+  if ($phanquyen == 0) $xtpl->parse("main.thanhvien2");
   if ($phanquyen >= 1) $xtpl->parse("main.nhanvien");
   if ($phanquyen == 2) $xtpl->parse("main.quanly");
   $xtpl->parse('main');

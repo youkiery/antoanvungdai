@@ -413,11 +413,14 @@ function dulieuthongke() {
 
   $hantiemphong = time() - 365.25 * 60 * 60 * 24;
 
+  // echo json_encode($danhsachphuong);die();
+
   foreach ($danhsachphuong as $tenphuong => $idphuong) {
     $datiemphong = 0;
     $tungtiemphong = 0;
     $chuatiemphong = 0;
     $sql = "select b.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id where c.idphuong = $idphuong and ngaymat = 0";
+    // die($sql);
     $danhsachthucung = $db->all($sql);
 
     foreach ($danhsachthucung as $thucung) {
@@ -513,7 +516,7 @@ function danhsachduyet() {
   else if (empty($danhsachphuong)) $x = 0;
   else $x = "(c.id in (". implode(", ", $danhsachphuong) .") )";
 
-  $sql = "select * from ". PREFIX ."_quanly_xetduyet a inner join ". PREFIX ."_tiemphong_chunuoi c on a.idchu = c.id where a.trangthai = 0 order by a.thoigian asc";
+  $sql = "select * from ". PREFIX ."_quanly_xetduyet a inner join ". PREFIX ."_tiemphong_chuho c on a.idchu = c.id where a.trangthai = 0 order by a.thoigian asc";
   $danhsach = $db->all($sql);
 
   $xtpl->assign('phantrang', phantrang($truongloc['trang'], 0, GIOIHAN, 'dentrang'));
@@ -527,7 +530,7 @@ function sidemenu() {
 
   $xtpl = new XTemplate("sidemenu.tpl", PATH);
   $phanquyen = kiemtraphanquyen();
-  $danhsachchucnang = ['thanhvien', 'tiemphong', 'thongke', 'nguoidung', 'danhmuc', 'xuphat', 'vatnuoi', 'xetduyet'];
+  $danhsachchucnang = ['thanhvien', 'tiemphong', 'thongke', 'nguoidung', 'danhmuc', 'xuphat', 'vatnuoi', 'xetduyet', 'dispatch'];
   if (in_array($op, $danhsachchucnang) !== false) $chucnang = $op;
   else $chucnang = 'main';
   $xtpl->assign($chucnang, 'active');
