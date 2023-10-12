@@ -413,14 +413,11 @@ function dulieuthongke() {
 
   $hantiemphong = time() - 365.25 * 60 * 60 * 24;
 
-  // echo json_encode($danhsachphuong);die();
-
   foreach ($danhsachphuong as $tenphuong => $idphuong) {
     $datiemphong = 0;
     $tungtiemphong = 0;
     $chuatiemphong = 0;
     $sql = "select b.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id where c.idphuong = $idphuong and ngaymat = 0";
-    // die($sql);
     $danhsachthucung = $db->all($sql);
 
     foreach ($danhsachthucung as $thucung) {
@@ -504,6 +501,7 @@ function danhsachvatnuoi() {
 function danhsachduyet() {
   global $db, $nv_Request, $user_info, $op;
 
+  $truongloc = $nv_Request->get_array("truongloc", "post");
   if (empty($truongloc)) $truongloc = [];
   if (empty($truongloc["trang"])) $truongloc["trang"] = 1;
 
@@ -516,11 +514,22 @@ function danhsachduyet() {
   else if (empty($danhsachphuong)) $x = 0;
   else $x = "(c.id in (". implode(", ", $danhsachphuong) .") )";
 
-  $sql = "select * from ". PREFIX ."_quanly_xetduyet a inner join ". PREFIX ."_tiemphong_chuho c on a.idchu = c.id where a.trangthai = 0 order by a.thoigian asc";
+  $sql = "select a.id, a.noidung, c.ten, c.dienthoai, c.diachi from ". PREFIX ."_quanly_xetduyet a inner join ". PREFIX ."_tiemphong_chuho c on a.idchu = c.id where a.trangthai = 0 order by a.thoigian asc limit ". GIOIHAN . " offset ". ($truongloc["trang"] - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
 
-  $xtpl->assign('phantrang', phantrang($truongloc['trang'], 0, GIOIHAN, 'dentrang'));
-  $xtpl->parse("main.trong");
+  $sql = "select a.id from ". PREFIX ."_quanly_xetduyet a inner join ". PREFIX ."_tiemphong_chuho c on a.idchu = c.id where a.trangthai = 0";
+  $tong = count($db->arr($sql, "id"));
+
+  foreach ($danhsach as $xetduyet) {
+    $xtpl->assign("chuho", $xetduyet["ten"]);
+    $xtpl->assign("dienthoai", $xetduyet["dienthoai"]);
+    $xtpl->assign("diachi", $xetduyet["diachi"]);
+    $xtpl->assign("noidung", $xetduyet["noidung"]);
+    $xtpl->parse("main.danhsach");
+  }
+
+  if (!count($danhsach)) $xtpl->parse("main.trong");
+  $xtpl->assign('phantrang', phantrang($truongloc['trang'], $tong, GIOIHAN, 'dentrang'));
   $xtpl->parse("main");
   return $xtpl->text();
 }

@@ -28,7 +28,7 @@ function laybanner() {
 function kiemtraphanquyenphuong($phanquyen = 0) {
   global $db, $user_info;
 
-  if ($phanquyen == 2) $sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong order by ten asc";
+  if ($phanquyen == 2) $sql = "select id as idphuong, ten from ". PREFIX ."_quanly_danhmuc_phuong order by ten asc";
   else $sql = "select a.idphuong, b.ten from ". PREFIX ."_phanquyen_chitiet a inner join ". PREFIX ."_quanly_danhmuc_phuong b on a.idphuong = b.id where a.userid = $user_info[userid] order by b.ten asc";
   return $db->obj($sql, "ten", "idphuong");
 }

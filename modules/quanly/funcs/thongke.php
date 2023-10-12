@@ -21,7 +21,7 @@ else {
 	$xtpl->assign('danhsachthongke', danhsachthongke());
 
 	$phanquyen = kiemtraphanquyen();
-	$danhsachphuong = kiemtraphanquyenphuong();
+	$danhsachphuong = kiemtraphanquyenphuong($phanquyen);
 
 	foreach ($danhsachphuong as $tenphuong => $idphuong) {
 		$xtpl->assign('idphuong', $idphuong);

@@ -397,6 +397,13 @@ function chuyentrangtiemphong() {
 	$resp['danhsachtiemphong'] = danhsachtiemphong();
 }
 
+function chuyentrangxetduyet() {
+	global $db, $nv_Request, $resp;
+
+	$resp['status'] = 1;
+	$resp['danhsachduyet'] = danhsachduyet();
+}
+
 function chuyentrangduyet() {
 	global $db, $nv_Request, $resp;
 
@@ -606,7 +613,7 @@ function doimatkhau() {
 }
 
 function importtiemphong() {
-  global $db, $nv_Request, $resp, $_FILES;
+  global $db, $nv_Request, $resp, $_FILES, $user_info;
 
 	$x = array();
 	$xr = array(0 => 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', 'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'HI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO');
@@ -620,6 +627,9 @@ function importtiemphong() {
   $objReader = PHPExcel_IOFactory::createReader($inputFileType);
   $objReader->setReadDataOnly(true);
   $objPHPExcel = $objReader->load($raw);
+
+	$phanquyen = kiemtraphanquyen();
+	$danhsachphuong = kiemtraphanquyenphuong($phanquyen);
   
   $sheet = $objPHPExcel->getSheet(0); 
   $tongdong = intval($sheet->getHighestRow()); 
@@ -644,6 +654,15 @@ function importtiemphong() {
     return 0;
   }
 
+	$tatcaphuong = [];
+	foreach ($danhsachphuong as $tenphuong => $idphuong) {
+		$tatcaphuong []= $tenphuong;
+	}
+	$tatcaphuong = implode(", ", $tatcaphuong);
+
+	$noidung = "$user_info[first_name] ($tatcaphuong) đã import dữ liệu ";
+	$thoigian = time();
+
   $loi = [];
   for ($i = 2; $i <= $tongdong; $i ++) {
     $dulieu = [];
@@ -661,6 +680,9 @@ function importtiemphong() {
 		else {
 			$dulieu['idphuong'] = $phuong['id'];
 			$idchuho = kiemtrachuho($dulieu);
+
+			if (empty($danhsachphuong[$phuong["ten"]])) $xetduyet = $phuong["id"];
+			else $xetduyet = 0;
 
 			// kiểm tra thú cưng, nếu chưa có micro thì thêm
 			$dulieu['idgiong'] = kiemtragiongloai($dulieu);
@@ -683,6 +705,11 @@ function importtiemphong() {
 					}
 					else {
 						$sql = "insert into ". PREFIX ."_tiemphong (idthucung, thoigiantiem, thoigiannhac) values ($idthucung, $thoigiantiem, $thoigiannhac)";
+						$db->query($sql);
+					}
+
+					if ($xetduyet) {
+						$sql = "insert into ". PREFIX ."_quanly_xetduyet (loaixetduyet, idnguoitao, idchu, idthucung, noidung, thoigian, trangthai) values(6, $user_info[userid], $idchuho, $idthucung, '$noidung $phuong[ten]', $thoigian, 0)";
 						$db->query($sql);
 					}
 				}

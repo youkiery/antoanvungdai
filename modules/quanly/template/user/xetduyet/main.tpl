@@ -12,13 +12,18 @@
         trang: 1
       }
 
+      function laytruongloc(trang = 1) {
+        if (trang) global.trang = trang
+        return global
+      }
+
       function dentrang(trang) {
         vhttp.post('/quanly/api/', {
           action: 'chuyentrangxetduyet',
-          truongloc: global
+          truongloc: laytruongloc(trang)
         }).then((resp) => {
-          $('#danhsachxetduyet').html(resp.danhsachxetduyet)
           global.trang = trang
+          $('#danhsachxetduyet').html(resp.danhsachduyet)
         }, (error) => { })
       }
     </script>

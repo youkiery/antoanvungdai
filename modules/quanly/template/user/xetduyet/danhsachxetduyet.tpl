@@ -9,6 +9,15 @@
       <th></th>
     </tr>
   </thead>
+  <!-- BEGIN: danhsach -->
+  <tr>
+    <td> {chuho} </td>
+    <td> {dienthoai} </td>
+    <td> {diachi} </td>
+    <td> {noidung} </td>
+    <td>  </td>
+  </tr>
+  <!-- END: danhsach -->
   <!-- BEGIN: trong -->
   <tr>
     <td colspan="9" class="text-center"> Không có dữ liệu </td>
