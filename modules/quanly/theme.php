@@ -453,12 +453,12 @@ function danhsachvatnuoi() {
   $idchu = $user_info["userid"];
   $xtpl = new XTemplate("danhsachvatnuoi.tpl", PATH . '/vatnuoi/');
 
-  $sql = "select * from pet_users_info where userid = $idchu";
+  $sql = "select * from ". PREFIX ."_users_info where userid = $idchu";
   $chuho = $db->fetch($sql);
   if (empty($chuho)) $x = 0;
   else $x = 1;
 
-  $sql = "select * from pet_tiemphong_thucung where idchu in (select id as idchu from pet_tiemphong_chuho where dienthoai = '$chuho[dienthoai]' and $x)";
+  $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu in (select id as idchu from ". PREFIX ."_tiemphong_chuho where dienthoai = '$chuho[dienthoai]' and $x)";
   $danhsachthucung = $db->all($sql);
   $homnay = strtotime(date("Y/m/d"));
 
@@ -521,6 +521,7 @@ function danhsachduyet() {
   $tong = count($db->arr($sql, "id"));
 
   foreach ($danhsach as $xetduyet) {
+    $xtpl->assign("id", $xetduyet["id"]);
     $xtpl->assign("chuho", $xetduyet["ten"]);
     $xtpl->assign("dienthoai", $xetduyet["dienthoai"]);
     $xtpl->assign("diachi", $xetduyet["diachi"]);

@@ -11,7 +11,7 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "Xét duyệt chủ nuôi";
+$page_title = "Xét duyệt nội dung";
 $xtpl = new XTemplate("main.tpl", PATH .'/xetduyet/');
 $xtpl->assign('sidemenu', sidemenu());
 

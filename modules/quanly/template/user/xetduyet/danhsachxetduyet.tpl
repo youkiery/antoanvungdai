@@ -15,7 +15,10 @@
     <td> {dienthoai} </td>
     <td> {diachi} </td>
     <td> {noidung} </td>
-    <td>  </td>
+    <td> 
+      <button class="btn btn-info btn-xs" onclick="xacnhanxetduyet({id})"> xác nhận </button>  
+      <button class="btn btn-warning btn-xs" onclick="huyxetduyet({id})"> huỷ </button>  
+    </td>
   </tr>
   <!-- END: danhsach -->
   <!-- BEGIN: trong -->

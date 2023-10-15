@@ -601,11 +601,11 @@ function doimatkhau() {
 	$dulieu = $nv_Request->get_array('dulieu', 'post', '');
 	$matkhaumoi = $crypt->hash_password($dulieu["matkhaumoi"], $global_config['hashprefix']);
 
-	$sql = "select * from pet_users where userid = $userid";
+	$sql = "select * from ". PREFIX ."_users where userid = $userid";
 	$nguoidung = $db->fetch($sql);
 	if (!$crypt->validate_password($dulieu["matkhaucu"], $nguoidung['password'])) $resp["messenger"] = "Sai mật khẩu";
 	else {
-		$sql = "update pet_users set `password` = '$matkhaumoi' where userid = $userid";
+		$sql = "update ". PREFIX ."_users set `password` = '$matkhaumoi' where userid = $userid";
 		$db->query($sql);
 		$resp["messenger"] = "Đã đổi mật khẩu";
 		$resp['status'] = 1;
@@ -681,8 +681,10 @@ function importtiemphong() {
 			$dulieu['idphuong'] = $phuong['id'];
 			$idchuho = kiemtrachuho($dulieu);
 
-			if (empty($danhsachphuong[$phuong["ten"]])) $xetduyet = $phuong["id"];
-			else $xetduyet = 0;
+			if (empty($danhsachphuong[$phuong["ten"]])) {
+				$loi []= "Dòng $i không có quyền thêm thú nuôi thuộc phường $phuong[ten]";
+				continue;
+			}
 
 			// kiểm tra thú cưng, nếu chưa có micro thì thêm
 			$dulieu['idgiong'] = kiemtragiongloai($dulieu);
@@ -705,11 +707,6 @@ function importtiemphong() {
 					}
 					else {
 						$sql = "insert into ". PREFIX ."_tiemphong (idthucung, thoigiantiem, thoigiannhac) values ($idthucung, $thoigiantiem, $thoigiannhac)";
-						$db->query($sql);
-					}
-
-					if ($xetduyet) {
-						$sql = "insert into ". PREFIX ."_quanly_xetduyet (loaixetduyet, idnguoitao, idchu, idthucung, noidung, thoigian, trangthai) values(6, $user_info[userid], $idchuho, $idthucung, '$noidung $phuong[ten]', $thoigian, 0)";
 						$db->query($sql);
 					}
 				}
@@ -787,5 +784,51 @@ function capnhatthucung() {
 	
 	$resp['chitiet'] = danhsachchitietchunuoi();
 	$resp['danhsachthongke'] = danhsachthongke();
+	$resp['status'] = 1;
+}
+
+function huyxetduyet() {
+  global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$sql = "update ". PREFIX ."_quanly_xetduyet set trangthai = 1 where id = $id";
+	$db->query($sql);
+
+	$resp['danhsachduyet'] = danhsachduyet();
+	$resp['status'] = 1;
+}
+
+function xacnhanxetduyet() {
+  global $db, $nv_Request, $resp;
+
+	$id = $nv_Request->get_string('id', 'post', '0');
+	$sql = "select * from ". PREFIX ."_quanly_xetduyet where id = $id";
+	$thongtinxetduyet = $db->fetch($sql);
+
+	switch ($thongtinxetduyet["loaixetduyet"]) {
+		case '1':
+			// cập nhật thông tin chủ nuôi
+			$dulieu = json_decode($thongtinxetduyet["dulieu"]);
+			foreach ($dulieu as $tentruong => $danhsachthaydoi) {
+				foreach ($danhsachthaydoi as $giatricu => $giatrimoi) {
+					$sql = "update ". PREFIX ."_users_info set $tentruong = '$giatrimoi' where userid = $thongtinxetduyet[idchu]";
+					$db->query($sql);
+				}
+			}
+			$sql = "update ". PREFIX ."_quanly_xetduyet set trangthai = 1 where id = $id";
+			$db->query($sql);
+			break;
+		case '2':
+			// duyệt vật nuôi
+			break;
+		case '3':
+			// xác nhận tiêm phòng
+			break;
+		case '4':
+			// xác nhận bắn chip
+			break;
+	}
+
+	$resp['danhsachduyet'] = danhsachduyet();
 	$resp['status'] = 1;
 }
