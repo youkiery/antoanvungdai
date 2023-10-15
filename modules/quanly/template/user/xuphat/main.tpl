@@ -284,8 +284,8 @@
         vhttp.post('/quanly/api/', {
           action: 'timkiemxuphat',
           truongloc: thongtintruongloc(trang),
-        }).then((resp) => {
-          $('#danhsach').html(resp.danhsachxuphat)
+        }).then((phanhoi) => {
+          $('#danhsach').html(phanhoi.danhsachxuphat)
           global.trang = 1
           keolen()
           $('#modal-timkiem').modal('hide')
@@ -296,8 +296,8 @@
         vhttp.post('/quanly/api/', {
           action: 'chitietxuphat',
           idchu: idchu,
-        }).then((resp) => {
-          $('#chitiet').html(resp.chitiet)
+        }).then((phanhoi) => {
+          $('#chitiet').html(phanhoi.chitiet)
           $('#modal-chitiet').modal('show')
         }, (error) => { })
       }
@@ -456,8 +456,8 @@
             url: '/quanly/api/',
             dataType: 'text',
             cache: false,
-            success: function (php_script_response) {
-              json = JSON.parse(php_script_response)
+            success: function (php_script_phanhoionse) {
+              json = JSON.parse(php_script_phanhoionse)
               resolve(json.url)
             },
           })

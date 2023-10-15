@@ -51,8 +51,8 @@
     vhttp.post('/admin/index.php?language=vi&nv=danhsach&op=api', {
       action: 'themphuong',
       tenphuong: $('#ten-phuong').val()
-    }).then((resp) => {
-      $('#noidung').html(resp.danhsach)
+    }).then((phanhoi) => {
+      $('#noidung').html(phanhoi.danhsach)
       $('#modal-them-phuong').modal('hide')
     }, (error) => { })
   }

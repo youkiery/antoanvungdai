@@ -341,7 +341,7 @@ function timkiemthucung() {
 
 	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
 	$idchu = $nv_Request->get_string('idchu', 'post', '0');
-	$sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $idchu and (micro like '%$tukhoa%' or ten like '%$tukhoa%') and xacnhan = 1 order by id asc limit ". GIOIHAN;
+	$sql = "select * from ". PREFIX ."_tiemphong_thucung where ". ($idchu > 0 ? "idchu = $idchu and ": "") ." (micro like '%$tukhoa%' or ten like '%$tukhoa%') and xacnhan = 1 order by id asc limit ". GIOIHAN;
 	$danhsach = $db->all($sql);
   $xtpl = new XTemplate('goiythucung.tpl', PATH .'/tiemphong/');
 
@@ -817,7 +817,7 @@ function xacnhanxetduyet() {
 			$db->query($sql);
 			break;
 		case '2':
-			// duyệt vật nuôi
+			// duyệt thêm vật nuôi
 			$sql = "update ". PREFIX ."_tiemphong_thucung set xacnhan = 1 where id = $thongtinxetduyet[idthucung]";
 			$db->query($sql);
 
@@ -825,9 +825,19 @@ function xacnhanxetduyet() {
 			$db->query($sql);
 			break;
 		case '3':
-			// xác nhận tiêm phòng
+			// duyệt cập nhật vật nuôi
+			$dulieu = json_decode($thongtinxetduyet["dulieu"]);
+			foreach ($dulieu as $tentruong => $giatrimoi) {
+				$sql = "update ". PREFIX ."_tiemphong_thucung set $tentruong = '$giatrimoi' where id = $thongtinxetduyet[idthucung]";
+				$db->query($sql);
+			}
+			$sql = "update ". PREFIX ."_quanly_xetduyet set trangthai = 1 where id = $id";
+			$db->query($sql);
 			break;
 		case '4':
+			// xác nhận tiêm phòng
+			break;
+		case '5':
 			// xác nhận bắn chip
 			break;
 	}

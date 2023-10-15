@@ -22,7 +22,7 @@
   <a class="btn btn-warning" href="/users/logout"> Đăng xuất </a>
   <!-- END: khach -->
 </div>
-<div class="banner"> <img class="img-responsive" src="{banner}"> </div>
+<div class="banner"> <img class="img-phanhoionsive" src="{banner}"> </div>
 <div class="main-search">
   <form onsubmit="return timkiem(event)">
     <div class="input-border">
@@ -47,8 +47,8 @@
       action: 'timkiem',
       trang: 1,
       tukhoa: $('#tukhoa').val()
-    }).then((resp) => {
-      $('#content').html(resp.danhsach)
+    }).then((phanhoi) => {
+      $('#content').html(phanhoi.danhsach)
       global.trang = 1
       keolen()
     }, (error) => { })
@@ -60,8 +60,8 @@
       action: 'timkiem',
       trang: trang,
       tukhoa: $('#tukhoa').val()
-    }).then((resp) => {
-      $('#content').html(resp.danhsach)
+    }).then((phanhoi) => {
+      $('#content').html(phanhoi.danhsach)
       global.trang = trang
       keolen()
     }, (error) => { })
@@ -71,8 +71,8 @@
     vhttp.post('/danhsach/api/', {
       action: 'laychitiet',
       id: id,
-    }).then((resp) => {
-      $('#chitiet').html(resp.chitiet)
+    }).then((phanhoi) => {
+      $('#chitiet').html(phanhoi.chitiet)
       $('#modal-chitiet').modal('show')
     }, (error) => { })
   }

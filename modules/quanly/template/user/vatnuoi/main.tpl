@@ -146,6 +146,7 @@
     <script>
       let global = {
         trang: 1,
+        id: 0,
         idchu: '{idchu}'
       }
       let thongtin = {
@@ -230,6 +231,7 @@
 
       function xacnhanthemtiemphong() {
         var dulieu = {
+          id: global.id,
           tenthucung: $('#tenthucung').val(),
           micro: $('#micro').val(),
           loai: $('#loai').val(),
@@ -255,17 +257,6 @@
         }
       }
 
-      function chonthucung(idthucung, tenthucung, micro, giong, loai, tenchu, diachi, dienthoai) {
-        global.idthucung = idthucung
-        $('#tenthucung').val(tenthucung)
-        $('#micro').val(micro)
-        $('#giong').val(giong)
-        $('#loai').val(loai)
-        $('#tenchu').val(tenchu)
-        $('#diachi').val(diachi)
-        $('#dienthoai').val(dienthoai)
-      }
-
       function hienthinut() {
         if (global.id) {
           $('.them').hide()
@@ -285,6 +276,26 @@
         $("#modal-thongtin").modal("show")
       }
 
+      function chitiet(id) {
+        vhttp.post('/quanly/vatnuoi/', {
+          action: 'laythongtinthucung',
+          id: id
+        }).then((phanhoi) => {
+          global.id = id
+          hienthinut()
+          $('#thucung').val('')
+          $('#tenthucung').val(phanhoi.tenthucung)
+          $('#micro').val(phanhoi.micro)
+          $('#giongloai').val(phanhoi.giongloai)
+          $('#loai').val(phanhoi.loai)
+          $('#giong').val(phanhoi.giong)
+          $('#ngaysinh').val(phanhoi.ngaysinh)
+          vimage.data['hinhanh'] = [phanhoi.hinhanh]
+          vimage.reload('hinhanh')
+          $('#modal-themtiemphong').modal('show')
+        }, (error) => { })
+      }
+
       function xacnhancapnhat() {
         let dulieu = {
           tenchuho: $("#thongtin-tenchuho").val(),
@@ -296,7 +307,7 @@
         vhttp.post('/quanly/vatnuoi/', {
           action: 'capnhatthongtin',
           dulieu: dulieu
-        }).then((resp) => {
+        }).then((phanhoi) => {
           setTimeout(() => {
             window.location.reload()
           }, 1000);
@@ -307,8 +318,8 @@
         vhttp.post('/quanly/vatnuoi/', {
           action: 'chuyentrangvatnuoi',
           truongloc: global
-        }).then((resp) => {
-          $('#danhsachvatnuoi').html(resp.danhsachvatnuoi)
+        }).then((phanhoi) => {
+          $('#danhsachvatnuoi').html(phanhoi.danhsachvatnuoi)
           global.trang = trang
         }, (error) => { })
       }

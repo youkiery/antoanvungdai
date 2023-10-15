@@ -370,8 +370,8 @@
         vhttp.post('/quanly/api/', {
           action: 'chuyentrangtiemphong',
           truongloc: thongtintruongloc(trang),
-        }).then((resp) => {
-          $('#tiemphong').html(resp.danhsachtiemphong)
+        }).then((phanhoi) => {
+          $('#tiemphong').html(phanhoi.danhsachtiemphong)
           $('#modal-timkiem').modal('hide')
           keolen()
           global.trang = trang

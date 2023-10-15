@@ -65,8 +65,8 @@
           action: 'xacnhanxetduyet',
           id: global.id,
           truongloc: laytruongloc()
-        }).then((resp) => {
-          $('#danhsachxetduyet').html(resp.danhsachduyet)
+        }).then((phanhoi) => {
+          $('#danhsachxetduyet').html(phanhoi.danhsachduyet)
           $("#modal-xacnhan").modal("hide")
         }, (error) => { })
       }
@@ -76,8 +76,8 @@
           action: 'huyxetduyet',
           id: global.id,
           truongloc: laytruongloc()
-        }).then((resp) => {
-          $('#danhsachxetduyet').html(resp.danhsachduyet)
+        }).then((phanhoi) => {
+          $('#danhsachxetduyet').html(phanhoi.danhsachduyet)
           $("#modal-xacnhan").modal("hide")
         }, (error) => { })
       }
@@ -86,9 +86,9 @@
         vhttp.post('/quanly/api/', {
           action: 'chuyentrangxetduyet',
           truongloc: laytruongloc(trang)
-        }).then((resp) => {
+        }).then((phanhoi) => {
           global.trang = trang
-          $('#danhsachxetduyet').html(resp.danhsachduyet)
+          $('#danhsachxetduyet').html(phanhoi.danhsachduyet)
         }, (error) => { })
       }
     </script>

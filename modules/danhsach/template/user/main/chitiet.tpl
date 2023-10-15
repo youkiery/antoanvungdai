@@ -1,7 +1,7 @@
 <!-- BEGIN: main -->
 <div class="row">
   <div class="col-xs-12">
-    <img src="{hinhanh}" class="img-responsive">
+    <img src="{hinhanh}" class="img-phanhoionsive">
   </div>
   <div class="col-xs-12">
     <b> Tên thú cưng: </b> {tenthucung} <br>
