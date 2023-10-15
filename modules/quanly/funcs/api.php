@@ -299,7 +299,7 @@ function timkiemchuhomorong() {
 	global $db, $nv_Request, $resp;
 
 	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
-	$sql = "select * from ". PREFIX ."_tiemphong_chuho a inner join ". PREFIX ."_tiemphong_thucung b on a.id = b.idchu where a.ten like '%$tukhoa%' or a.diachi like '%$tukhoa%' or a.dienthoai like '%$tukhoa%' or b.micro like '%$tukhoa%' order by id asc limit ". GIOIHAN;
+	$sql = "select * from ". PREFIX ."_tiemphong_chuho a inner join ". PREFIX ."_tiemphong_thucung b on a.id = b.idchu where (a.ten like '%$tukhoa%' or a.diachi like '%$tukhoa%' or a.dienthoai like '%$tukhoa%' or b.micro like '%$tukhoa%') and b.xacnhan = 1 order by id asc limit ". GIOIHAN;
 	$danhsach = $db->all($sql);
   $xtpl = new XTemplate('goiychuho.tpl', PATH .'/tiemphong/');
 
@@ -341,7 +341,7 @@ function timkiemthucung() {
 
 	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
 	$idchu = $nv_Request->get_string('idchu', 'post', '0');
-	$sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $idchu and (micro like '%$tukhoa%' or ten like '%$tukhoa%') order by id asc limit ". GIOIHAN;
+	$sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $idchu and (micro like '%$tukhoa%' or ten like '%$tukhoa%') and xacnhan = 1 order by id asc limit ". GIOIHAN;
 	$danhsach = $db->all($sql);
   $xtpl = new XTemplate('goiythucung.tpl', PATH .'/tiemphong/');
 
@@ -809,17 +809,20 @@ function xacnhanxetduyet() {
 		case '1':
 			// cập nhật thông tin chủ nuôi
 			$dulieu = json_decode($thongtinxetduyet["dulieu"]);
-			foreach ($dulieu as $tentruong => $danhsachthaydoi) {
-				foreach ($danhsachthaydoi as $giatricu => $giatrimoi) {
-					$sql = "update ". PREFIX ."_users_info set $tentruong = '$giatrimoi' where userid = $thongtinxetduyet[idchu]";
-					$db->query($sql);
-				}
+			foreach ($dulieu as $tentruong => $giatrimoi) {
+				$sql = "update ". PREFIX ."_users_info set $tentruong = '$giatrimoi' where userid = $thongtinxetduyet[idchu]";
+				$db->query($sql);
 			}
 			$sql = "update ". PREFIX ."_quanly_xetduyet set trangthai = 1 where id = $id";
 			$db->query($sql);
 			break;
 		case '2':
 			// duyệt vật nuôi
+			$sql = "update ". PREFIX ."_tiemphong_thucung set xacnhan = 1 where id = $thongtinxetduyet[idthucung]";
+			$db->query($sql);
+
+			$sql = "update ". PREFIX ."_quanly_xetduyet set trangthai = 1 where id = $id";
+			$db->query($sql);
 			break;
 		case '3':
 			// xác nhận tiêm phòng

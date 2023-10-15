@@ -25,7 +25,7 @@ function danhsachphuong() {
     $sql = "select count(id) as tong from ". PREFIX ."_tiemphong_chuho where idphuong = $phuong[id]";
     if (empty($sochuho = $db->fetch($sql))) $sochuho = 0;
     else $sochuho = $sochuho['tong'];
-    $sql = "select count(a.id) as tong from ". PREFIX ."_tiemphong_chuho a inner join ". PREFIX ."_tiemphong_thucung b on a.id = b.idchu where a.idphuong = $phuong[id]";
+    $sql = "select count(a.id) as tong from ". PREFIX ."_tiemphong_chuho a inner join ". PREFIX ."_tiemphong_thucung b on a.id = b.idchu where a.idphuong = $phuong[id] and xacnhan = 1";
     if (empty($sothucung = $db->fetch($sql))) $sothucung = 0;
     else $sothucung = $sothucung['tong'];
 
@@ -49,7 +49,7 @@ function danhsachgiong() {
   $danhsach = $db->all($sql);
 
   foreach ($danhsach as $giong) {
-    $sql = "select count(id) as tong from ". PREFIX ."_tiemphong_thucung where idgiong = $giong[id]";
+    $sql = "select count(id) as tong from ". PREFIX ."_tiemphong_thucung where idgiong = $giong[id] and xacnhan = 1";
     if (empty($sothucung = $db->fetch($sql))) $sothucung = 0;
     else $sothucung = $sothucung['tong'];
 
@@ -202,9 +202,9 @@ function danhsachtiemphong() {
       break;
   }
 
-  if (count($xtra)) $xtra = " where ". implode(' and ', $xtra);
-  else $xtra = '';
-
+  $xtra []= "xacnhan = 1";
+  $xtra = " where ". implode(' and ', $xtra);
+  
   $sql = "select a.id, c.ten as chuho, e.ten as phuong, b.micro, a.thoigiantiem as thoigian from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra order by id desc, thoigiantiem desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
 
@@ -356,9 +356,9 @@ function danhsachthongke() {
     $xtra []= " b.id $ex (select idthucung as id from ". PREFIX ."_tiemphong where thoigiantiem >= $hantiemphong group by idthucung) ";
   }
 
-  if (count($xtra)) $xtra = " where ". implode(' and ', $xtra);
-  else $xtra = '';
-
+  $xtra []= "xacnhan = 1";
+  $xtra = " where ". implode(' and ', $xtra);
+  
   $sql = "select c.ten as chuho, c.diachi, e.ten as phuong, c.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra and b.ngaymat = 0 group by c.id order by c.id desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
 
@@ -368,7 +368,7 @@ function danhsachthongke() {
   foreach ($danhsach as $chuho) {
     $tongtiemphong = 0;
     $datiemphong = 0;
-    $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $chuho[id] and ngaymat = 0";
+    $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $chuho[id] and ngaymat = 0 and xacnhan = 1";
     $danhsachthucung = $db->all($sql);
     foreach ($danhsachthucung as $thucung) {
       $sql = "select * from ". PREFIX ."_tiemphong where idthucung = $thucung[id] and thoigiantiem >= $hantiemphong";
@@ -405,7 +405,7 @@ function dulieuthongke() {
   else $x = "(c.id in (". implode(", ", $danhsachphuong) .") )";
 
   $tongthucung = 0;
-  $sql = "select a.id from ". PREFIX ."_tiemphong_thucung a inner join ". PREFIX ."_tiemphong_chuho b on a.idchu = b.id inner join ". PREFIX ."_quanly_danhmuc_phuong c on b.idphuong = c.id and $x and a.ngaymat = 0";
+  $sql = "select a.id from ". PREFIX ."_tiemphong_thucung a inner join ". PREFIX ."_tiemphong_chuho b on a.idchu = b.id inner join ". PREFIX ."_quanly_danhmuc_phuong c on b.idphuong = c.id and $x and a.ngaymat = 0 and xacnhan = 1";
   $danhsach = $db->all($sql);
   foreach ($danhsach as $thucung) {
     $tongthucung ++;
@@ -417,7 +417,7 @@ function dulieuthongke() {
     $datiemphong = 0;
     $tungtiemphong = 0;
     $chuatiemphong = 0;
-    $sql = "select b.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id where c.idphuong = $idphuong and ngaymat = 0";
+    $sql = "select b.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id where c.idphuong = $idphuong and ngaymat = 0 and xacnhan = 1";
     $danhsachthucung = $db->all($sql);
 
     foreach ($danhsachthucung as $thucung) {
@@ -488,6 +488,8 @@ function danhsachvatnuoi() {
     $xtpl->assign('giongloai', laytengiongloai($thucung['idgiong']));
     $xtpl->assign('micro', $thucung['micro']);
     $xtpl->assign('tiemcuoi', $tiemcuoi);
+    if ($thucung["xacnhan"]) $xtpl->assign('choxacnhan', "");
+    else $xtpl->assign('choxacnhan', "(chờ xét duyệt)");
     $xtpl->assign('tiemphong', $tiemphong);
     $xtpl->assign('color', $color);
     $xtpl->parse("main.thucung");
@@ -625,7 +627,7 @@ function danhsachchitietchunuoi() {
   global $db, $nv_Request;
 
   $idchu = $nv_Request->get_string("idchu", "post");
-	$sql = "select a.*, b.giong, b.loai from ". PREFIX ."_tiemphong_thucung a inner join ". PREFIX ."_quanly_danhmuc_giong b on a.idgiong = b.id where idchu = $idchu and ngaymat = 0";
+	$sql = "select a.*, b.giong, b.loai from ". PREFIX ."_tiemphong_thucung a inner join ". PREFIX ."_quanly_danhmuc_giong b on a.idgiong = b.id where idchu = $idchu and ngaymat = 0 and xacnhan = 1";
 	$danhsachthucung = $db->all($sql);
   $hantiemphong = time() - 365.25 * 60 * 60 * 24;
 

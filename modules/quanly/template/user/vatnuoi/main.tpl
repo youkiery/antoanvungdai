@@ -57,7 +57,6 @@
       </div>
     </div>
 
-
     <div id="modal-themtiemphong" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -134,10 +133,10 @@
       </button>
     </div>
     <div class="form-group">
-      <div> Chủ hộ: {tenchuho} </div>
-      <div> Địa chỉ: {diachi} </div>
-      <div> Phường: {tenphuong} </div>
-      <div> Điện thoại: {dienthoai} </div>
+      <div> Chủ hộ: {tenchuho} {xetduyettenchuho} </div>
+      <div> Địa chỉ: {diachi} {xetduyetdiachi} </div>
+      <div> Phường: {tenphuong} {xetduyettenphuong} </div>
+      <div> Điện thoại: {dienthoai} {xetduyetdienthoai} </div>
     </div>
 
     <div class="form-group" id="danhsachvatnuoi">
@@ -312,6 +311,19 @@
           $('#danhsachvatnuoi').html(resp.danhsachvatnuoi)
           global.trang = trang
         }, (error) => { })
+      }
+
+      function chonthucung(idthucung, tenthucung, micro, giong, loai, tenchu, diachi, dienthoai) {
+        global.idthucung = idthucung
+        $('#tenthucung').val(tenthucung)
+        $('#micro').val(micro)
+        $('#giong').val(giong)
+        $('#loai').val(loai)
+      }
+
+      function chongiongloai(giong, loai) {
+        $('#giong').val(giong)
+        $('#loai').val(loai)
       }
     </script>
     <!-- END: coquyen -->

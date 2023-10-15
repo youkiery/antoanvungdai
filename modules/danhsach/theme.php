@@ -22,8 +22,10 @@ function danhsachthucung() {
 
   $tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
   $trang = $nv_Request->get_string('trang', 'post', '1');
-  if (empty($tukhoa)) $xtra = "";
-  else $xtra = " where c.ten like '%$tukhoa%' or c.dienthoai like '%$tukhoa%' or b.micro like '%$tukhoa%'";
+  $xtra = [];
+  if (empty($tukhoa)) $xtra []= "(c.ten like '%$tukhoa%' or c.dienthoai like '%$tukhoa%' or b.micro like '%$tukhoa%')";
+  $xtra []= "xacnhan = 1";
+  $xtra = "where ". implode("and", $xtra);
 
   // gom tất cả idthucung lại, sort theo thời gian
   $sql = "select a.id, b.ten, b.id as idthucung, b.idgiong, c.ten as chuho, b.hinhanh, b.micro from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id $xtra group by idthucung order by thoigiantiem desc, a.id desc limit ". GIOIHAN . " offset ". ($trang - 1) * GIOIHAN;

@@ -41,6 +41,14 @@ if ($phanquyen == 0) {
 		$xtpl->parse('main.coquyen.phuong');
 	}
 
+	$sql = "select * from ". PREFIX ."_quanly_xetduyet where idchu = $user_info[userid] and trangthai = 0 and loaixetduyet = 1";
+	if (!empty($xetduyet = $db->fetch($sql))) {
+		$dulieu = json_decode($xetduyet["dulieu"]);
+		foreach ($dulieu as $tentruong => $giatrimoi) {
+			$xtpl->assign("xetduyet". $tentruong, " => ". $giatrimoi . " (chờ xét duyệt)");
+		}
+	}
+
 	$sql = "select * from ". PREFIX ."_users_info where userid = $user_info[userid]";
 	$thongtin = $db->fetch($sql);
 	
@@ -99,7 +107,7 @@ function capnhatthongtin() {
 		$noidung = [];
 		$chuyendoi = ["tenchuho" => "Tên chủ", "diachi" => "Địa chỉ", "phuong" => "Phường", "dienthoai" => "Điện thoại"];
 		foreach ($thaydoi as $tentruong => $giatri) {
-			$dulieu [$tentruong]= [$thongtinchunuoi[$tentruong] => $giatri];
+			$dulieu [$tentruong]= $giatri;
 			if ($tentruong == "phuong") {
 				$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where id = $thongtinchunuoi[$tentruong]";
 				if (empty($phuong = $db->fetch($sql))) $phuong["ten"] = "";
@@ -119,7 +127,7 @@ function capnhatthongtin() {
 			$db->query($sql);
 		}
 		else {
-			$sql = "insert into ". PREFIX ."_quanly_xetduyet (loaixetduyet, idnguoitao, idchu, idthucung, noidung, dulieu, thoigian, trangthai) values(1, $idchuho, $idchuho, 0, '$noidung', '$dulieu' $thoigian, 0)";
+			$sql = "insert into ". PREFIX ."_quanly_xetduyet (loaixetduyet, idnguoitao, idchu, idthucung, noidung, dulieu, thoigian, trangthai) values(1, $idchuho, $idchuho, 0, '$noidung', '$dulieu', $thoigian, 0)";
 			$db->query($sql);
 		}
 	}
@@ -137,7 +145,14 @@ function themtiemphong() {
   $chuho = $db->fetch($sql);
 	$idchuho = kiemtrachuho($chuho);
 	$idthucung = kiemtrathucung($idchuho, $dulieu);
-			
+	$thoigian = time();
+
+	$sql = "update ". PREFIX ."_tiemphong_thucung set xacnhan = 0 where id = $idthucung";
+	$db->query($sql);
+
+	$sql = "insert into ". PREFIX ."_quanly_xetduyet (loaixetduyet, idnguoitao, idchu, idthucung, noidung, dulieu, thoigian, trangthai) values(2, $idchuho, $idchuho, $idthucung, 'Thêm vật nuôi $dulieu[tenthucung]', '', $thoigian, 0)";
+	$db->query($sql);
+
 	$resp['status'] = 1;
 }
 

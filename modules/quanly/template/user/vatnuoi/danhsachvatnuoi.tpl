@@ -12,7 +12,7 @@
   </thead>
   <!-- BEGIN: thucung -->
   <tr>
-    <td> {tenthucung} </td>
+    <td> {tenthucung} {choxacnhan} </td>
     <td> {giongloai} </td>
     <td> {micro} </td>
     <td> {tiemcuoi} </td>
