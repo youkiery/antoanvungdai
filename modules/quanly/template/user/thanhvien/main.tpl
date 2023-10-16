@@ -293,10 +293,12 @@
       }
 
       function capnhatthanhvien(id) {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'laythongtinthanhvien',
           id: id,
         }).then((phanhoi) => {
+          vloading.defreeze()
           global.id = id
           global.quyen = phanhoi.quyen
           $('[name=gioitinh][value=' + phanhoi.gioitinh + ']')[0].checked = true
@@ -307,7 +309,10 @@
           phanquyen()
           tailaiquyen()
           $('#modal-themthanhvien').modal('show')
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+
+        })
       }
 
       function xacnhanthemthanhvien() {
@@ -323,6 +328,8 @@
           global.quyen.forEach(q => {
             quyen.push(q.id)
           })
+          vloading.freeze()
+
           vhttp.post('/quanly/api/', {
             action: 'themthanhvien',
             id: global.id,
@@ -335,9 +342,13 @@
             quyen: quyen,
             trangnhanvien: global.trangnhanvien,
           }).then((phanhoi) => {
+            vloading.defreeze()
             $('#modal-themthanhvien').modal('hide')
             $('#thanhvien').html(phanhoi.danhsachthanhvien)
-          }, (error) => { })
+          }, (error) => {
+            vloading.defreeze()
+
+          })
         }
       }
 
@@ -347,16 +358,20 @@
       }
 
       function xacnhankichhoatthanhvien() {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'kichhoatthanhvien',
           id: global.id,
           trangnhanvien: global.trangnhanvien,
           trangchunuoi: global.trangchunuoi
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#modal-kichhoatthanhvien').modal('hide')
           $('#thanhvien').html(phanhoi.danhsachthanhvien)
           $('#xetduyet').html(phanhoi.danhsachxetduyet)
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function xoakichhoatthanhvien(id) {
@@ -365,16 +380,20 @@
       }
 
       function xacnhanxoakichhoatthanhvien() {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'xoakichhoatthanhvien',
           id: global.id,
           trangnhanvien: global.trangnhanvien,
           trangchunuoi: global.trangchunuoi
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#modal-xoakichhoat').modal('hide')
           $('#thanhvien').html(phanhoi.danhsachthanhvien)
           $('#xetduyet').html(phanhoi.danhsachxetduyet)
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function xoathanhvien(id) {
@@ -383,16 +402,20 @@
       }
 
       function xacnhanxoathanhvien() {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'xoathanhvien',
           id: global.id,
           trangnhanvien: global.trangnhanvien,
           trangchunuoi: global.trangchunuoi
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#modal-xoathanhvien').modal('hide')
           $('#thanhvien').html(phanhoi.danhsachthanhvien)
           $('#xetduyet').html(phanhoi.danhsachxetduyet)
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
     </script>
     <!-- END: coquyen -->

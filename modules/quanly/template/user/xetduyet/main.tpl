@@ -61,25 +61,33 @@
       }
 
       function xacnhan() {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'xacnhanxetduyet',
           id: global.id,
           truongloc: laytruongloc()
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#danhsachxetduyet').html(phanhoi.danhsachduyet)
           $("#modal-xacnhan").modal("hide")
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function huy() {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'huyxetduyet',
           id: global.id,
           truongloc: laytruongloc()
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#danhsachxetduyet').html(phanhoi.danhsachduyet)
           $("#modal-xacnhan").modal("hide")
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function dentrang(trang) {

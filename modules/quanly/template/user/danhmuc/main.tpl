@@ -174,37 +174,53 @@
       }
 
       function xacnhanxoaphuong() {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'xoaphuong',
           id: global.id,
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#phuong').html(phanhoi.danhsachphuong)
           $('#modal-xoaphuong').modal('hide')
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+
+        })
       }
 
       function xacnhanxoagiong() {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'xoagiong',
           id: global.id,
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#giong').html(phanhoi.danhsachgiong)
           $('#modal-xoagiong').modal('hide')
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+
+        })
       }
 
       function xacnhanthemphuong() {
         if (!$('#tenphuong').val().length) vhttp.notify('Không được để trống tên phường')
         else {
+          vloading.freeze()
+
           vhttp.post('/quanly/api/', {
             action: 'themphuong',
             id: global.id,
             tenphuong: $('#tenphuong').val()
           }).then((phanhoi) => {
+            vloading.defreeze()
             $('#phuong').html(phanhoi.danhsachphuong)
             $('.nav-tabs a[href="#phuong"]').tab('show');
             $('#modal-themphuong').modal('hide')
-          }, (error) => { })
+          }, (error) => {
+            vloading.defreeze()
+
+          })
         }
       }
 
@@ -228,16 +244,20 @@
         if (!$('#tenloai').val().length) vhttp.notify('Không được để trống tên loài')
         else if (!$('#tengiong').val().length) vhttp.notify('Không được để trống tên giống')
         else {
+          vloading.freeze()
           vhttp.post('/quanly/api/', {
             action: 'themgiong',
             id: global.id,
             tengiong: $('#tengiong').val(),
             tenloai: $('#tenloai').val(),
           }).then((phanhoi) => {
+            vloading.defreeze()
             $('#giong').html(phanhoi.danhsachgiong)
             $('.nav-tabs a[href="#giong"]').tab('show');
             $('#modal-themgiong').modal('hide')
-          }, (error) => { })
+          }, (error) => {
+            vloading.defreeze()
+          })
         }
       }
     </script>

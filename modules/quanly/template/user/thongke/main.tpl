@@ -289,23 +289,29 @@
       }
 
       function xacnhanxoa() {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'xoachitietchuho',
           truongloc: thongtintruongloc(global.trang),
           id: global.idthucung,
           idchu: global.idchu,
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#chitiet').html(phanhoi.chitiet)
           $('#danhsach').html(phanhoi.danhsachthongke)
           $('#modal-xoa').modal('hide')
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function capnhat(id) {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'laythongtinthucung',
           id: id,
         }).then((phanhoi) => {
+          vloading.defreeze()
           global.idthucung = id
           $('#thucung').val('')
           $('#tenthucung').val(phanhoi.tenthucung)
@@ -317,7 +323,9 @@
           vimage.data['hinhanh'] = [phanhoi.hinhanh]
           vimage.reload('hinhanh')
           $('#modal-capnhat').modal('show')
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function kiemtrangaythang(ngay) {
@@ -349,6 +357,7 @@
         else if (!dulieu.loai.length) vhttp.notify('Không được để trống tên loài')
         else if (!kiemtrangaythang(dulieu.ngaysinh)) vhttp.notify('Ngày sinh không hợp lệ')
         else {
+          vloading.freeze()
           vimage.uploadimage('hinhanh').then(() => {
             dulieu.hinhanh = vimage.data['hinhanh']
             vhttp.post('/quanly/api/', {
@@ -358,10 +367,13 @@
               dulieu: dulieu,
               truongloc: thongtintruongloc(global.trang),
             }).then((phanhoi) => {
+              vloading.defreeze()
               $('#chitiet').html(phanhoi.chitiet)
               $('#danhsach').html(phanhoi.danhsachthongke)
               $('#modal-capnhat').modal('hide')
-            }, (error) => { })
+            }, (error) => {
+              vloading.defreeze()
+            })
           })
         }
       }

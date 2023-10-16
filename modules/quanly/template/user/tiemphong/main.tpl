@@ -134,9 +134,10 @@
               <div class="input-group">
                 <input type="text" class="form-control" id="chuho"
                   placeholder="Tìm kiếm chủ hộ theo tên, địa chỉ, số điện thoại">
-                  <div class="input-group-btn">
-                    <button class="btn btn-info" onclick="chuyensodienthoai()"> <span class="fa fa-share"></span> </button>
-                  </div>
+                <div class="input-group-btn">
+                  <button class="btn btn-info" onclick="chuyensodienthoai()"> <span class="fa fa-share"></span>
+                  </button>
+                </div>
               </div>
               <div class="danhsachgoiy" id="goiychuho"></div>
             </div>
@@ -178,12 +179,13 @@
             <div class="form-group"> <b>Thú cưng</b> </div>
             <div class="form-group goiy">
               <div class="input-group">
-                <input type="text" class="form-control" id="thucung" placeholder="Tìm kiếm thú cưng theo tên, microchip">
+                <input type="text" class="form-control" id="thucung"
+                  placeholder="Tìm kiếm thú cưng theo tên, microchip">
                 <div class="input-group-btn">
                   <button class="btn btn-info" onclick="chuyensomicro()"> <span class="fa fa-share"></span> </button>
                 </div>
               </div>
-            <div class="danhsachgoiy" id="goiythucung"></div>
+              <div class="danhsachgoiy" id="goiythucung"></div>
             </div>
 
             <div class="form-group row">
@@ -343,7 +345,7 @@
 
       function chuyensodienthoai() {
         $("#dienthoai").val($("#chuho").val())
-        $("#chuho").val("")        
+        $("#chuho").val("")
       }
 
       function xacnhanimport() {
@@ -454,14 +456,18 @@
       }
 
       function xacnhanxoatiemphong() {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'xoatiemphong',
           id: global.id,
           truongloc: thongtintruongloc(global.trang),
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#tiemphong').html(phanhoi.danhsachtiemphong)
           $('#modal-xoatiemphong').modal('hide')
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function themtiemphong() {
@@ -484,10 +490,12 @@
       }
 
       function capnhattiemphong(id) {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'laythongtintiemphong',
           id: id,
         }).then((phanhoi) => {
+          vloading.defreeze()
           global.id = id
           hienthinut()
           $('#chuho').val('')
@@ -506,7 +514,9 @@
           vimage.data['hinhanh'] = [phanhoi.hinhanh]
           vimage.reload('hinhanh')
           $('#modal-themtiemphong').modal('show')
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function kiemtrangaythang(ngay) {
@@ -552,6 +562,7 @@
         else if (dulieu.thoigiantiem.length && !kiemtrangaythang(dulieu.thoigiantiem)) vhttp.notify('Ngày tháng không hợp lệ')
         else if (!kiemtrangaythang(dulieu.ngaysinh)) vhttp.notify('Ngày sinh không hợp lệ')
         else {
+          vloading.freeze()
           vimage.uploadimage('hinhanh').then(() => {
             dulieu.hinhanh = vimage.data['hinhanh']
             vhttp.post('/quanly/api/', {
@@ -560,9 +571,12 @@
               dulieu: dulieu,
               truongloc: thongtintruongloc(global.trang),
             }).then((phanhoi) => {
+              vloading.defreeze()
               $('#tiemphong').html(phanhoi.danhsachtiemphong)
               $('#modal-themtiemphong').modal('hide')
-            }, (error) => { })
+            }, (error) => {
+              vloading.defreeze()
+            })
           })
         }
       }

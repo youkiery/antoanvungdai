@@ -4,9 +4,17 @@
   <div class="col-xs-24 col-sm-18 pw-content">
     <!-- BEGIN: coquyen -->
     <style>
-      .red { background: pink; }
-      .green { background: lightgreen; }
-      .orange { background: orange; }
+      .red {
+        background: pink;
+      }
+
+      .green {
+        background: lightgreen;
+      }
+
+      .orange {
+        background: orange;
+      }
     </style>
 
     <div id="modal-thongtin" class="modal fade" role="dialog">
@@ -244,6 +252,7 @@
         else if (!dulieu.loai.length) vhttp.notify('Không được để trống tên loài')
         else if (!kiemtrangaythang(dulieu.ngaysinh)) vhttp.notify('Ngày sinh không hợp lệ')
         else {
+          vloading.freeze()
           vimage.uploadimage('hinhanh').then(() => {
             dulieu.hinhanh = vimage.data['hinhanh']
             vhttp.post('/quanly/vatnuoi/', {
@@ -251,8 +260,11 @@
               idchu: global.idchu,
               dulieu: dulieu,
             }).then((phanhoi) => {
+              vloading.defreeze()
               window.location.reload()
-            }, (error) => { })
+            }, (error) => {
+              vloading.defreeze()
+            })
           })
         }
       }
@@ -304,14 +316,18 @@
           dienthoai: $("#thongtin-dienthoai").val(),
         }
         if (Number(dulieu.phuong) <= 0) return vhttp.notify("Xin hãy chọn 1 phường")
+        vloading.freeze()
         vhttp.post('/quanly/vatnuoi/', {
           action: 'capnhatthongtin',
           dulieu: dulieu
         }).then((phanhoi) => {
+          vloading.defreeze()
           setTimeout(() => {
             window.location.reload()
           }, 1000);
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function dentrang(trang) {

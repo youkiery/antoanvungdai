@@ -7,6 +7,25 @@
   }
 }
 
+.loading-skin {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  background-color: #000;
+  opacity: .5;
+  display: none;
+  text-align: center;
+}
+
+.loading-skin i {
+  color: white;
+  font-size: 10em;
+  line-height: 5;
+}
+
 .container {
   padding-left: 50px;
   padding-right: 50px;
@@ -78,10 +97,12 @@ body {
   width: 140px;
   float: left;
 }
+
 .pw-card-left img {
   height: 140px;
   width: 140px;
 }
+
 .pw-card-right {
   width: calc(100% - 150px);
   float: right;
@@ -265,12 +286,14 @@ table {
   padding: 3px;
   border: 1px solid gray;
 }
+
 .input-button {
   background-color: white;
   position: absolute;
   right: 5px;
   border: none;
 }
+
 .input-real {
   background-color: white;
   width: 100%;

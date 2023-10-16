@@ -64,27 +64,19 @@
         else if (!dulieu.xacnhanmatkhaumoi.length) vhttp.notify('Không được để trống xác nhận mật khẩu')
         else if (dulieu.xacnhanmatkhaumoi !== dulieu.matkhaumoi) vhttp.notify('Mật khẩu xác nhận không trùng nhau')
         else {
-          dongbangnut()
+          vloading.freeze()
+
           vhttp.post('/quanly/api/', {
             action: 'doimatkhau',
             dulieu: dulieu
           }).then((phanhoi) => {
-            radongbang()
+            vloading.defreeze()
             $('#modal-matkhau').modal('hide')
           }, () => {
-            radongbang()
+            vloading.defreeze()
           })
         }
       }
-
-      function dongbangnut() {
-        $('button').prop('disabled', true)
-      }
-
-      function radongbang() {
-        $('button').prop('disabled', false)
-      }
-
     </script>
     <!-- END: coquyen -->
     <!-- BEGIN: khongquyen -->

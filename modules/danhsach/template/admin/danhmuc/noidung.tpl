@@ -48,13 +48,17 @@
       vhttp.notify('Không được để trống tên phường')
       return 0
     }
+    vloading.freeze()
     vhttp.post('/admin/index.php?language=vi&nv=danhsach&op=api', {
       action: 'themphuong',
       tenphuong: $('#ten-phuong').val()
     }).then((phanhoi) => {
+      vloading.defreeze()
       $('#noidung').html(phanhoi.danhsach)
       $('#modal-them-phuong').modal('hide')
-    }, (error) => { })
+    }, (error) => {
+      vloading.defreeze()
+    })
   }
 </script>
 <!-- END: main  -->

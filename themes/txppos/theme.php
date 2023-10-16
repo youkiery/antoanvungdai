@@ -286,6 +286,10 @@ function nv_site_theme($contents, $full = true)
         'ext' => 1,
         'content' => NV_STATIC_URL . 'themes/' . $global_config['module_theme'] . '/js/firebase-storage.js'
     ];
+    $html_js[] = [
+        'ext' => 1,
+        'content' => NV_STATIC_URL . 'themes/' . $global_config['module_theme'] . '/js/vloading.js'
+    ];
 
     foreach ($html_js as $js) {
         if ($js['ext']) {

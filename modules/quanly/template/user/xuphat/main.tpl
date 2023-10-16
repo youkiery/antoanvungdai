@@ -293,13 +293,17 @@
       }
 
       function chitiet(idchu) {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'chitietxuphat',
           idchu: idchu,
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#chitiet').html(phanhoi.chitiet)
           $('#modal-chitiet').modal('show')
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function dongphat(id) {
@@ -313,15 +317,19 @@
         let thoigian = $('#dongphat-thoigian').val()
         if (!thoigian.length || !kiemtrangaythang(thoigian)) vhttp.notify('Thời gian không hợp lệ')
         else {
+          vloading.freeze()
           vhttp.post('/quanly/api/', {
             action: 'dongphat',
             id: global.id,
             thoigian: thoigian,
             truongloc: thongtintruongloc(global.trang),
           }).then((phanhoi) => {
+            vloading.defreeze()
             $('#danhsach').html(phanhoi.danhsachxuphat)
             $('#modal-dongphat').modal('hide')
-          }, (error) => { })
+          }, (error) => {
+            vloading.defreeze()
+          })
         }
       }
 
@@ -332,14 +340,18 @@
       }
 
       function xacnhanxoaxuphat() {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'xoaxuphat',
           id: global.id,
           truongloc: thongtintruongloc(global.trang),
         }).then((phanhoi) => {
+          vloading.defreeze()
           $('#danhsach').html(phanhoi.danhsachxuphat)
           $('#modal-xoaxuphat').modal('hide')
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function hienthinut() {
@@ -405,10 +417,12 @@
       }
 
       function capnhatxuphat(id) {
+        vloading.freeze()
         vhttp.post('/quanly/api/', {
           action: 'laythongtinxuphat',
           id: id,
         }).then((phanhoi) => {
+          vloading.defreeze()
           global.id = id
           hienthinut()
           radongbang()
@@ -424,7 +438,9 @@
           tailaitepdinhkem()
           phuong = $('#phuong option[value=' + phanhoi.idphuong + ']').prop('selected', true)
           $('#modal-themxuphat').modal('show')
-        }, (error) => { })
+        }, (error) => {
+          vloading.defreeze()
+        })
       }
 
       function kiemtrangaythang(ngay) {
@@ -508,8 +524,8 @@
         else if (!kiemtrangaythang(dulieu.thoigianphat)) vhttp.notify('Ngày tháng không hợp lệ')
         else if (!kiemtrangaythang(dulieu.thoigiandong)) vhttp.notify('Ngày tháng không hợp lệ')
         else {
+          vloading.freeze()
           uploadfile().then(() => {
-            dongbangnut()
             dulieu.tepdinhkem = global.tepdinhkem
             vhttp.post('/quanly/api/', {
               action: 'themxuphat',
@@ -517,24 +533,18 @@
               dulieu: dulieu,
               truongloc: thongtintruongloc(global.trang),
             }).then((phanhoi) => {
-              radongbang()
+              vloading.defreeze()
               $('#danhsach').html(phanhoi.danhsachxuphat)
               $('#modal-themxuphat').modal('hide')
-            }, (error) => { })
+            }, (error) => {
+              vloading.defreeze()
+            })
           })
         }
       }
 
       function taifile(diachi) {
         window.location = diachi
-      }
-
-      function dongbangnut() {
-        $('button').prop('disabled', true)
-      }
-
-      function radongbang() {
-        $('button').prop('disabled', false)
       }
 
       function keolen() {
