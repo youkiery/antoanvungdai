@@ -272,18 +272,18 @@ function timkiemchuho() {
 	global $db, $nv_Request, $resp;
 
 	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
-	$sql = "select a.first_name as chuho, b.* from ". PREFIX ."_users a inner join ". PREFIX ."_users_info b on a.userid = b.userid where a.first_name like '%$tukhoa%' or b.diachi like '%$tukhoa%' or b.dienthoai like '%$tukhoa%' order by a.userid asc limit ". GIOIHAN;
+	$sql = "select a.first_name as chuho, b.* from ". PREFIX ."_users a inner join ". PREFIX ."_users_info b on a.userid = b.userid where (a.first_name like '%$tukhoa%' or b.diachi like '%$tukhoa%' or b.dienthoai like '%$tukhoa%') and level = 0 order by a.userid asc limit ". GIOIHAN;
 	$danhsach = $db->all($sql);
   $xtpl = new XTemplate('goiychuho.tpl', PATH .'/tiemphong/');
 
 	foreach ($danhsach as $chuho) {
-		$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where id = $chuho[idphuong]";
+		$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where id = $chuho[phuong]";
 		$phuong = $db->fetch($sql)['ten'];
-		$xtpl->assign('idchu', $chuho['id']);
-		$xtpl->assign('ten', $chuho['ten']);
+		$xtpl->assign('idchu', $chuho['userid']);
+		$xtpl->assign('ten', $chuho['chuho']);
 		$xtpl->assign('diachi', $chuho['diachi']);
 		$xtpl->assign('dienthoai', $chuho['dienthoai']);
-		$xtpl->assign('idphuong', $chuho['idphuong']);
+		$xtpl->assign('idphuong', $chuho['phuong']);
 		$xtpl->assign('phuong', $phuong);
 		$xtpl->parse('main.row');
 	}
@@ -299,18 +299,18 @@ function timkiemchuhomorong() {
 	global $db, $nv_Request, $resp;
 
 	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
-	$sql = "select a.first_name, b.* from ". PREFIX ."_users a inner join ". PREFIX ."_users_info f on a.userid = f.userid inner join ". PREFIX ."_tiemphong_thucung b on a.userid = b.idchu where (a.first_name like '%$tukhoa%' or f.diachi like '%$tukhoa%' or f.dienthoai like '%$tukhoa%' or b.micro like '%$tukhoa%') and b.xacnhan = 1 order by a.userid asc limit ". GIOIHAN;
+	$sql = "select a.first_name as ten, f.* from ". PREFIX ."_users a inner join ". PREFIX ."_users_info f on a.userid = f.userid inner join ". PREFIX ."_tiemphong_thucung b on a.userid = b.idchu where (a.first_name like '%$tukhoa%' or f.diachi like '%$tukhoa%' or f.dienthoai like '%$tukhoa%' or b.micro like '%$tukhoa%') and b.xacnhan = 1 order by a.userid asc limit ". GIOIHAN;
 	$danhsach = $db->all($sql);
   $xtpl = new XTemplate('goiychuho.tpl', PATH .'/tiemphong/');
 
 	foreach ($danhsach as $chuho) {
-		$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where id = $chuho[idphuong]";
+		$sql = "select * from ". PREFIX ."_quanly_danhmuc_phuong where id = $chuho[phuong]";
 		$phuong = $db->fetch($sql)['ten'];
-		$xtpl->assign('idchu', $chuho['id']);
+		$xtpl->assign('idchu', $chuho['userid']);
 		$xtpl->assign('ten', $chuho['ten']);
 		$xtpl->assign('diachi', $chuho['diachi']);
 		$xtpl->assign('dienthoai', $chuho['dienthoai']);
-		$xtpl->assign('idphuong', $chuho['idphuong']);
+		$xtpl->assign('idphuong', $chuho['phuong']);
 		$xtpl->assign('phuong', $phuong);
 		$xtpl->parse('main.row');
 	}

@@ -131,8 +131,13 @@
           <div class="modal-body">
             <div class="form-group"> <b>Chủ hộ</b> </div>
             <div class="form-group goiy">
-              <input type="text" class="form-control" id="chuho"
-                placeholder="Tìm kiếm chủ hộ theo tên, địa chỉ, số điện thoại">
+              <div class="input-group">
+                <input type="text" class="form-control" id="chuho"
+                  placeholder="Tìm kiếm chủ hộ theo tên, địa chỉ, số điện thoại">
+                  <div class="input-group-btn">
+                    <button class="btn btn-info" onclick="chuyensodienthoai()"> <span class="fa fa-share"></span> </button>
+                  </div>
+              </div>
               <div class="danhsachgoiy" id="goiychuho"></div>
             </div>
 
@@ -172,8 +177,13 @@
 
             <div class="form-group"> <b>Thú cưng</b> </div>
             <div class="form-group goiy">
-              <input type="text" class="form-control" id="thucung" placeholder="Tìm kiếm thú cưng theo tên, microchip">
-              <div class="danhsachgoiy" id="goiythucung"></div>
+              <div class="input-group">
+                <input type="text" class="form-control" id="thucung" placeholder="Tìm kiếm thú cưng theo tên, microchip">
+                <div class="input-group-btn">
+                  <button class="btn btn-info" onclick="chuyensomicro()"> <span class="fa fa-share"></span> </button>
+                </div>
+              </div>
+            <div class="danhsachgoiy" id="goiythucung"></div>
             </div>
 
             <div class="form-group row">
@@ -324,6 +334,16 @@
 
       function download(filename) {
         window.location = '/assets/excel/MauImportVaccine.xlsx';
+      }
+
+      function chuyensomicro() {
+        $("#micro").val($("#thucung").val())
+        $("#thucung").val("")
+      }
+
+      function chuyensodienthoai() {
+        $("#dienthoai").val($("#chuho").val())
+        $("#chuho").val("")        
       }
 
       function xacnhanimport() {
