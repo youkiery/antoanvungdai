@@ -22,7 +22,7 @@
   <a class="btn btn-warning" href="/users/logout"> Đăng xuất </a>
   <!-- END: khach -->
 </div>
-<div class="banner"> <img class="img-phanhoionsive" src="{banner}"> </div>
+<div class="banner"> <img class="img-responsive" src="{banner}"> </div>
 <div class="main-search">
   <form onsubmit="return timkiem(event)">
     <div class="input-border">

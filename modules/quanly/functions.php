@@ -83,27 +83,32 @@ function kiemtrangaythang($ngay) {
 }
 
 function kiemtrachuho($dulieu) {
-	global $db;
+	global $db, $global_config;
 
+  $thoigian = time();
   if (empty($dulieu['dienthoai'])) {
-    $sql = "select * from ". PREFIX ."_tiemphong_chuho where diachi = '$dulieu[diachi]' and idphuong = $dulieu[idphuong]";
+    $sql = "select * from ". PREFIX ."_users_info where diachi = '$dulieu[diachi]' and phuong = $dulieu[idphuong]";
     if (empty($chuho = $db->fetch($sql))) {
-      $sql = "insert into ". PREFIX ."_tiemphong_chuho (idphuong, ten, dienthoai, diachi) values($dulieu[idphuong], '$dulieu[tenchu]', '$dulieu[dienthoai]', '$dulieu[diachi]')";
-      return $db->insertid($sql);
+      $sql = "insert into ". PREFIX ."_users (group_id, username, md5username, password, email, first_name, last_name, gender, photo, birthday, sig, regdate, question, answer, passlostkey, view_mail, remember, in_groups, active, checknum, last_login, last_ip, last_agent, last_openid, idsite, email_verification_time, active_obj, level) VALUES (4, '', '', '', '', '$dulieu[tenchu]', '', 'M',  '', '0', '', $thoigian, '', '', '', 0, 1, 4, 0, '', 0, '', '', '', $global_config[idsite], -1, 'SYSTEM', 0)";
+      $id = $db->insertid($sql);
+
+      $sql = "insert into ". PREFIX ."_users_info (userid, dienthoai, diachi, phuong) values($id, '$dulieu[dienthoai]', '$dulieu[diachi]', $dulieu[idphuong])";
+      $db->query($sql);
+      return $id;
     }
-    return $chuho['id'];
+    return $chuho['userid'];
   }
   else {
-    $sql = "select * from ". PREFIX ."_tiemphong_chuho where dienthoai = '$dulieu[dienthoai]'";
+    $sql = "select * from ". PREFIX ."_users_info where dienthoai = '$dulieu[dienthoai]'";
     if (empty($chuho = $db->fetch($sql))) {
-      $sql = "insert into ". PREFIX ."_tiemphong_chuho (idphuong, ten, dienthoai, diachi) values($dulieu[idphuong], '$dulieu[tenchu]', '$dulieu[dienthoai]', '$dulieu[diachi]')";
-      return $db->insertid($sql);
-    }
-    else {
-      $sql = "update ". PREFIX ."_tiemphong_chuho set idphuong = $dulieu[idphuong], ten = '$dulieu[tenchu]', dienthoai = '$dulieu[dienthoai]', diachi = '$dulieu[diachi]' where id = $chuho[id]";
+      $sql = "insert into ". PREFIX ."_users (group_id, username, md5username, password, email, first_name, last_name, gender, photo, birthday, sig, regdate, question, answer, passlostkey, view_mail, remember, in_groups, active, checknum, last_login, last_ip, last_agent, last_openid, idsite, email_verification_time, active_obj, level) VALUES (4, '', '', '', '', '$dulieu[tenchu]', '', 'M',  '', '0', '', $thoigian, '', '', '', 0, 1, 4, 0, '', 0, '', '', '', $global_config[idsite], -1, 'SYSTEM', 0)";
+      $id = $db->insertid($sql);
+
+      $sql = "insert into ". PREFIX ."_users_info (userid, dienthoai, diachi, phuong) values($id, '$dulieu[dienthoai]', '$dulieu[diachi]', $dulieu[idphuong])";
       $db->query($sql);
-      return $chuho['id'];
+      return $id;
     }
+    return $chuho['userid'];
   }
 }
 

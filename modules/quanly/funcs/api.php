@@ -48,7 +48,7 @@ function chitietxuphat() {
 
   $xtpl = new XTemplate("chitietxuphat.tpl", PATH ."/xuphat/");
 	$idchu = $nv_Request->get_string('idchu', 'post', '0');
-	$sql = "select * from ". PREFIX ."_tiemphong_chuho where id = $idchu";
+	$sql = "select a.fist_name as chuho, b.* from ". PREFIX ."_users a inner join ". PREFIX ."_users_info b on a.userid = b.userid where a.userid = $idchu";
 	$thongtin = $db->fetch($sql);
 	$tongphat = 0;
 	$chuadongphat = 0;
@@ -272,7 +272,7 @@ function timkiemchuho() {
 	global $db, $nv_Request, $resp;
 
 	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
-	$sql = "select * from ". PREFIX ."_tiemphong_chuho where ten like '%$tukhoa%' or diachi like '%$tukhoa%' or dienthoai like '%$tukhoa%' order by id asc limit ". GIOIHAN;
+	$sql = "select a.first_name as chuho, b.* from ". PREFIX ."_users a inner join ". PREFIX ."_users_info b on a.userid = b.userid where a.first_name like '%$tukhoa%' or b.diachi like '%$tukhoa%' or b.dienthoai like '%$tukhoa%' order by a.userid asc limit ". GIOIHAN;
 	$danhsach = $db->all($sql);
   $xtpl = new XTemplate('goiychuho.tpl', PATH .'/tiemphong/');
 
@@ -299,7 +299,7 @@ function timkiemchuhomorong() {
 	global $db, $nv_Request, $resp;
 
 	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
-	$sql = "select * from ". PREFIX ."_tiemphong_chuho a inner join ". PREFIX ."_tiemphong_thucung b on a.id = b.idchu where (a.ten like '%$tukhoa%' or a.diachi like '%$tukhoa%' or a.dienthoai like '%$tukhoa%' or b.micro like '%$tukhoa%') and b.xacnhan = 1 order by id asc limit ". GIOIHAN;
+	$sql = "select a.first_name, b.* from ". PREFIX ."_users a inner join ". PREFIX ."_users_info f on a.userid = f.userid inner join ". PREFIX ."_tiemphong_thucung b on a.userid = b.idchu where (a.first_name like '%$tukhoa%' or f.diachi like '%$tukhoa%' or f.dienthoai like '%$tukhoa%' or b.micro like '%$tukhoa%') and b.xacnhan = 1 order by a.userid asc limit ". GIOIHAN;
 	$danhsach = $db->all($sql);
   $xtpl = new XTemplate('goiychuho.tpl', PATH .'/tiemphong/');
 
@@ -349,7 +349,7 @@ function timkiemthucung() {
 		$sql = "select * from ". PREFIX ."_quanly_danhmuc_giong where id = $thucung[idgiong]";
 		$giongloai = $db->fetch($sql);
 
-		$sql = "select * from ". PREFIX ."_tiemphong_chuho where id = $thucung[idchu]";
+		$sql = "select a.first_name as ten, b.* from ". PREFIX ."_users a inner join ". PREFIX ."_users_info b on a.userid = b.userid where a.userid = $thucung[idchu]";
 		$chuho = $db->fetch($sql);
 		$xtpl->assign('idthucung', $thucung['id']);
 		$xtpl->assign('ten', $thucung['ten']);
@@ -459,8 +459,6 @@ function xoathanhvien() {
 	$db->query($sql);
 	$sql = "delete from ". PREFIX ."_phanquyen_chitiet where userid = $id";
 	$db->query($sql);
-	$sql = "delete from ". PREFIX ."_tiemphong_chuho_lienket where idchu = $id";
-	$db->query($sql);
 
 	$resp['status'] = 1;
 	$resp['danhsachthanhvien'] = danhsachthanhvien();
@@ -495,7 +493,7 @@ function laythongtintiemphong() {
 
 	$id = $nv_Request->get_string('id', 'post', '0');
 	
-  $sql = "select a.id, c.ten as tenchu, c.dienthoai, c.diachi, b.ten as tenthucung, b.micro, d.giong, d.loai, b.hinhanh, c.idphuong, a.thoigiantiem, b.ngaysinh from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id where a.id = $id";
+  $sql = "select a.id, c.first_name as tenchu, f.dienthoai, f.diachi, b.ten as tenthucung, b.micro, d.giong, d.loai, b.hinhanh, f.phuong as idphuong, a.thoigiantiem, b.ngaysinh from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_users c on b.idchu = c.userid inner join ". PREFIX ."_users_info f on c.userid = f.userid inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id where a.id = $id";
 	$resp = $db->fetch($sql);
 	$resp['thoigiantiem'] = date('d/m/Y', $resp['thoigiantiem']);
 	$resp['ngaysinh'] = date('d/m/Y', $resp['ngaysinh']);
@@ -507,7 +505,7 @@ function laythongtinxuphat() {
 
 	$id = $nv_Request->get_string('id', 'post', '0');
 	
-  $sql = "select a.id, a.noidung, a.mucphat, a.dongphat, a.thoigianphat, a.thoigiandong, c.id as idchuho, c.ten as chuho, c.dienthoai, c.diachi, c.idphuong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_tiemphong_chuho c on a.idchuho = c.id where a.id = $id";
+  $sql = "select a.id, a.noidung, a.mucphat, a.dongphat, a.thoigianphat, a.thoigiandong, c.id as idchuho, c.first_name as chuho, f.dienthoai, f.diachi, f.phuong as idphuong from ". PREFIX ."_xuphat a inner join ". PREFIX ."users c on a.idchuho = c.id inner join ". PREFIX ."_users_info f on c.userid = f.userid where a.id = $id";
 	$resp = $db->fetch($sql);
 
 	$sql = "select * from ". PREFIX ."_xuphat_dinhkem where idxuphat = $id";

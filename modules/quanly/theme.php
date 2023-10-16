@@ -22,10 +22,10 @@ function danhsachphuong() {
   $danhsach = $db->all($sql);
 
   foreach ($danhsach as $phuong) {
-    $sql = "select count(id) as tong from ". PREFIX ."_tiemphong_chuho where idphuong = $phuong[id]";
+    $sql = "select count(id) as tong from ". PREFIX ."_users_info where phuong = $phuong[id]";
     if (empty($sochuho = $db->fetch($sql))) $sochuho = 0;
     else $sochuho = $sochuho['tong'];
-    $sql = "select count(a.id) as tong from ". PREFIX ."_tiemphong_chuho a inner join ". PREFIX ."_tiemphong_thucung b on a.id = b.idchu where a.idphuong = $phuong[id] and xacnhan = 1";
+    $sql = "select count(a.id) as tong from ". PREFIX ."_users_info a inner join ". PREFIX ."_tiemphong_thucung b on a.userid = b.idchu where a.phuong = $phuong[id] and xacnhan = 1";
     if (empty($sothucung = $db->fetch($sql))) $sothucung = 0;
     else $sothucung = $sothucung['tong'];
 
@@ -175,8 +175,8 @@ function danhsachtiemphong() {
     if (!count($danhsachphuong)) $xtra []= " 0 ";
     else $xtra []= " e.id in (". (implode(', ', $danhsachphuong)) .") ";
   }
-  if (!empty($truongloc['tenchu'])) $xtra []= " c.ten like '%$truongloc[tenchu]%' ";
-  if (!empty($truongloc['dienthoai'])) $xtra []= " c.dienthoai like '%$truongloc[dienthoai]%' ";
+  if (!empty($truongloc['tenchu'])) $xtra []= " c.first_name like '%$truongloc[tenchu]%' ";
+  if (!empty($truongloc['dienthoai'])) $xtra []= " f.dienthoai like '%$truongloc[dienthoai]%' ";
   if (!empty($truongloc['thucung'])) $xtra []= " b.ten like '%$truongloc[thucung]%' ";
   if (!empty($truongloc['micro'])) $xtra []= " b.micro like '%$truongloc[micro]%' ";
   if (!empty($truongloc['giong'])) $xtra []= " d.giong like '%$truongloc[giong]%' ";
@@ -205,10 +205,10 @@ function danhsachtiemphong() {
   $xtra []= "xacnhan = 1";
   $xtra = " where ". implode(' and ', $xtra);
   
-  $sql = "select a.id, c.ten as chuho, e.ten as phuong, b.micro, a.thoigiantiem as thoigian from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra order by id desc, thoigiantiem desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
+  $sql = "select a.id, c.first_name as chuho, e.ten as phuong, b.micro, a.thoigiantiem as thoigian from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_users c on b.idchu = c.userid inner join ". PREFIX ."_users_info f on c.userid = f.userid inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on f.phuong = e.id $xtra order by a.id desc, thoigiantiem desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
 
-  $sql = "select count(a.id) as tong from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra";
+  $sql = "select count(a.id) as tong from ". PREFIX ."_tiemphong a inner join ". PREFIX ."_tiemphong_thucung b on a.idthucung = b.id inner join ". PREFIX ."_users c on b.idchu = c.userid inner join ". PREFIX ."_users_info f on c.userid = f.userid inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on f.phuong = e.id $xtra";
   if (!empty($tong = $db->fetch($sql))) $tong = $tong['tong'];
   else $tong = 0;
 
@@ -245,8 +245,8 @@ function danhsachxuphat() {
   $xtpl = new XTemplate("danhsachxuphat.tpl", PATH ."/xuphat/");
   // bộ lọc: tên chủ, điện thoại, tên thú cưng, micro, giống, loài, phường, thời gian tiêm
   $xtra = [];
-  if (!empty($truongloc['tenchu'])) $xtra []= " c.ten like '%$truongloc[tenchu]%' ";
-  if (!empty($truongloc['dienthoai'])) $xtra []= " c.dienthoai like '%$truongloc[dienthoai]%' ";
+  if (!empty($truongloc['tenchu'])) $xtra []= " c.first_name like '%$truongloc[tenchu]%' ";
+  if (!empty($truongloc['dienthoai'])) $xtra []= " f.dienthoai like '%$truongloc[dienthoai]%' ";
   if (!empty($truongloc['phuong'])) $xtra []= " e.id = '$truongloc[phuong]' ";
   if (!empty($truongloc['noidung'])) $xtra []= " a.noidung like '%$truongloc[noidung]%' ";
   if (!empty($truongloc['dongphat'])) {
@@ -276,10 +276,10 @@ function danhsachxuphat() {
   if (count($xtra)) $xtra = " where ". implode(' and ', $xtra);
   else $xtra = '';
 
-  $sql = "select a.id, a.noidung, a.mucphat, a.dongphat, a.thoigianphat, c.id as idchuho, c.ten as chuho, c.dienthoai, c.diachi, e.ten as phuong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_tiemphong_chuho c on a.idchuho = c.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra order by a.thoigianphat desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
+  $sql = "select a.id, a.noidung, a.mucphat, a.dongphat, a.thoigianphat, c.userid as idchuho, c.first_name as chuho, f.dienthoai, f.diachi, e.ten as phuong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_users c on a.idchuho = c.userid inner join ". PREFIX ."_users_info f on c.userid = f.userid inner join ". PREFIX ."_quanly_danhmuc_phuong e on f.phuong = e.id $xtra order by a.thoigianphat desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
 
-  $sql = "select count(c.id) as tong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_tiemphong_chuho c on a.idchuho = c.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra";
+  $sql = "select count(c.userid) as tong from ". PREFIX ."_xuphat a inner join ". PREFIX ."_users c on a.idchuho = c.userid inner join ". PREFIX ."_users_info f on c.userid = f.userid inner join ". PREFIX ."_quanly_danhmuc_phuong e on f.phuong = e.id $xtra";
   if (!empty($tong = $db->fetch($sql))) $tong = $tong['tong'];
   else $tong = 0;
 
@@ -359,10 +359,10 @@ function danhsachthongke() {
   $xtra []= "xacnhan = 1";
   $xtra = " where ". implode(' and ', $xtra);
   
-  $sql = "select c.ten as chuho, c.diachi, e.ten as phuong, c.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra and b.ngaymat = 0 group by c.id order by c.id desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
+  $sql = "select c.first_name as chuho, f.diachi, e.ten as phuong, c.userid as id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_users c on b.idchu = c.userid inner join ". PREFIX ."_users_info f on c.userid = f.userid inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on f.phuong = e.id $xtra and b.ngaymat = 0 group by c.userid order by c.userid desc limit ". GIOIHAN ." offset ". ($truongloc['trang'] - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
 
-  $sql = "select c.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on c.idphuong = e.id $xtra and b.ngaymat = 0 group by c.id";
+  $sql = "select c.userid as id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_users c on b.idchu = c.userid inner join ". PREFIX ."_users_info f on c.userid = f.userid inner join ". PREFIX ."_quanly_danhmuc_giong d on b.idgiong = d.id inner join ". PREFIX ."_quanly_danhmuc_phuong e on f.phuong = e.id $xtra and b.ngaymat = 0 group by c.userid";
   $tong = count($db->arr($sql, "id"));
 
   foreach ($danhsach as $chuho) {
@@ -402,10 +402,10 @@ function dulieuthongke() {
   $danhsachphuong = kiemtraphanquyenphuong($phanquyen);
   if ($phanquyen == 2) $x = 1;
   else if (empty($danhsachphuong)) $x = 0;
-  else $x = "(c.id in (". implode(", ", $danhsachphuong) .") )";
+  else $x = "(f.phuong in (". implode(", ", $danhsachphuong) .") )";
 
   $tongthucung = 0;
-  $sql = "select a.id from ". PREFIX ."_tiemphong_thucung a inner join ". PREFIX ."_tiemphong_chuho b on a.idchu = b.id inner join ". PREFIX ."_quanly_danhmuc_phuong c on b.idphuong = c.id and $x and a.ngaymat = 0 and xacnhan = 1";
+  $sql = "select a.id from ". PREFIX ."_tiemphong_thucung a inner join ". PREFIX ."_users b on a.idchu = b.userid inner join ". PREFIX ."_users_info f on b.userid = f.userid inner join ". PREFIX ."_quanly_danhmuc_phuong c on f.phuong = c.id and $x and a.ngaymat = 0 and xacnhan = 1";
   $danhsach = $db->all($sql);
   foreach ($danhsach as $thucung) {
     $tongthucung ++;
@@ -417,7 +417,7 @@ function dulieuthongke() {
     $datiemphong = 0;
     $tungtiemphong = 0;
     $chuatiemphong = 0;
-    $sql = "select b.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_tiemphong_chuho c on b.idchu = c.id where c.idphuong = $idphuong and ngaymat = 0 and xacnhan = 1";
+    $sql = "select b.id from ". PREFIX ."_tiemphong_thucung b inner join ". PREFIX ."_users c on b.idchu = c.userid inner join ". PREFIX ."_users_info d on c.userid = d.userid where d.phuong = $idphuong and ngaymat = 0 and xacnhan = 1";
     $danhsachthucung = $db->all($sql);
 
     foreach ($danhsachthucung as $thucung) {
@@ -458,7 +458,7 @@ function danhsachvatnuoi() {
   if (empty($chuho)) $x = 0;
   else $x = 1;
 
-  $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu in (select id as idchu from ". PREFIX ."_tiemphong_chuho where dienthoai = '$chuho[dienthoai]' and $x)";
+  $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu in (select userid as idchu from ". PREFIX ."_users_info where dienthoai = '$chuho[dienthoai]' and $x)";
   $danhsachthucung = $db->all($sql);
   $homnay = strtotime(date("Y/m/d"));
 
@@ -514,12 +514,12 @@ function danhsachduyet() {
   $danhsachphuong = kiemtraphanquyenphuong($phanquyen);
   if ($phanquyen == 2) $x = 1;
   else if (empty($danhsachphuong)) $x = 0;
-  else $x = "(c.id in (". implode(", ", $danhsachphuong) .") )";
+  else $x = "(f.phuong in (". implode(", ", $danhsachphuong) .") )";
 
-  $sql = "select a.id, a.noidung, c.ten, c.dienthoai, c.diachi from ". PREFIX ."_quanly_xetduyet a inner join ". PREFIX ."_tiemphong_chuho c on a.idchu = c.id where a.trangthai = 0 order by a.thoigian asc limit ". GIOIHAN . " offset ". ($truongloc["trang"] - 1) * GIOIHAN;
+  $sql = "select a.id, a.noidung, c.first_name as ten, f.dienthoai, f.diachi from ". PREFIX ."_quanly_xetduyet a inner join ". PREFIX ."_users c on a.idchu = c.userid inner join ". PREFIX ."_users_info f on c.userid = f.userid where a.trangthai = 0 order by a.thoigian asc limit ". GIOIHAN . " offset ". ($truongloc["trang"] - 1) * GIOIHAN;
   $danhsach = $db->all($sql);
 
-  $sql = "select a.id from ". PREFIX ."_quanly_xetduyet a inner join ". PREFIX ."_tiemphong_chuho c on a.idchu = c.id where a.trangthai = 0";
+  $sql = "select a.id from ". PREFIX ."_quanly_xetduyet a inner join ". PREFIX ."_users c on a.idchu = c.userid where a.trangthai = 0";
   $tong = count($db->arr($sql, "id"));
 
   foreach ($danhsach as $xetduyet) {

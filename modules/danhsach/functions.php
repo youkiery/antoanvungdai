@@ -68,11 +68,3 @@ function laytengiongloai($idgiong) {
   if (empty($giong = $db->fetch($sql))) return 'Chưa xác định';
   return "$giong[loai] $giong[giong]";
 }
-
-function laythongtinchu($idchu) {
-  global $db;
-
-  $sql = "select * from ". PREFIX ."_tiemphong_chuho where id = $idchu";
-  if (empty($chuho = $db->fetch($sql))) return 'Chưa xác định';
-  return "$chuho[ten]";
-}

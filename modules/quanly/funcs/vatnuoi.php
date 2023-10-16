@@ -119,7 +119,7 @@ function capnhatthongtin() {
 			else $noidung [] = "$chuyendoi[$tentruong] $thongtinchunuoi[$tentruong] => $giatri";
 		}
 		$noidung = "Thay đổi ". implode(", ", $noidung);
-		$dulieu = json_encode($dulieu);
+		$dulieu = json_encode($dulieu, JSON_UNESCAPED_UNICODE );
 
 		$sql = "select * from ". PREFIX ."_quanly_xetduyet where idchu = $idchuho and loaixetduyet = 1 and trangthai = 0";
 		if (!empty($xetduyet = $db->fetch($sql))) {
@@ -158,10 +158,10 @@ function themtiemphong() {
 		$db->query($sql);
 	}
 	else {
-		$sql = "select ten as tenthucung, micro, idgiong, ngaysinh, hinhanh from ". PREFIX ."_tiemphong_thucung where id = $id";
+		$sql = "select ten, micro, idgiong, ngaysinh, hinhanh from ". PREFIX ."_tiemphong_thucung where id = $id";
 		$thucung = $db->fetch($sql);
-		$dulieu["ten"] = $dulieu["tenvatnuoi"]; 
-		unset($dulieu["tenvatnuoi"]);
+		$dulieu["ten"] = $dulieu["tenthucung"]; 
+		unset($dulieu["tenthucung"]);
 		$dulieu["idgiong"] = kiemtragiongloai($dulieu);
 		unset($dulieu["giong"]);
 		unset($dulieu["loai"]);
@@ -200,7 +200,7 @@ function themtiemphong() {
 				else if ($tentruong !== "hinhanh") $noidung [] = "$chuyendoi[$tentruong] $thongtinchunuoi[$tentruong] => $giatri";
 			}
 			$noidung = "Thay đổi ". implode(", ", $noidung);
-			$dulieu = json_encode($dulieu);
+			$dulieu = json_encode($dulieu, JSON_UNESCAPED_UNICODE);
 	
 			$sql = "select * from ". PREFIX ."_quanly_xetduyet where idthucung = $id and loaixetduyet = 3 and trangthai = 0";
 			if (!empty($xetduyet = $db->fetch($sql))) {
@@ -223,12 +223,7 @@ function timkiemthucung() {
 	$tukhoa = $nv_Request->get_string('tukhoa', 'post', '');
 	$idchu = $nv_Request->get_string('idchu', 'post', '0');
 
-  $sql = "select * from ". PREFIX ."_users_info where userid = $idchu";
-  $chuho = $db->fetch($sql);
-  if (empty($chuho)) $x = 0;
-  else $x = 1;
-
-  $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu in (select id as idchu from ". PREFIX ."_tiemphong_chuho where dienthoai = '$chuho[dienthoai]' and $x) and (micro like '%$tukhoa%' or ten like '%$tukhoa%') ";
+  $sql = "select * from ". PREFIX ."_tiemphong_thucung where idchu = $idchu and (micro like '%$tukhoa%' or ten like '%$tukhoa%') ";
 	$danhsach = $db->all($sql);
   $xtpl = new XTemplate('goiythucung.tpl', PATH .'/tiemphong/');
 
@@ -236,16 +231,11 @@ function timkiemthucung() {
 		$sql = "select * from ". PREFIX ."_quanly_danhmuc_giong where id = $thucung[idgiong]";
 		$giongloai = $db->fetch($sql);
 
-		$sql = "select * from ". PREFIX ."_tiemphong_chuho where id = $thucung[idchu]";
-		$chuho = $db->fetch($sql);
 		$xtpl->assign('idthucung', $thucung['id']);
 		$xtpl->assign('ten', $thucung['ten']);
 		$xtpl->assign('micro', $thucung['micro']);
 		$xtpl->assign('giong', $giongloai['giong']);
 		$xtpl->assign('loai', $giongloai['loai']);
-		$xtpl->assign('tenchu', $chuho['ten']);
-		$xtpl->assign('diachi', $chuho['diachi']);
-		$xtpl->assign('dienthoai', $chuho['dienthoai']);
 		$xtpl->parse('main.row');
 	}
 
