@@ -22,10 +22,10 @@ function danhsachphuong() {
   $danhsach = $db->all($sql);
 
   foreach ($danhsach as $phuong) {
-    $sql = "select count(id) as tong from ". PREFIX ."_users_info where phuong = $phuong[id]";
+    $sql = "select count(userid) as tong from ". PREFIX ."_users_info where phuong = $phuong[id]";
     if (empty($sochuho = $db->fetch($sql))) $sochuho = 0;
     else $sochuho = $sochuho['tong'];
-    $sql = "select count(a.id) as tong from ". PREFIX ."_users_info a inner join ". PREFIX ."_tiemphong_thucung b on a.userid = b.idchu where a.phuong = $phuong[id] and xacnhan = 1";
+    $sql = "select count(a.userid) as tong from ". PREFIX ."_users_info a inner join ". PREFIX ."_tiemphong_thucung b on a.userid = b.idchu where a.phuong = $phuong[id] and xacnhan = 1";
     if (empty($sothucung = $db->fetch($sql))) $sothucung = 0;
     else $sothucung = $sothucung['tong'];
 
